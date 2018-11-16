@@ -20,7 +20,7 @@ rule mk_coords_hapmap:
     input:
         DATA + 'interim/hapmap/hapmap_{pop}_r23a_filtered.bim'
     output:
-        DATA + 'interim/hapmap/{pop}.tolift'
+        DATA + 'interim/hapmap/{pop,CEU|YRI|JPT_CHB}.tolift'
     shell:
         """awk '{{print "chr" $1, $4 -1, $4, $2 }}' {input} | sed 's/chr23/chrX/' | sed 's/chr24/chrY/' > {output}"""
 
@@ -84,3 +84,16 @@ rule combine_hapmap:
 
 rule hm:
     input: expand(DATA + 'processed/hapmap/{pop}.bed', pop=('CEU', 'YRI', 'JPT_CHB'))
+
+rule combine_hapmap_raw:
+    input: expand(DATA + 'interim/hapmap/hapmap_{pop}_r23a_filtered.bed', pop=('CEU', 'YRI', 'JPT_CHB'))
+    output:
+        expand(DATA + 'interim/bfiles/hapmapraw.{s}', s=('bed', 'bim', 'fam'))
+    singularity:
+        PLINK
+    log:
+        LOG + 'prep/combine_hapmap_raw'
+    shell:
+        "plink --merge-list {CONFIG}hapmap_bfiles "
+        "--autosome --make-bed --out {DATA}interim/bfiles/hapmapraw &> {log}"
+

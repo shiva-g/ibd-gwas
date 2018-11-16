@@ -56,7 +56,7 @@ rule combine_hapmap_ibd_2:
 
 rule ibd_hapmap_ibd:
     input:
-        DATA + 'interim/bfiles_indep/{group}.fam'
+        DATA + 'interim/bfiles/{group}.fam'
     output:
         DATA + 'interim/plink_genome/{group}.genome'
     singularity:
@@ -64,12 +64,12 @@ rule ibd_hapmap_ibd:
     log:
         LOG + 'mds/genome.{group}'
     shell:
-        "plink --bfile {DATA}interim/bfiles_indep/{wildcards.group} --genome "
+        "plink --bfile {DATA}interim/bfiles/{wildcards.group} --genome "
         "--out {DATA}interim/plink_genome/{wildcards.group} &> {log}"
 
 rule ibd_hapmap_mds:
     input:
-        f = DATA + 'interim/bfiles_indep/{group}.fam',
+        f = DATA + 'interim/bfiles/{group}.fam',
         g = DATA + 'interim/plink_genome/{group}.genome'
     output:
         DATA + 'interim/plink_mds/{group}.mds'
@@ -78,9 +78,9 @@ rule ibd_hapmap_mds:
     log:
         LOG + 'mds/mds_{group}'
     shell:
-        "plink --bfile {DATA}interim/bfiles_filter_samples/{wildcards.group} "
+        "plink --bfile {DATA}interim/bfiles/{wildcards.group} "
         "--read-genome {DATA}interim/plink_genome/{wildcards.group}.genome "
-        "--cluster --mds-plot 2 --out {DATA}interim/plink_mds/{wildcards.group} &> {log}"
+        "--cluster --mds-plot 10 --out {DATA}interim/plink_mds/{wildcards.group} &> {log}"
 
 rule mds:
-    input: DATA + 'interim/plink_mds/hapmap.mds'
+    input: DATA + 'interim/plink_mds/hapmapraw.mds'
