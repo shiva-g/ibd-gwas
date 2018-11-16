@@ -1,7 +1,5 @@
 """Prep PLINK data"""
 
-PLINK = "docker://quay.research.chop.edu/evansj/plink-docker"
-
 def mk_raw_bfiles(wc):
     if wc.group=='44':
         return DATA + 'raw/plink44/paths.txt.GSA-mGluR_enrichd_20011739X343186_B2.ped.fam'
