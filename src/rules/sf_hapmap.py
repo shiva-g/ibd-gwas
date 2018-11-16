@@ -1,4 +1,5 @@
 """Prep hapmap for ancestry"""
+# http://zzz.bwh.harvard.edu/plink/res.shtml
 # https://rdrr.io/cran/plinkQC/f/inst/doc/HapMap.pdf
 # http://zzz.bwh.harvard.edu/plink/dist/hapmap_CEU_r23a_filtered.zip
 # http://zzz.bwh.harvard.edu/plink/dist/hapmap_YRI_r23a_filtered.zip
@@ -59,7 +60,7 @@ rule hapmap_to_hg19:
         pos = DATA + 'interim/hapmap/{pop}.pos',
         snps = DATA + 'interim/hapmap/{pop}.snps'
     output:
-        expand(DATA + 'processed/hapmap/{{pop}}.{s}', s=('bed', 'bim', 'fam'))
+        expand(DATA + 'interim/hapmap/{{pop}}.{s}', s=('bed', 'bim', 'fam'))
     singularity:
         PLINK
     log:
@@ -67,7 +68,19 @@ rule hapmap_to_hg19:
     shell:
         "plink --bfile {DATA}interim/hapmap/hapmap_{wildcards.pop}_r23a_filtered "
         "--extract {input.snps} --update-map {input.pos} "
-        "--make-bed --out {DATA}processed/hapmap/{wildcards.pop} &> {log}"
+        "--make-bed --out {DATA}interim/hapmap/{wildcards.pop} &> {log}"
+
+rule combine_hapmap:
+    input: expand(DATA + 'interim/hapmap/{pop}.bed', pop=('CEU', 'YRI', 'JPT_CHB'))
+    output:
+        expand(DATA + 'interim/bfiles/hapmap.{s}', s=('bed', 'bim', 'fam'))
+    singularity:
+        PLINK
+    log:
+        LOG + 'prep/combine_hapmap'
+    shell:
+        "plink --merge-list {CONFIG}hapmap_bfiles "
+        "--autosome --make-bed --out {DATA}interim/bfiles/hapmap &> {log}"
 
 rule hm:
     input: expand(DATA + 'processed/hapmap/{pop}.bed', pop=('CEU', 'YRI', 'JPT_CHB'))
