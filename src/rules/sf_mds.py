@@ -56,7 +56,7 @@ rule combine_hapmap_ibd_2:
 
 rule ibd_hapmap_ibd:
     input:
-        DATA + 'interim/bfiles_indep/{group}.fam'
+        DATA + 'interim/bfiles_filter_samples/{group}.fam'
     output:
         DATA + 'interim/plink_genome/{group}.genome'
     singularity:
@@ -64,12 +64,12 @@ rule ibd_hapmap_ibd:
     log:
         LOG + 'mds/genome.{group}'
     shell:
-        "plink --bfile {DATA}interim/bfiles_indep/{wildcards.group} --genome "
+        "plink --bfile {DATA}interim/bfiles_filter_samples/{wildcards.group} --genome "
         "--out {DATA}interim/plink_genome/{wildcards.group} &> {log}"
 
 rule ibd_hapmap_mds:
     input:
-        f = DATA + 'interim/bfiles_indep/{group}.fam',
+        f = DATA + 'interim/bfiles_filter_samples/{group}.fam',
         g = DATA + 'interim/plink_genome/{group}.genome'
     output:
         DATA + 'interim/plink_mds/{group}.mds'
@@ -82,5 +82,26 @@ rule ibd_hapmap_mds:
         "--read-genome {DATA}interim/plink_genome/{wildcards.group}.genome "
         "--cluster --mds-plot 2 --out {DATA}interim/plink_mds/{wildcards.group} &> {log}"
 
+rule color_mds:
+    input:
+        mds = DATA + 'interim/plink_mds/{group}.mds',
+        yri = DATA + 'interim/hapmap/YRI.fam',
+        ceu = DATA + 'interim/hapmap/CEU.fam',
+        asn = DATA + 'interim/hapmap/JPT_CHB.fam',
+        ibd = DATA + 'interim/bfiles_filter_samples/3groups.fam',
+    output:
+        o = DATA + 'interim/mds_dat/{group}.dat'
+    run:
+        mds = pd.read_csv(input.mds, delim_whitespace=True)
+        # fam = pd.read_csv(input.f, header=None, names=['FID', 'IID', 'father', 'mother', 'sex', 'phenotype'], delimiter=' ')
+        yri_fam, ceu_fam, asn_fam, ibd_fam = [pd.read_csv(f, header=None, names=['FID', 'IID', 'father', 'mother', 'sex', 'phenotype'], delimiter=' ') for f in (input.yri, input.ceu, input.asn, input.ibd)]
+        yri_fam['group'] = 'YRI'
+        ibd_fam.loc[:, 'group'] = ibd_fam.apply(lambda row: 'case' if row['phenotype']==2 else 'control', axis=1) 
+        asn_fam['group'] = 'JPT_CHB'
+        ceu_fam['group'] = 'CEU'
+        fam = pd.concat([ceu_fam, asn_fam, ibd_fam, yri_fam])
+        df = pd.merge(mds, fam, on=('IID'), how='left')
+        df.to_csv(output.o, index=False, sep='\t')
+
 rule mds:
-    input: DATA + 'interim/plink_mds/hapmap.mds'
+    input: DATA + 'interim/mds_dat/ibd_hapmap.dat'
