@@ -3,8 +3,8 @@
 * Merge files with plink, and restrict to autosomes.
 * Use plink to remove non-polymorphic markers (min-ac 1) and markers not called for more than 5% of samples (geno 0.05). 
 * Remove 2728 duplicated variants and 4471 positions that appeared more than once with plink.
-* Remove 3 samples with more than 5% of markers not called (mind 0.05).
-* For MDS, use independent markers (indep 50 5 2).
+* Remove 3 samples with more than 5% of markers not called (plink mind 0.05).
+* For MDS, use independent markers (plink indep 50 5 2).
 
 ### HapMap samples
 * Download Phase 2 HapMap as a PLINK fileset (CEU, YRI, and JPT_CHB filtered founders) from http://zzz.bwh.harvard.edu/plink/res.shtml.
