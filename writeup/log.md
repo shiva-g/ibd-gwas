@@ -1,5 +1,6 @@
 ### 20181117
 * methods
+* use hwe for a filter? http://bio3.giga.ulg.ac.be/chaichoompu/userfiles/downloads/2016/GBIO0009/L5/Plink.pdf slide 19
 
 ### 20181116
 * MDS shows most are CEU
