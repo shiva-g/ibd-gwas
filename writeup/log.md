@@ -1,5 +1,5 @@
 ### 20181120
-* 173 samples after mds cut
+* 173 samples after mds cut. 39 are cases and 134 are controls
 
 ### 20181119
 * methods
