@@ -1,5 +1,6 @@
 ### 20181120
 * 173 samples after mds cut. 39 are cases and 134 are controls
+* mds picks up 2 outlier case/control pairs that are very close
 * 201939090050_R10C02 and 201978470008_R03C02 co cluster
 * 201939090076_R03C01 and 201939090006_R11C02 co cluster
 
