@@ -1,4 +1,7 @@
-### 20181117
+### 20181120
+* 173 samples after mds cut
+
+### 20181119
 * methods
 * use hwe for a filter? http://bio3.giga.ulg.ac.be/chaichoompu/userfiles/downloads/2016/GBIO0009/L5/Plink.pdf slide 19
 
