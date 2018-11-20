@@ -1,5 +1,7 @@
 ### 20181120
 * 173 samples after mds cut. 39 are cases and 134 are controls
+* 201939090050_R10C02 and 201978470008_R03C02 co cluster
+* 201939090076_R03C01 and 201939090006_R11C02 co cluster
 
 ### 20181119
 * methods
