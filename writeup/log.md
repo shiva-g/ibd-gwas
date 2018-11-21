@@ -1,18 +1,18 @@
 ### 20181120
 * 173 samples after mds cut. 39 are cases and 134 are controls
 * mds picks up 2 outlier case/control pairs that are very close
-* 201939090050_R10C02 and 201978470008_R03C02 co cluster
-* 201939090076_R03C01 and 201939090006_R11C02 co cluster
+* 201939090050_R10C02 (missing 0.0009588) and 201978470008_R03C02 (missing 0.0008311) co cluster; drop 201939090050_R10C02
+* 201939090076_R03C01 (missing 0.00138) and 201939090006_R11C02 (missing 0.0006981) co cluster; drop 201939090076_R03C01
 * these are clusters of the same ppl. Remove the one w/ more missing targets
 
 #### mtg
-* keep XY and check sex
+* keep XY and check sex. added chrX for hapmap and study
 * Send missing samples, and % missing. Are they case/control?
-* for indep, use indep-pairwise 0.2
+* for indep, use indep-pairwise 0.2 updated.
 * add ethnicity to mds plot w/ hapmap
 * check pruned target #
 * check hapmap/study overlap #
-* rm two duplicate samples
+* rm two duplicate samples. done
 * Send file z scores to check second cousins
 * how many targets below 1%, 1-5%, and above 5%? what frac of total targets?
 * hwe test. split case vs control/healthy. case is early and late ibd
