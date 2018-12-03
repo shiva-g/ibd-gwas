@@ -90,20 +90,22 @@ rule color_mds:
         ceu = DATA + 'interim/hapmap/CEU.fam',
         asn = DATA + 'interim/hapmap/JPT_CHB.fam',
         ibd = DATA + 'interim/bfiles_filter_samples/3groups.fam',
+        man = DATA + 'processed/MANIFEST.csv'
     output:
         o = DATA + 'interim/mds_dat/{group}.dat'
     run:
         mds = pd.read_csv(input.mds, delim_whitespace=True)
         mds.loc[:, 'FID'] = mds.apply(lambda row: row['FID'].lstrip().strip(), axis=1)
+        manifest = pd.read_csv(input.man)
         # fam = pd.read_csv(input.f, header=None, names=['FID', 'IID', 'father', 'mother', 'sex', 'phenotype'], delimiter=' ')
         yri_fam, ceu_fam, asn_fam, ibd_fam = [pd.read_csv(f, header=None, names=['FID', 'IID', 'father', 'mother', 'sex', 'phenotype'], delimiter=' ') for f in (input.yri, input.ceu, input.asn, input.ibd)]
         yri_fam['group'] = 'YRI'
-        ibd_fam.loc[:, 'FID'] = mds.apply(lambda row: str(row['FID']), axis=1)
-        ibd_fam.loc[:, 'group'] = ibd_fam.apply(lambda row: 'case' if row['phenotype']==2 else 'control', axis=1)
+        manifest.loc[:, 'FID'] = '0'
+        manifest.loc[:, 'group'] = manifest.apply(lambda row: 'HC' if not str(row['HC or IBD or ONC']) in ('IBD', 'HC', 'ONC') else row['HC or IBD or ONC'], axis=1)
         asn_fam['group'] = 'JPT_CHB'
         ceu_fam['group'] = 'CEU'
         ceu_fam.loc[:, 'FID'] = ceu_fam.apply(lambda row: str(row['FID']), axis=1)
-        fam = pd.concat([ceu_fam, asn_fam, ibd_fam, yri_fam])
+        fam = pd.concat([ceu_fam, asn_fam, manifest, yri_fam])
         df = pd.merge(mds, fam, on=['IID', 'FID'], how='left')
         df.to_csv(output.o, index=False, sep='\t')
 
@@ -115,7 +117,7 @@ rule cut_mds:
         o = DATA + 'interim/mds_cut/3groups.keep_samples'
     run:
         df = pd.read_csv(input.i, sep='\t')
-        df[(df.C1<-.025) & (df.C2>.025) & ((df.group=='case') | (df.group=='control'))][['FID', 'IID']].to_csv(output.o, index=False, header=None, sep=' ')
+        df[(df.C1<-.025) & (df.C2>.025) & ( (df.group=='IBD') | (df.group=='HC') | (df.group=='ONC'))][['FID', 'IID']].to_csv(output.o, index=False, header=None, sep=' ')
 
 rule restrict_ibd_samples:
     input:
@@ -163,13 +165,15 @@ rule color_mds_ibd:
     input:
         mds = DATA + 'interim/plink_mds_ibd/{group}.mds',
         ibd = DATA + 'interim/bfiles_filter_samples/{group}.fam',
+        man = DATA + 'processed/MANIFEST.csv'
     output:
         o = DATA + 'interim/mds_dat_ibd/{group}.dat'
     run:
         mds = pd.read_csv(input.mds, delim_whitespace=True)
-        fam = pd.read_csv(input.ibd, header=None, names=['FID', 'IID', 'father', 'mother', 'sex', 'phenotype'], delimiter=' ')
-        fam.loc[:, 'group'] = fam.apply(lambda row: 'case' if row['phenotype']==2 else 'control', axis=1)
-        df = pd.merge(mds, fam, on=['IID', 'FID'], how='left')
+        manifest = pd.read_csv(input.man)
+        manifest.loc[:, 'FID'] = 0
+        manifest.loc[:, 'group'] = manifest.apply(lambda row: 'HC' if not str(row['HC or IBD or ONC']) in ('IBD', 'HC', 'ONC') else row['HC or IBD or ONC'], axis=1)
+        df = pd.merge(mds, manifest, on=['IID', 'FID'], how='left')
         df.to_csv(output.o, index=False, sep='\t')
 
 rule mds:

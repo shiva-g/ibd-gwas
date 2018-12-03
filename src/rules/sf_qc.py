@@ -1,14 +1,14 @@
 rule check_gender_x:
     input:
-        expand(DATA + 'interim/bfiles/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
+        expand(DATA + 'interim/bfiles_indep/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
     output:
-        DATA + 'interim/sex_check/{group}.x'
+        DATA + 'interim/sex_check/{group}.sexcheck'
     singularity:
         PLINK
     log:
         LOG + 'qc/{group}.sex_check'
     shell:
-        "plink --bfile {DATA}interim/bfiles/{wildcards.group} --check-sex "
+        "plink --bfile {DATA}interim/bfiles_indep/{wildcards.group} --check-sex "
         "--out {DATA}interim/sex_check/{wildcards.group} &> {log}"
 
 rule missing:
@@ -18,8 +18,11 @@ rule missing:
         expand(DATA + 'interim/missing/{{group}}.{miss}', miss=('imiss', 'lmiss') )
     singularity:
         PLINK
+    log:
+        LOG + 'qc/{group}.missing'
     shell:
-        "plink --bfile {DATA}interim/bfiles_filter_snps/{wildcards.group} --missing --out {DATA}interim/missing/{wildcards.group}"
+        "plink --bfile {DATA}interim/bfiles_filter_snps/{wildcards.group} --missing --out {DATA}interim/missing/{wildcards.group} &> {log}"
 
 rule all_qc:
-    input: expand(DATA + 'interim/missing/3groups.{miss}', miss=('imiss', 'lmiss') )
+    input: expand(DATA + 'interim/missing/3groups.{miss}', miss=('imiss', 'lmiss') ),
+           DATA + 'interim/sex_check/3groups.sexcheck'
