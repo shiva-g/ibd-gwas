@@ -80,7 +80,4 @@ rule combine_hapmap:
         LOG + 'prep/combine_hapmap'
     shell:
         "plink --merge-list {CONFIG}hapmap_bfiles "
-        "--autosome --make-bed --out {DATA}interim/bfiles/hapmap &> {log}"
-
-rule hm:
-    input: expand(DATA + 'processed/hapmap/{pop}.bed', pop=('CEU', 'YRI', 'JPT_CHB'))
+        "--autosome --not-chr y --make-bed --out {DATA}interim/bfiles/hapmap &> {log}"

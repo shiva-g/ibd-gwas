@@ -3,7 +3,7 @@ rule combine_hapmap_ibd:
         expand(DATA + 'interim/bfiles_indep/{group}.fam', group=('3groups', 'hapmap'))
     output:
         DATA + 'interim/bfiles_tmp/hapmap.bim',
-        DATA + 'interim/bfiles_tmp/3groupshapmap.bim',
+        DATA + 'interim/bfiles_tmp/3groups.bim',
     singularity:
         PLINK
     log:
@@ -38,12 +38,13 @@ rule list_discordant_pos_hapmap_ibd:
 
 rule combine_hapmap_ibd_2:
     input:
-        b=expand(DATA + 'interim/bfiles_tmp/{group}.fam', group=('3groups', 'hapmap')),
+        b=expand(DATA + 'interim/bfiles_tmp/{group}.bim', group=('3groups', 'hapmap')),
         ibd_rm = DATA + 'interim/bfiles_tmp/3groups.discord',
         hp_rm = DATA + 'interim/bfiles_tmp/hapmap.discord',
     output:
-        DATA + 'interim/bfiles/ibd_hapmap.fam',
-        DATA + 'interim/bfiles_tmp2/3groups.bim'
+        expand(DATA + 'interim/bfiles/ibd_hapmap.{s}', s=('bed', 'bim', 'fam')),
+        DATA + 'interim/bfiles_tmp2/3groups.bim',
+        DATA + 'interim/bfiles_tmp2/hapmap.bim'
     singularity:
         PLINK
     log:
@@ -101,6 +102,7 @@ rule color_mds:
         ibd_fam.loc[:, 'group'] = ibd_fam.apply(lambda row: 'case' if row['phenotype']==2 else 'control', axis=1)
         asn_fam['group'] = 'JPT_CHB'
         ceu_fam['group'] = 'CEU'
+        ceu_fam.loc[:, 'FID'] = ceu_fam.apply(lambda row: str(row['FID']), axis=1)
         fam = pd.concat([ceu_fam, asn_fam, ibd_fam, yri_fam])
         df = pd.merge(mds, fam, on=['IID', 'FID'], how='left')
         df.to_csv(output.o, index=False, sep='\t')
@@ -120,7 +122,7 @@ rule restrict_ibd_samples:
         b = DATA + 'interim/bfiles_indep/{group}.fam',
         k = DATA + 'interim/mds_cut/{group}.keep_samples'
     output:
-        DATA + 'processed/bfiles/{group}.bim',
+        DATA + 'processed/bfiles/{group}.fam',
     singularity:
         PLINK
     log:
@@ -171,4 +173,5 @@ rule color_mds_ibd:
         df.to_csv(output.o, index=False, sep='\t')
 
 rule mds:
-    input: DATA + 'interim/mds_dat_ibd/3groups.dat'
+    input: DATA + 'interim/mds_dat_ibd/3groups.dat',
+           o = DATA + 'interim/mds_dat/ibd_hapmap.dat'

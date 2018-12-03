@@ -78,15 +78,5 @@ rule indep_snps:
     log:
         LOG + 'prep/{group}.indep_snps'
     shell:
-        "plink --bfile {DATA}interim/bfiles_filter_samples/{wildcards.group} --indep 50 5 2 "
+        "plink --bfile {DATA}interim/bfiles_filter_samples/{wildcards.group} --indep-pairwise 50 5 0.2 "
         "--make-bed --out {DATA}interim/bfiles_indep/{wildcards.group} &> {log}"
-
-rule missing:
-    input:
-        expand(DATA + 'interim/bfiles_filter_snps/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
-    output:
-        expand(DATA + 'interim/missing/{{group}}.{miss}', miss=('imiss', 'lmiss') )
-    singularity:
-        PLINK
-    shell:
-        "plink --bfile {DATA}interim/bfiles_filter_snps/{wildcards.group} --missing --out {DATA}interim/missing/{wildcards.group}"
