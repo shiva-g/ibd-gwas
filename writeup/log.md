@@ -1,3 +1,7 @@
+### 20181203
+* [new sample table](https://mail.google.com/mail/u/0/#inbox/FMfcgxvzLrJTTbPBRKbqKrlxdgCqjQKh)
+* 
+
 ### 20181120
 * 173 samples after mds cut. 39 are cases and 134 are controls
 * mds picks up 2 outlier case/control pairs that are very close
