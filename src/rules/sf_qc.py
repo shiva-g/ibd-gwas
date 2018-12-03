@@ -1,3 +1,16 @@
+rule check_gender_y:
+    input:
+        expand(DATA + 'interim/bfiles_indep/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
+    output:
+        DATA + 'interim/sex_check_y/{group}.sexcheck'
+    singularity:
+        PLINK
+    log:
+        LOG + 'qc/{group}.sex_check_y'
+    shell:
+        "plink --bfile {DATA}interim/bfiles_indep/{wildcards.group} --check-sex y-only "
+        "--out {DATA}interim/sex_check_y/{wildcards.group} &> {log}"
+
 rule check_gender_x:
     input:
         expand(DATA + 'interim/bfiles_indep/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
@@ -25,4 +38,5 @@ rule missing:
 
 rule all_qc:
     input: expand(DATA + 'interim/missing/3groups.{miss}', miss=('imiss', 'lmiss') ),
-           DATA + 'interim/sex_check/3groups.sexcheck'
+           DATA + 'interim/sex_check/3groups.sexcheck',
+#           DATA + 'interim/sex_check_y/3groups.sexcheck'
