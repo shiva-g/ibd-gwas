@@ -1,6 +1,6 @@
 ### 20181203
 * [new sample table](https://mail.google.com/mail/u/0/#inbox/FMfcgxvzLrJTTbPBRKbqKrlxdgCqjQKh)
-* 
+* all ibd samples (early and late) are now cases
 
 ### 20181120
 * 173 samples after mds cut. 39 are cases and 134 are controls
