@@ -47,7 +47,7 @@ miss 201978470008_R07C01 2017_CHOP_BAL_VEO_010
 * keep XY and check sex. added chrX for hapmap and study
 * Send missing samples, and % missing. Are they case/control?
 * for indep, use indep-pairwise 0.2 updated.
-* add ethnicity to mds plot w/ hapmap
+* add ethnicity to mds plot w/ hapmap. done
 * check pruned target #
 * check hapmap/study overlap #
 * rm two duplicate samples. done
