@@ -1,3 +1,11 @@
+### 20181205
+* hwe test
+* gender check revealed two problems with the sample table
+* missing check: do not use x
+
+### 20181204
+* case (all ibd) vs control missing test
+
 ### 20181203
 * [new sample table](https://mail.google.com/mail/u/0/#inbox/FMfcgxvzLrJTTbPBRKbqKrlxdgCqjQKh)
 * all ibd samples (early and late) are now cases
@@ -54,7 +62,7 @@ miss 201978470008_R07C01 2017_CHOP_BAL_VEO_010
 * Send file z scores to check second cousins
 * how many targets below 1%, 1-5%, and above 5%? what frac of total targets?
 * hwe test. split case vs control/healthy. case is early and late ibd
-* missing rates for case vs control
+* missing rates for case vs control. done
 * imputation w/ michigain server. use X. use haplotype consortium
 * polygenic risk score w/ snps from paper 3rd sheet: all loci eur
 * next mtg dec 11
