@@ -1,6 +1,7 @@
 ### 20181205
 * hwe test
 * gender check revealed two problems with the sample table
+* missing check: do not use x
 
 ### 20181204
 * case (all ibd) vs control missing test
