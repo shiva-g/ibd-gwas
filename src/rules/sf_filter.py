@@ -83,7 +83,6 @@ rule drop_x_filter_snps:
         "plink --bfile {DATA}interim/bfiles_filter_snps/{wildcards.group} --chr 1-22 --make-bed "
         "--out {DATA}interim/bfiles_filter_snps_nox/{wildcards.group} &> {log}"
 
-
 rule drop_x_filter_samples:
     """rm x for hwe test
     """
@@ -111,3 +110,19 @@ rule indep_snps:
     shell:
         "plink --bfile {DATA}interim/bfiles_filter_samples/{wildcards.group} --indep-pairwise 50 5 0.2 "
         "--make-bed --out {DATA}interim/bfiles_indep/{wildcards.group} &> {log}"
+
+rule drop_x_indep:
+    """rm x for freq test
+    """
+    input:
+        expand(DATA + 'interim/bfiles_indep/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
+    output:
+        expand(DATA + 'interim/bfiles_indep_nox/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
+    singularity:
+        PLINK
+    log:
+        LOG + 'prep/{group}.indep_nox'
+    shell:
+        "plink --bfile {DATA}interim/bfiles_indep/{wildcards.group} --chr 1-22 --make-bed "
+        "--out {DATA}interim/bfiles_indep_nox/{wildcards.group} &> {log}"
+

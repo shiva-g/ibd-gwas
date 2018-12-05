@@ -37,6 +37,37 @@ rule missing:
         "plink --bfile {DATA}interim/bfiles_filter_snps_nox/{wildcards.group} "
         "--missing --test-missing --out {DATA}interim/missing_test/{wildcards.group} &> {log}"
 
+rule check_freq:
+    input:
+        expand(DATA + 'interim/bfiles_indep_nox/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
+    output:
+        DATA + 'interim/qc_freq/{group}.frq'
+    singularity:
+        PLINK
+    log:
+        LOG + 'qc/{group}.freq'
+    shell:
+        "plink --bfile {DATA}interim/bfiles_indep_nox/{wildcards.group} "
+        "--freq --out {DATA}interim/qc_freq/{wildcards.group} &> {log}"
+
+rule summarize_freq:
+    input:
+        i = DATA + 'interim/qc_freq/{group}.frq'
+    output:
+        o = DATA + 'interim/qc_freq/{group}.counts'
+    run:
+        df = pd.read_csv(input.i, delim_whitespace=True)
+        def assign_class(row):
+            if row['MAF']<0.01:
+                return 'Below 1%'
+            elif row['MAF']>=0.01 and row['MAF']<0.05:
+                return '1% to 5%'
+            else:
+                return 'Greater 5%'
+
+        df.loc[:, 'group'] = df.apply(assign_class, axis=1)
+        df.groupby('group').size().reset_index().to_csv(output.o, index=False, sep='\t')
+        
 rule check_hwe:
     input:
         expand(DATA + 'interim/bfiles_filter_samples_nox/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
@@ -67,9 +98,9 @@ rule summarize_hwe:
         g001 = df[crit001].groupby('TEST').size().reset_index().rename(columns=cols)
         g001.loc[:, 'pCut'] = 0.001
         pd.concat([g01, g001]).to_csv(output.o, index=False, sep='\t')
-         
+
 rule all_qc:
     input: expand(DATA + 'interim/missing_test/3groups.{miss}', miss=('imiss', 'lmiss') ),
            DATA + 'interim/sex_check/3groups.sexcheck',
-           DATA + 'interim/qc_hwe/3groups.counts'
-#           DATA + 'interim/sex_check_y/3groups.sexcheck'
+           DATA + 'interim/qc_hwe/3groups.counts',
+           DATA + 'interim/qc_freq/3groups.counts'
