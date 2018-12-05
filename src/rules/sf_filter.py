@@ -68,6 +68,37 @@ rule filter_samples:
         "plink --bfile {DATA}interim/bfiles_filter_snps/{wildcards.group} --mind 0.05 --make-bed "
         "--out {DATA}interim/bfiles_filter_samples/{wildcards.group} &> {log}"
 
+rule drop_x_filter_snps:
+    """rm x for missing test
+    """
+    input:
+        expand(DATA + 'interim/bfiles_filter_snps/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
+    output:
+        expand(DATA + 'interim/bfiles_filter_snps_nox/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
+    singularity:
+        PLINK
+    log:
+        LOG + 'prep/{group}.filter_samples_nox'
+    shell:
+        "plink --bfile {DATA}interim/bfiles_filter_snps/{wildcards.group} --chr 1-22 --make-bed "
+        "--out {DATA}interim/bfiles_filter_snps_nox/{wildcards.group} &> {log}"
+
+
+rule drop_x_filter_samples:
+    """rm x for hwe test
+    """
+    input:
+        expand(DATA + 'interim/bfiles_filter_samples/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
+    output:
+        expand(DATA + 'interim/bfiles_filter_samples_nox/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
+    singularity:
+        PLINK
+    log:
+        LOG + 'prep/{group}.filter_samples_nox'
+    shell:
+        "plink --bfile {DATA}interim/bfiles_filter_samples/{wildcards.group} --chr 1-22 --make-bed "
+        "--out {DATA}interim/bfiles_filter_samples_nox/{wildcards.group} &> {log}"
+
 rule indep_snps:
     input:
         expand(DATA + 'interim/bfiles_filter_samples/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
