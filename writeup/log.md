@@ -61,7 +61,7 @@ miss 201978470008_R07C01 2017_CHOP_BAL_VEO_010
 * Send file z scores to check second cousins
 * how many targets below 1%, 1-5%, and above 5%? what frac of total targets?
 * hwe test. split case vs control/healthy. case is early and late ibd
-* missing rates for case vs control
+* missing rates for case vs control. done
 * imputation w/ michigain server. use X. use haplotype consortium
 * polygenic risk score w/ snps from paper 3rd sheet: all loci eur
 * next mtg dec 11
