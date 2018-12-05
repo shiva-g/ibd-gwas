@@ -24,3 +24,7 @@
     * UNAFF: 2432 targets p<0.001. 8823 targets p<0.01
 * gender check (--check-sex) run after indep filter shows no conflicts
 * case vs control missing per target (--test-missing) run after filtering targets with high missing rates and removing chrX. 344 markers have p<0.05. 76 p<0.01. 7 p<0.001
+* mafs
+    * 1% to 5%        189979
+    * Below 1%        49089
+    * Greater 5%      317969
