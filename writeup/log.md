@@ -1,5 +1,5 @@
 ### 20181205
-* hwe test
+* hwe test. do not use x
 * gender check revealed two problems with the sample table
 * missing check: do not use x
 
@@ -52,16 +52,16 @@ miss 201978470008_R07C01 2017_CHOP_BAL_VEO_010
 * these are clusters of the same ppl. Remove the one w/ more missing targets
 
 #### mtg
-* keep XY and check sex. added chrX for hapmap and study
-* Send missing samples, and % missing. Are they case/control?
+* keep XY and check sex. added chrX for hapmap and study. done
+* Send missing samples, and % missing. Are they case/control? done.
 * for indep, use indep-pairwise 0.2 updated.
 * add ethnicity to mds plot w/ hapmap. done
 * check pruned target #
 * check hapmap/study overlap #
 * rm two duplicate samples. done
 * Send file z scores to check second cousins
-* how many targets below 1%, 1-5%, and above 5%? what frac of total targets?
-* hwe test. split case vs control/healthy. case is early and late ibd
+* how many targets below 1%, 1-5%, and above 5%? what frac of total targets? done
+* hwe test. split case vs control/healthy. case is early and late ibd. done
 * missing rates for case vs control. done
 * imputation w/ michigain server. use X. use haplotype consortium
 * polygenic risk score w/ snps from paper 3rd sheet: all loci eur
