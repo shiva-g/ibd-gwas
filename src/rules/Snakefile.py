@@ -7,7 +7,4 @@ include: "sf_prep.py"
 include: "sf_qc.py"
 include: "sf_hapmap.py"
 include: "sf_mds.py"
-
-rule all:
-    output: LOG + 'DONE'
-    shell:  'touch {output}'
+include: "sf_prs.py"

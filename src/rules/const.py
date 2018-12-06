@@ -25,3 +25,4 @@ CONFIG = PWD + 'configs/'
 
 # containers
 PLINK = "docker://quay.research.chop.edu/evansj/plink-docker:181012"
+PRSICE = "docker://quay.research.chop.edu/evansj/prsice-docker:2.1.4"
