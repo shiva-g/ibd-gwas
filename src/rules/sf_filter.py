@@ -1,3 +1,7 @@
+"""Snp array QC: remove bad samples and targets.
+   Locate independent targets.
+"""
+
 rule filter_snps:
     """rm snps missing in more than 5% of samples: --geno
        rm non-polymorphic: --min-ac
@@ -15,8 +19,10 @@ rule filter_snps:
         "--make-bed --out {DATA}interim/bfiles_filter_snps_1/{wildcards.group} &> {log}"
 
 rule list_dup_pos:
-    input:  i = DATA + 'interim/bfiles_filter_snps_1/{group}.bim'
-    output: o = DATA + 'interim/bfiles_filter_snps_1_dupPos/{group}.duppos'
+    input:  
+        i = DATA + 'interim/bfiles_filter_snps_1/{group}.bim'
+    output: 
+        o = DATA + 'interim/bfiles_filter_snps_1_dupPos/{group}.duppos'
     run:
         names = ['chrom', 'id', 'blank', 'pos', 'allele1', 'allele2']
         df = pd.read_csv(input.i, header=None, sep='\t', names = names)
@@ -125,4 +131,3 @@ rule drop_x_indep:
     shell:
         "plink --bfile {DATA}interim/bfiles_indep/{wildcards.group} --chr 1-22 --make-bed "
         "--out {DATA}interim/bfiles_indep_nox/{wildcards.group} &> {log}"
-
