@@ -6,6 +6,7 @@
 * plink logs vs perry logs
 * iterative plink
 * snakemake wrappers
+* imputation server
 
 ### 20181206
 * testing prsice - overlap is done by snp id, and they do not match. use --keep-ambig to turn this off
