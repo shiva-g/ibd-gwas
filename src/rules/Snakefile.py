@@ -1,4 +1,4 @@
-"""Main snakefile"""
+"""Main snakefile for polygeic risk score"""
 
 include: "const.py"
 include: "sf_manifest.py"
