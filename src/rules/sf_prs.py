@@ -156,6 +156,3 @@ rule prsice:
         '--target {DATA}processed/bfiles_imputed/eur '
         '--thread {threads} --binary-target T '
         '--out {DATA}interim/prsice/eur'
-
-rule unzip_imputation:
-    input: expand(DATA + 'interim/imputed/chr{chr}.dose.vcf.gz', chr=range(1,23))
