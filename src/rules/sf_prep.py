@@ -1,4 +1,4 @@
-"""Prep PLINK data"""
+"""Prep CAG PLINK data"""
 
 def mk_raw_bfiles(wc):
     if wc.group=='44':
@@ -63,19 +63,6 @@ rule fix_bfiles:
                     print(' '.join(sp[:-2] + ['1', '1']), file=fout)
                     print('miss', iid, trans[iid])
 
-rule split_x:
-    input:
-        DATA + 'interim/bfiles/{group}.fam'
-    output:
-        DATA + 'interim/bfiles_splitx/{group}.fam'
-    singularity:
-        PLINK
-    log:
-        LOG + 'prep/{group}.splitx'
-    shell:
-        "plink --bfile {DATA}interim/bfiles/{wildcards.group} "
-        "--split-x hg19 --make-bed --out {DATA}interim/bfiles_splitx/{wildcards.group} &> {log}"
-
 rule combine_bfiles:
     input:
         expand(DATA + 'interim/bfiles/{group}.fam', group=(44, 185))
@@ -88,16 +75,3 @@ rule combine_bfiles:
     shell:
         "plink --bfile {DATA}interim/bfiles/185 --bmerge {DATA}interim/bfiles/44 "
         "--remove {CONFIG}dup_samples --chr 1-22, x --make-bed --out {DATA}interim/bfiles/3groups &> {log}"
-
-# rule combine_bfiles_y:
-#     input:
-#         expand(DATA + 'interim/bfiles/{group}.fam', group=(44, 185))
-#     output:
-#         DATA + 'interim/bfiles/3groups.fam'
-#     singularity:
-#         PLINK
-#     log:
-#         LOG + 'prep/combine_44_185'
-#     shell:
-#         "plink --bfile {DATA}interim/bfiles/185 --bmerge {DATA}interim/bfiles/44 "
-#         "--remove {CONFIG}dup_samples --autosome-xy --make-bed --out {DATA}interim/bfiles/3groups &> {log}"
