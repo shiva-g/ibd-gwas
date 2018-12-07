@@ -179,3 +179,4 @@ rule color_mds_ibd:
 rule mds:
     input: DATA + 'interim/mds_dat_ibd/3groups.dat',
            o = DATA + 'interim/mds_dat/ibd_hapmap.dat'
+# plots

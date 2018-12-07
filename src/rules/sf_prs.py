@@ -80,13 +80,51 @@ rule vcf_to_bfiles:
 
 rule merge_imputed_bfiles_ls:
     input:
-        expand(DATA + 'interim/bfiles_imputed/chr{chr}.fam', chr=range(1, 23))
+        expand(DATA + 'interim/bfiles_imputed_ex/chr{chr}.fam', chr=range(1, 23))
     output:
         o = DATA + 'interim/bfiles_imputed.eur.ls'
     run:
         with open(output.o, 'w') as fout:
             for afile in list(input):
                 print(afile.split('.')[0], file=fout)
+
+rule merge_imputed_bfiles_ls_1:
+    input:
+        expand(DATA + 'interim/bfiles_imputed/chr{chr}.fam', chr=range(1, 23))
+    output:
+        o = DATA + 'interim/bfiles_imputed.eur.ls1'
+    run:
+        with open(output.o, 'w') as fout:
+            for afile in list(input):
+                print(afile.split('.')[0], file=fout)
+
+rule merge_imputed_bfiles_tmp:
+    input:
+        DATA + 'interim/bfiles_imputed.eur.ls1'
+    output:
+        DATA + 'interim/bfiles_imputed_tmp/eur-merge.missnp'
+    singularity:
+        PLINK
+    log:
+        LOG + 'prs/merge_tmp'
+    shell:
+        "plink --merge-list {input} --make-bed "
+        "--out {DATA}interim/bfiles_imputed_tmp/eur &> {log} || touch {output}"
+
+rule rm_tri_allelic:
+    input:
+        f = DATA + 'interim/bfiles_imputed/chr{chr}.fam',
+        ex = DATA + 'interim/bfiles_imputed_tmp/eur-merge.missnp'
+    output:
+        DATA + 'interim/bfiles_imputed_ex/chr{chr}.fam'
+    singularity:
+        PLINK
+    log:
+        LOG + 'prs/{chr}.rm_tri_tmp'
+    shell:
+        "plink --bfile {DATA}/interim/bfiles_imputed/chr{wildcards.chr} "
+        "--exclude {input.ex} --make-bed "
+        "--out {DATA}interim/bfiles_imputed_ex/chr{wildcards.chr} &> {log} "
 
 rule merge_imputed_bfiles:
     input:
@@ -99,10 +137,8 @@ rule merge_imputed_bfiles:
         LOG + 'prs/merge'
     shell:
         "plink --merge-list {input} --make-bed "
-        "--out {DATA}interim/bfiles_imputed_tmp/eur &> {log}.1 || "
-        "plink --merge-list {input} --biallelic-only strict "
-        "--exclude {DATA}interim/bfiles_imputed_tmp/eur-merge.missnp --make-bed "
         "--out {DATA}processed/bfiles_imputed/eur &> {log} "
+
 
 rule prsice:
     input:
@@ -119,7 +155,7 @@ rule prsice:
         '--prsice /usr/local/bin/PRSice_linux '
         '--base {input.a} '
         '--target {DATA}processed/bfiles_imputed/eur '
-        '--thread {threads} --stat OR --binary-target T '
+        '--thread {threads} --binary-target T '
         '--out {DATA}interim/prsice/eur'
 
 rule unzip_imputation:
