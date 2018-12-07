@@ -139,7 +139,6 @@ rule merge_imputed_bfiles:
         "plink --merge-list {input} --make-bed "
         "--out {DATA}processed/bfiles_imputed/eur &> {log} "
 
-
 rule prsice:
     input:
         b = DATA + 'processed/bfiles_imputed/eur.fam',
@@ -160,4 +159,3 @@ rule prsice:
 
 rule unzip_imputation:
     input: expand(DATA + 'interim/imputed/chr{chr}.dose.vcf.gz', chr=range(1,23))
-
