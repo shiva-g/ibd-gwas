@@ -1,3 +1,5 @@
+"""Format sample list"""
+
 rule format_manifest:
     input: ibd = DATA + 'raw/conrad/CAGData112818.xlsx',
            cag1 = DATA + 'raw/cag/IRB_Microbiome_0.csv',
