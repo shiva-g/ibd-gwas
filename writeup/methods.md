@@ -32,3 +32,5 @@
     * 1% to 5%        189979
     * Below 1%        49089
     * Greater 5%      317969
+
+### Polygenic risk score
