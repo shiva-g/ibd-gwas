@@ -1,4 +1,4 @@
-"""Snp array QC: remove bad samples and targets.
+"""Snp array cleaning: remove bad samples and targets.
    Locate independent targets.
 """
 
