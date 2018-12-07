@@ -130,28 +130,54 @@ rule merge_imputed_bfiles:
     input:
         DATA + 'interim/bfiles_imputed.eur.ls'
     output:
-        DATA + 'processed/bfiles_imputed/eur.fam'
+        DATA + 'interim/bfiles_imputed_combined/eur.fam'
     singularity:
         PLINK
     log:
         LOG + 'prs/merge'
     shell:
         "plink --merge-list {input} --make-bed "
-        "--out {DATA}processed/bfiles_imputed/eur &> {log} "
+        "--out {DATA}interim/bfiles_imputed_combined/eur &> {log} "
 
+rule mk_rs_names:
+    input:
+        i = DATA + 'interim/ibd_gwas.assoc'
+    output:
+        o = DATA + 'interim/rs_names'
+    run:
+        df = pd.read_csv(input.i, sep=' ')
+        df.loc[:, 'id'] = df.apply(lambda row: str(row['CHR']) + ':' + str(row['BP']), axis=1)
+        df[['id', 'SNP']].to_csv(output.o, index=False, sep=' ', header=None)
+
+rule rename_rs_imputed_bfiles:
+    input:
+        fam = DATA + 'interim/bfiles_eur/3groups.fam',
+        f = DATA + 'interim/bfiles_imputed_combined/eur.fam',
+        rs_names = DATA + 'interim/rs_names'
+    output:
+        DATA + 'processed/bfiles_imputed/eur.fam'
+    singularity:
+        PLINK
+    log:
+        LOG + 'prs/rename_rs'
+    shell:
+        "plink --bfile {DATA}/interim/bfiles_imputed_combined/eur --update-name {input.rs_names} --make-bed "
+        "--out {DATA}processed/bfiles_imputed/eur &> {log} && "
+        """sed "s/^0 /0 0_/g" {input.fam} > {output}"""
+        
 rule prsice:
     input:
         b = DATA + 'processed/bfiles_imputed/eur.fam',
         a = DATA + 'interim/ibd_gwas.assoc'
     output:
-        DATA + 'interim/prsice/eur'
+        DATA + 'interim/prsice/eur.summary'
     singularity:
         PRSICE
     threads: 8
     shell:
         'Rscript /usr/local/bin/PRSice.R --dir {DATA}/interim/prsice/ '
         '--snp SNP --chr CHR --bp BP --A1 A1 --A2 A2 --stat EUR_OR --se EUR_SE --pvalue EUR_PVAL '
-        '--prsice /usr/local/bin/PRSice_linux '
+        '--prsice /usr/local/bin/PRSice_linux --keep-ambig '
         '--base {input.a} '
         '--target {DATA}processed/bfiles_imputed/eur '
         '--thread {threads} --binary-target T '
