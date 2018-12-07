@@ -1,3 +1,16 @@
+### 20181207
+* have new sample data
+
+#### code review notes
+* quay - plink and prsice
+* plink logs vs perry logs
+* iterative plink
+* snakemake wrappers
+* imputation server
+
+### 20181206
+* testing prsice - overlap is done by snp id, and they do not match. use --keep-ambig to turn this off
+
 ### 20181205
 * hwe test. do not use x
 * gender check revealed two problems with the sample table
