@@ -179,4 +179,16 @@ rule color_mds_ibd:
 rule mds:
     input: DATA + 'interim/mds_dat_ibd/3groups.dat',
            o = DATA + 'interim/mds_dat/ibd_hapmap.dat'
-# plots
+
+rule plot_with_hapmap:
+    input:
+        DATA + 'interim/mds_dat/ibd_hapmap.dat'
+    output:
+        PLOTS + 'hapmap_mds.png'
+    run:
+        R("""
+        require(ggplot2)
+        d = read.delim("{input}", header=TRUE, sep='\t')
+        p = ggplot(data=d) + geom_point(aes(x=C1, y=C2, colour=race), alpha=0.25) + theme_bw() + facet_grid(group~race)
+        ggsave("{output}", p, units="cm", width=60)
+        """)

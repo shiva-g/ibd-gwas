@@ -2,6 +2,7 @@ import os, sys
 import pandas as pd
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
 HTTP = HTTPRemoteProvider()
+from snakemake.utils import R
 
 SECRETS = '/home/evansj/me/.secrets/'
 sys.path.append(SECRETS)
@@ -22,6 +23,7 @@ SCRIPTS = PWD + 'src/scripts/'
 DATA = PWD + 'data/'
 LOG = PWD + 'log/'
 CONFIG = PWD + 'configs/'
+PLOTS = PWD + 'writeup/plots/'
 
 # containers
 PLINK = "docker://quay.research.chop.edu/evansj/plink-docker:181012"

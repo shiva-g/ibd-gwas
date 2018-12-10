@@ -16,7 +16,7 @@ rule cp_cag_bfiles:
         shell('cp {input.bed} {output.bed}')
 
 rule discard_cag_samples:
-    """These should not be in study."""
+    """These samples should not be in study."""
     input:
         f = DATA + 'interim/cag_raw_bfiles/{group}.fam',
         d = DATA + 'processed/DISCARD_SAMPLES'

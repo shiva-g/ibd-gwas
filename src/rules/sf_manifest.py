@@ -33,7 +33,7 @@ rule format_manifest:
         cag.loc[:, 'IID'] = cag.apply(lambda row: str(row['SentrixBarcode_A']) + '_' + row['SentrixPosition_A'], axis=1)
         discard_cag = ('2018_CHOP_BAL_VEO_022', '2015_CHOP_MIC_BAL_FAM106_SUB',
                        '2015_CHOP_MIC_BAL_FAM018_SUB', '2015_CHOP_MIC_BAL_FAM076_SUB',
-                       '2015_CHOP_MIC_BAL_FAM101_SUB')
+                       '2015_CHOP_MIC_BAL_FAM101_SUB', '2015_CHOP_MIC_BAL_FAM020_SUB')
         crit = cag.apply(lambda row: not row['SSID'] in discard_cag, axis=1)
         discard_df = cag[~crit]
         discard_df.loc[:, 'tmp'] = discard_df.apply(lambda row: '0 ' + row['IID'] + ' 0 0 0 -9', axis=1)

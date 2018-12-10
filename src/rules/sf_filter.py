@@ -2,12 +2,21 @@
    Locate independent targets.
 """
 
+rule list_monogenic_snps:
+    input:
+        DATA + 'interim/bfiles/{group}.bim'
+    output:
+        DATA + 'interim/monogenic/{group}'
+    shell:
+        """awk '{{if($5==0){{print $2}}}}' {input} > {output}"""
+
 rule filter_snps:
     """rm snps missing in more than 5% of samples: --geno
-       rm non-polymorphic: --min-ac
+       rm non-polymorphic: --min-ac and w/ no minor allele
     """
     input:
-        expand(DATA + 'interim/bfiles/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
+        b = expand(DATA + 'interim/bfiles/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') ),
+        m = DATA + 'interim/monogenic/{group}'
     output:
         expand(DATA + 'interim/bfiles_filter_snps_1/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
     singularity:
@@ -16,12 +25,13 @@ rule filter_snps:
         LOG + 'prep/{group}.filter_snps'
     shell:
         "plink --bfile {DATA}interim/bfiles/{wildcards.group} --min-ac 1 --geno 0.05 "
+        "--exclude {input.m} "
         "--make-bed --out {DATA}interim/bfiles_filter_snps_1/{wildcards.group} &> {log}"
 
 rule list_dup_pos:
-    input:  
+    input:
         i = DATA + 'interim/bfiles_filter_snps_1/{group}.bim'
-    output: 
+    output:
         o = DATA + 'interim/bfiles_filter_snps_1_dupPos/{group}.duppos'
     run:
         names = ['chrom', 'id', 'blank', 'pos', 'allele1', 'allele2']
