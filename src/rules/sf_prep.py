@@ -1,15 +1,24 @@
 """Prep CAG PLINK data"""
 
-def mk_raw_bfiles(wc):
-    if wc.group=='44':
-        return DATA + 'raw/plink44/paths.txt.GSA-mGluR_enrichd_20011739X343186_B2.ped.fam'
-    elif wc.group=='185':
-        return DATA + 'raw/plink185/paths.txt.GSA-mGluR_enrichd_20011739X343186_B2.ped.fam'
+rule cp_cag_bfiles:
+    """Mv bfiles to folder to fix bim name."""
+    input:
+        bim = DATA + 'raw/plink{group}/paths.txt.GSA-mGluR_enrichd_20011739X343186_B2.ped_Forward.bim',
+        fam = DATA + 'raw/plink{group}/paths.txt.GSA-mGluR_enrichd_20011739X343186_B2.ped.fam',
+        bed = DATA + 'raw/plink{group}/paths.txt.GSA-mGluR_enrichd_20011739X343186_B2.ped.bed'
+    output:
+        bim = DATA + 'interim/cag_raw_bfiles/{group}.bim',
+        fam = DATA + 'interim/cag_raw_bfiles/{group}.fam',
+        bed = DATA + 'interim/cag_raw_bfiles/{group}.bed'
+    run:
+        shell('cp {input.bim} {output.bim}')
+        shell('cp {input.fam} {output.fam}')
+        shell('cp {input.bed} {output.bed}')
 
-rule discard_samples:
+rule discard_cag_samples:
     """These should not be in study."""
     input:
-        f = mk_raw_bfiles,
+        f = DATA + 'interim/cag_raw_bfiles/{group}.fam',
         d = DATA + 'processed/DISCARD_SAMPLES'
     output:
         DATA + 'interim/bfiles_cag/{group}.fam'
@@ -18,10 +27,10 @@ rule discard_samples:
     log:
         LOG + 'prep/discard.{group}'
     shell:
-        """plink --bfile $(dirname {input.f})/paths.txt.GSA-mGluR_enrichd_20011739X343186_B2.ped \
+        """plink --bfile $(dirname {input.f})/{wildcards.group} \
         --remove {input.d} --make-bed --out $(dirname {output})/{wildcards.group} &> {log}"""
 
-rule fix_bfiles:
+rule fix_cag_bfiles:
     """Fill in pheno and gender.
        Missing samples.
     """
@@ -88,12 +97,12 @@ rule rm_dups_and_onc:
     log:
         LOG + 'prep/discard_onc.{group}'
     shell:
-        "cat {input.o1} {input.o2} {input.d} > tmp_samples && "
+        "cat {input.o1} {input.o2} {input.d} > tmp_samples.{wildcards.group} && "
         "plink --bfile  {DATA}interim/bfiles/{wildcards.group} "
-        "--remove tmp_samples --make-bed --out $(dirname {output})/{wildcards.group} &> {log} && "
-        " rm tmp_samples"
+        "--remove tmp_samples.{wildcards.group} --make-bed --out $(dirname {output})/{wildcards.group} &> {log} && "
+        " rm tmp_samples.{wildcards.group}"
 
-rule combine_bfiles:
+rule combine_cag_bfiles:
     input:
         f = expand(DATA + 'interim/bfiles_rm_samples/{group}.fam', group=(44, 185)),
         m = DATA + 'processed/MANIFEST.csv'
