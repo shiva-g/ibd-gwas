@@ -33,5 +33,11 @@
     * 1% to 5%        189979
     * Below 1%        49089
     * Greater 5%      317969
+    
+### Imputation
+* Michigan Imputation Server v1.0.4
+* EUR sample subset
+* Reference Panel: hrc.r1.1.2016
+* Phasing: eagle
 
 ### Polygenic risk score
