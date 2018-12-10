@@ -20,6 +20,7 @@
 * Remove 20668 variants where the position matches, but allele1 or allele2 do not across the study and hapmap.
 * Use plink to combine HapMap and study plink files with merge-mode 1 (concensus) and merge-equal-pos. Apply SNP filters.
 * Use plink to make MDS coordinates from 153443 variants across 44 cases, 182 controls, and 209 HapMap samples.
+* [Plot](plots/hapmap_mds.png)
 
 ### QC
 * sample missing table: /mnt/isilon/microbiome/perry/ibd-gwas/data/interim/missing_test/3groups.imiss
