@@ -48,10 +48,12 @@
 * [Hires plot](plots/eur_HIGH-RES_PLOT_2018-12-07.png)
 
 #### PRSicse
-* Set     Threshold       R2      P       Coefficient     Standard.Error  Num_SNP
-* Base    0.0001  0.183325        5.87979e-06     287.047 63.3565 222
-* Base    0.0024  0.183807        5.69032e-06     287.819 63.4301 223
+| Set |    Threshold   |    R2   |   P   |    Coefficient  |   Standard.Error | Num_SNP |
+| ---- | ----- | ----- | ----- | ----- | ----- | ----- |
+| Base |   0.0001 | 0.183325    |    5.87979e-06   |  287.047  | 63.3565  | 222 |
+| Base |   0.0024 | 0.183807   |     5.69032e-06  |   287.819 | 63.4301  |223 |
 
 #### Summary
-* Phenotype       Set     Threshold       PRS.R2  Full.R2 Null.R2 Prevalence      Coefficient     Standard.Error  P       Num_SNP
-* xxx       Base    0.0024  0.183807        0.183807        0       -       287.819 63.4301 5.69032e-06     223
+| Phenotype  |     Set   |  Threshold   |    PRS.R2  | Full.R2 | Null.R2 | Prevalence  |    Coefficient |    Standard.Error | P    |   Num_SNP |
+| -| ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | --- |
+| -    |   Base  |  0.0024 | 0.183807    |    0.183807   |     0   |    -   |    287.819 | 63.4301 | 5.69032e-06  |   223 |
