@@ -38,14 +38,6 @@ rule fix_bfiles:
         bed = input.i.replace('.fam', '.bed')
         shell('cp {bed} {DATA}interim/bfiles/{wildcards.group}.bed')
 
-        # if wildcards.group=='44':
-        #     pheno = '2' # case
-        # elif wildcards.group=='185':
-        #     pheno = '1' # control
-        # else:
-        #     pheno = 1/0
-        #sex = '1' # male
-        df = pd.read_csv(input.m)
         def calc_sex(row):
             if row['gender']=='Male':
                 return '1'
@@ -56,6 +48,7 @@ rule fix_bfiles:
                 print('no sex', row)
                 return 'wtf'
 
+        df = pd.read_csv(input.m)
         df.loc[:, 'sex'] = df.apply(calc_sex, axis=1)
         sex = {row['IID']:row['sex'] for _, row in df.iterrows()}
         pheno = {row['IID']:row['HC or IBD or ONC'] for _, row in df.iterrows()}
@@ -65,25 +58,22 @@ rule fix_bfiles:
                 sp = line.strip().split()
                 iid = sp[1]
 
-                if sex[iid] != 'wtf':
-                    if pheno[iid]=='HC':
-                        p = '1'
-                    elif pheno[iid] == 'IBD':
-                        p = '2'
-                    elif pheno[iid] == 'ONC':
-                        p = '1'
-                        print('onc??', wildcards.group, iid, pheno[iid], trans[iid])
-                    else:
-                        print(iid, pheno[iid])
-                        #i = 1/0
-
-                    if pheno[iid]=='ONC':
-                        print(' '.join(sp[:-2] + [sex[iid], p]), file=fonc)
-
-                    print(' '.join(sp[:-2] + [sex[iid], p]), file=fout)
+                if pheno[iid]=='HC':
+                    p = '1'
+                elif pheno[iid] == 'IBD':
+                    p = '2'
+                elif pheno[iid] == 'ONC':
+                    p = '1'
+                    print('onc??', wildcards.group, iid, pheno[iid], trans[iid])
                 else:
-                    print(' '.join(sp[:-2] + ['1', '1']), file=fout)
-                    print('miss', iid, trans[iid])
+                    print(iid, pheno[iid])
+                    i = 1/0
+
+                # collect samples to remvoe later
+                if pheno[iid]=='ONC':
+                    print(' '.join(sp[:-2] + [sex[iid], p]), file=fonc)
+
+                print(' '.join(sp[:-2] + [sex[iid], p]), file=fout)
 
 rule rm_dups_and_onc:
     input:
