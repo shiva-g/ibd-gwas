@@ -5,7 +5,8 @@ rule format_manifest:
            cag1 = DATA + 'raw/cag/IRB_Microbiome_0.csv',
            cag2 = DATA + 'raw/cag/IRB_Microbiome11-2-18.csv'
     output:
-        o = DATA + 'processed/MANIFEST.csv'
+        o = DATA + 'processed/MANIFEST.csv',
+        d = DATA + 'processed/DISCARD_SAMPLES'
     run:
         new_cag = {'2015_CHOP_MIC_BAL_FA071_SUB':'2015_CHOP_MIC_BAL_FAM071_SUB',
                    '2015_CHOP_MIC_BAL_FAM092_sub':'2015_CHOP_MIC_BAL_FAM092_SUB',
@@ -31,9 +32,12 @@ rule format_manifest:
         cag = pd.concat([cag1, cag2])[['Sample_ID', 'SentrixBarcode_A', 'SentrixPosition_A']].rename(columns={'Sample_ID':'SSID'})
         cag.loc[:, 'IID'] = cag.apply(lambda row: str(row['SentrixBarcode_A']) + '_' + row['SentrixPosition_A'], axis=1)
         discard_cag = ('2018_CHOP_BAL_VEO_022', '2015_CHOP_MIC_BAL_FAM106_SUB',
-                      '2015_CHOP_MIC_BAL_FAM018_SUB', '2015_CHOP_MIC_BAL_FAM076_SUB',
-                      '2015_CHOP_MIC_BAL_FAM101_SUB')
+                       '2015_CHOP_MIC_BAL_FAM018_SUB', '2015_CHOP_MIC_BAL_FAM076_SUB',
+                       '2015_CHOP_MIC_BAL_FAM101_SUB')
         crit = cag.apply(lambda row: not row['SSID'] in discard_cag, axis=1)
+        discard_df = cag[~crit]
+        discard_df.loc[:, 'tmp'] = discard_df.apply(lambda row: '0 ' + row['IID'] + ' 0 0 0 -9', axis=1)
+        discard_df[['tmp']].to_csv(output.d, index=False, header=None)
         cag.loc[:, 'SSID'] = cag.apply(rename_cag, axis=1)
 
         ibd = pd.read_excel(input.ibd, sheet_name='Has GWAS', skiprows=2)

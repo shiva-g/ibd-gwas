@@ -6,15 +6,33 @@ def mk_raw_bfiles(wc):
     elif wc.group=='185':
         return DATA + 'raw/plink185/paths.txt.GSA-mGluR_enrichd_20011739X343186_B2.ped.fam'
 
+rule discard_samples:
+    """These should not be in study."""
+    input:
+        f = mk_raw_bfiles,
+        d = DATA + 'processed/DISCARD_SAMPLES'
+    output:
+        DATA + 'interim/bfiles_cag/{group}.fam'
+    singularity:
+        PLINK
+    log:
+        LOG + 'prep/discard.{group}'
+    shell:
+        """plink --bfile $(dirname {input.f})/paths.txt.GSA-mGluR_enrichd_20011739X343186_B2.ped \
+        --remove {input.d} --make-bed --out $(dirname {output})/{wildcards.group} &> {log}"""
+
 rule fix_bfiles:
     """Fill in pheno and gender.
        Missing samples.
     """
-    input:  i = mk_raw_bfiles,
-            m = DATA + 'processed/MANIFEST.csv'
-    output: expand(DATA + 'interim/bfiles/{{group,44|185}}.{suffix}', suffix = ('fam', 'bim', 'bed') )
+    input:
+        i = DATA + 'interim/bfiles_cag/{group}.fam',
+        m = DATA + 'processed/MANIFEST.csv'
+    output:
+        expand(DATA + 'interim/bfiles/{{group,44|185}}.{suffix}', suffix = ('fam', 'bim', 'bed') ),
+        DATA + 'processed/onc_samples.{group}'
     run:
-        bim = input.i.replace('.fam', '_Forward.bim')
+        bim = input.i.replace('.fam', '.bim')
         shell('cp {bim} {DATA}interim/bfiles/{wildcards.group}.bim')
 
         bed = input.i.replace('.fam', '.bed')
@@ -34,6 +52,7 @@ rule fix_bfiles:
             elif row['gender']=='Female':
                 return '2'
             else:
+                i = 1/0
                 print('no sex', row)
                 return 'wtf'
 
@@ -41,7 +60,7 @@ rule fix_bfiles:
         sex = {row['IID']:row['sex'] for _, row in df.iterrows()}
         pheno = {row['IID']:row['HC or IBD or ONC'] for _, row in df.iterrows()}
         trans = {row['IID']:row['SSID'] for _, row in df.iterrows()}
-        with open(input.i) as f, open(DATA + 'interim/bfiles/' + wildcards.group + '.fam', 'w') as fout:
+        with open(input.i) as f, open(DATA + 'interim/bfiles/' + wildcards.group + '.fam', 'w') as fout, open(DATA + 'processed/onc_samples.' + wildcards.group, 'w') as fonc:
             for line in f:
                 sp = line.strip().split()
                 iid = sp[1]
@@ -58,14 +77,36 @@ rule fix_bfiles:
                         print(iid, pheno[iid])
                         #i = 1/0
 
+                    if pheno[iid]=='ONC':
+                        print(' '.join(sp[:-2] + [sex[iid], p]), file=fonc)
+
                     print(' '.join(sp[:-2] + [sex[iid], p]), file=fout)
                 else:
                     print(' '.join(sp[:-2] + ['1', '1']), file=fout)
                     print('miss', iid, trans[iid])
 
+rule rm_dups_and_onc:
+    input:
+        o1 = DATA + 'processed/onc_samples.44',
+        o2 = DATA + 'processed/onc_samples.185',
+        d = DATA + 'raw/conrad/dup_samples',
+        b = expand(DATA + 'interim/bfiles/{group}.fam', group = (44, 185) ),
+    output:
+        DATA + 'interim/bfiles_rm_samples/{group}.fam'
+    singularity:
+        PLINK
+    log:
+        LOG + 'prep/discard_onc.{group}'
+    shell:
+        "cat {input.o1} {input.o2} {input.d} > tmp_samples && "
+        "plink --bfile  {DATA}interim/bfiles/{wildcards.group} "
+        "--remove tmp_samples --make-bed --out $(dirname {output})/{wildcards.group} &> {log} && "
+        " rm tmp_samples"
+
 rule combine_bfiles:
     input:
-        expand(DATA + 'interim/bfiles/{group}.fam', group=(44, 185))
+        f = expand(DATA + 'interim/bfiles_rm_samples/{group}.fam', group=(44, 185)),
+        m = DATA + 'processed/MANIFEST.csv'
     output:
         DATA + 'interim/bfiles/3groups.fam'
     singularity:
@@ -73,5 +114,5 @@ rule combine_bfiles:
     log:
         LOG + 'prep/combine_44_185'
     shell:
-        "plink --bfile {DATA}interim/bfiles/185 --bmerge {DATA}interim/bfiles/44 "
-        "--remove {CONFIG}dup_samples --chr 1-22, x --make-bed --out {DATA}interim/bfiles/3groups &> {log}"
+        "plink --bfile {DATA}interim/bfiles_rm_samples/185 --bmerge {DATA}interim/bfiles_rm_samples/44 "
+        "--chr 1-22, x --make-bed --out {DATA}interim/bfiles/3groups &> {log}"
