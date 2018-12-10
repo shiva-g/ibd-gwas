@@ -35,8 +35,23 @@
     
 ### Imputation
 * Michigan Imputation Server v1.0.4
-* EUR sample subset after filtering missing samples
+* EUR sample subset after filtering missing samples (84 HC, 87 IBD)
 * Reference Panel: hrc.r1.1.2016
 * Phasing: eagle
 
 ### Polygenic risk score
+* 227 of 232 base variants included (4 discarded b/c of mismatch)
+* 223 variants after clumping
+* 1 region(s) with p-value less than 1e-5
+* these results are inflated due to the overfitting
+* [Barplot](plots/eur_BARPLOT_2018-12-07.png)
+* [Hires plot](plots/eur_HIGH-RES_PLOT_2018-12-07.png)
+
+#### PRSicse
+* Set     Threshold       R2      P       Coefficient     Standard.Error  Num_SNP
+* Base    0.0001  0.183325        5.87979e-06     287.047 63.3565 222
+* Base    0.0024  0.183807        5.69032e-06     287.819 63.4301 223
+
+#### Summary
+* Phenotype       Set     Threshold       PRS.R2  Full.R2 Null.R2 Prevalence      Coefficient     Standard.Error  P       Num_SNP
+* -       Base    0.0024  0.183807        0.183807        0       -       287.819 63.4301 5.69032e-06     223
