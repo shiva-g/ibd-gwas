@@ -24,10 +24,10 @@ rule mk_coords_hapmap:
     shell:
         """awk '{{print "chr" $1, $4 -1, $4, $2 }}' {input} | sed 's/chr23/chrX/' | sed 's/chr24/chrY/' > {output}"""
 
-rule dl_chain_file:
-    input:  HTTP.remote('hgdownload.cse.ucsc.edu/goldenPath/hg18/liftOver/hg18ToHg19.over.chain.gz', insecure=True, keep_local=True, allow_redirects=True)
-    output: DATA + 'raw/ucsc/hg18ToHg19.over.chain.gz'
-    shell:  'mv {input} {output}'
+#rule dl_chain_file:
+#    input:  HTTP.remote('hgdownload.cse.ucsc.edu/goldenPath/hg18/liftOver/hg18ToHg19.over.chain.gz', insecure=True, keep_local=True, allow_redirects=True)
+#    output: DATA + 'raw/ucsc/hg18ToHg19.over.chain.gz'
+#    shell:  'mv {input} {output}'
 
 rule lift_hapmap:
     input:
