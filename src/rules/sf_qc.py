@@ -67,7 +67,7 @@ rule summarize_freq:
 
         df.loc[:, 'group'] = df.apply(assign_class, axis=1)
         df.groupby('group').size().reset_index().to_csv(output.o, index=False, sep='\t')
-        
+
 rule check_hwe:
     input:
         expand(DATA + 'interim/bfiles_filter_samples_nox/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
