@@ -1,6 +1,6 @@
 ### SNP filters
 * Start with 683369 markers across 118 cases and 99 controls. 
-* Use plink to remove 97585 monogenic snps and markers not called for more than 5% of samples (geno 0.05). 
+* Use plink to remove 97585 monomorphic snps and markers not called for more than 5% of samples (geno 0.05). 
 * Remove 1363 duplicated variants and 4560 positions that appeared more than once with plink.
 * Remove 3 samples with more than 5% of markers not called (plink mind 0.05).
     *   IBD case 201939090179_R06C01          N    52791   557037  0.09477
@@ -25,8 +25,8 @@
 ### QC
 * sample missing table: /mnt/isilon/microbiome/perry/ibd-gwas/data/interim/missing_test/3groups.imiss
 * hwe (--hardy) run after filtering samples with too many missing targets and removing chrX, but before indep. 
-    * AFF: 1895 targets p<0.001. 7511 targets p<0.01
-    * UNAFF: 2058 targets p<0.001. 7932 targets p<0.01
+    * AFF: 1895 targets p<0.001. 7511 targets p<0.01 (might have real signal)
+    * UNAFF controls: 2058 targets p<0.001. 7932 targets p<0.01
 * gender check (--check-sex) run after indep filter shows two conflicts F of .08 and .06
 * case vs control missing per target (--test-missing) run after filtering targets with high missing rates and removing chrX. 344 markers have p<0.05. 76 p<0.01. 7 p<0.001
 * mafs after indep
