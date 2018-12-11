@@ -54,9 +54,7 @@ rule prep_gwas:
         cols = ['CHR', 'BP', 'SNP', 'A1', 'A2', 'EUR_OR', 'EUR_PVAL', 'EUR_SE']
         df[cols].to_csv(output.o, index=False, sep=' ')
 
-rule for_imputation:
-    input: expand(DATA + 'interim/eur_vcf/3groups.{chr}.vcf.gz', chr=range(1,23))
-
+# after imputation
 rule unzip_imputed:
     input:
         DATA + 'interim/imputed/chr_{c}.zip'
