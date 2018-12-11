@@ -62,7 +62,9 @@ rule fix_cag_bfiles:
         sex = {row['IID']:row['sex'] for _, row in df.iterrows()}
         pheno = {row['IID']:row['HC or IBD or ONC'] for _, row in df.iterrows()}
         trans = {row['IID']:row['SSID'] for _, row in df.iterrows()}
-        with open(input.i) as f, open(DATA + 'interim/bfiles/' + wildcards.group + '.fam', 'w') as fout, open(DATA + 'processed/onc_samples.' + wildcards.group, 'w') as fonc:
+        with open(input.i) as f, \
+        open(DATA + 'interim/bfiles/' + wildcards.group + '.fam', 'w') as fout, \
+        open(DATA + 'processed/onc_samples.' + wildcards.group, 'w') as fonc:
             for line in f:
                 sp = line.strip().split()
                 iid = sp[1]
@@ -99,8 +101,9 @@ rule rm_dups_and_onc:
     shell:
         "cat {input.o1} {input.o2} {input.d} > tmp_samples.{wildcards.group} && "
         "plink --bfile  {DATA}interim/bfiles/{wildcards.group} "
-        "--remove tmp_samples.{wildcards.group} --make-bed --out $(dirname {output})/{wildcards.group} &> {log} && "
-        " rm tmp_samples.{wildcards.group}"
+        "--remove tmp_samples.{wildcards.group} --make-bed "
+        "--out $(dirname {output})/{wildcards.group} &> {log} && "
+        "rm tmp_samples.{wildcards.group}"
 
 rule combine_cag_bfiles:
     input:

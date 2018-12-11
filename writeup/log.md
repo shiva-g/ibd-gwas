@@ -1,3 +1,13 @@
+### 20181211
+* Monomorphic sites: 196 on chr22. I thought I removed these.
+* new impute run done
+
+### 20181210
+* rm another sample
+* switch from 0/1 format to nuc
+* two more gender issues
+* in impute server queue all day
+
 ### 20181207
 * have new sample data
 
