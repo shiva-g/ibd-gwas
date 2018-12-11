@@ -192,6 +192,21 @@ rule plot_with_hapmap:
         R("""
         require(ggplot2)
         d = read.delim("{input}", header=TRUE, sep='\t')
-        p = ggplot(data=d) + geom_point(aes(x=C1, y=C2, colour=race), alpha=0.25) + theme_bw() + facet_grid(group~race)
+        p = ggplot(data=d) + geom_point(aes(x=C1, y=C2, colour=race), alpha=0.25) +
+        theme_bw() + facet_grid(group~race)
+        ggsave("{output}", p, units="cm", width=60)
+        """)
+
+rule plot_eur_ibd:
+    input:
+        DATA + 'interim/mds_dat_ibd/3groups.dat'
+    output:
+        PLOTS + 'eur_mds.png'
+    run:
+        R("""
+        require(ggplot2)
+        d = read.delim("{input}", header=TRUE, sep='\t')
+        p = ggplot(data=d) + geom_point(aes(x=C1, y=C2, colour=race, shape=group), alpha=0.25) +
+        theme_bw()
         ggsave("{output}", p, units="cm", width=60)
         """)

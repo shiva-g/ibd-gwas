@@ -63,7 +63,7 @@ rule unzip_imputed:
     output:
         DATA + 'interim/imputed/chr{c}.dose.vcf.gz'
     shell:
-        'unzip -o -P VUekgAD02lfhM5 -d {DATA}/interim/imputed/ {input}'
+        'unzip -o -P 6GMoMXi0fkzQ3w -d {DATA}/interim/imputed/ {input}'
 
 rule vcf_to_bfiles:
     input:
