@@ -40,7 +40,7 @@
 * Phasing: eagle
 
 ### Polygenic risk score
-* 227 of 232 base variants included (4 discarded b/c of mismatch). [Base snps](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4881818/)
+* 227 of 232 base variants included (4 discarded b/c of mismatch). [Base snps](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4881818/). [Nature tables](https://www.nature.com/articles/ng.3359#supplementary-information)
 * 223 variants after clumping
 * 1 region(s) with p-value less than 1e-5
 * these results are inflated due to the overfitting
