@@ -147,9 +147,24 @@ rule mk_rs_names:
         df.loc[:, 'id'] = df.apply(lambda row: str(row['CHR']) + ':' + str(row['BP']), axis=1)
         df[['id', 'SNP']].to_csv(output.o, index=False, sep=' ', header=None)
 
+rule update_fam:
+    """Mk fam for imputed files b/c imputation removed data"""
+    input:
+        imputed_fam = DATA + 'interim/bfiles_imputed_combined/eur.fam',
+        data_fam = DATA + 'interim/bfiles_eur/3groups.fam'
+    output:
+        o = DATA + 'interim/tmp.fam'
+    run:
+        cols= ['fid', 'iid', 'f', 'm', 'sex', 'pheno']
+        df_imputed = pd.read_csv(input.imputed_fam, sep=' ', header=None, names=cols)[['iid']]
+        df_dat = pd.read_csv(input.data_fam, sep=' ', header=None, names=cols)
+        df_dat.loc[:, 'iid'] = df_dat.apply(lambda row: '0_' + row['iid'], axis=1)
+        df = pd.merge(df_imputed, df_dat, how='left', on='iid')
+        df[cols].to_csv(output.o, sep=' ', index=False, header=False)
+
 rule rename_rs_imputed_bfiles:
     input:
-        fam = DATA + 'interim/bfiles_eur/3groups.fam',
+        fam = DATA + 'interim/tmp.fam',
         f = DATA + 'interim/bfiles_imputed_combined/eur.fam',
         rs_names = DATA + 'interim/rs_names'
     output:
@@ -159,10 +174,11 @@ rule rename_rs_imputed_bfiles:
     log:
         LOG + 'prs/rename_rs'
     shell:
-        "plink --bfile {DATA}/interim/bfiles_imputed_combined/eur --update-name {input.rs_names} --make-bed "
+        "plink --bfile {DATA}/interim/bfiles_imputed_combined/eur "
+        "--update-name {input.rs_names} --make-bed "
         "--out {DATA}processed/bfiles_imputed/eur &> {log} && "
-        """sed "s/^0 /0 0_/g" {input.fam} > {output}"""
-        
+        """cp {input.fam} {output}"""
+
 rule prsice:
     input:
         b = DATA + 'processed/bfiles_imputed/eur.fam',
