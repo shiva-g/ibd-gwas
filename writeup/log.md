@@ -1,5 +1,5 @@
 ### 20181211
-* Monomorphic sites: 196 on chr22. I thought I removed these.
+* Monomorphic sites: 196 on chr22. I thought I removed these. I bet these are monomorphic for just eur.
 * new impute run done
 
 ### 20181210
