@@ -208,5 +208,5 @@ rule plot_eur_ibd:
         d = read.delim("{input}", header=TRUE, sep='\t')
         p = ggplot(data=d) + geom_point(aes(x=C1, y=C2, colour=race, shape=group), alpha=0.25) +
         theme_bw()
-        ggsave("{output}", p, units="cm", width=60)
+        ggsave("{output}", p)
         """)
