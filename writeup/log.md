@@ -112,9 +112,9 @@
 ### 20181115
 * Use hapmap plink files for ancestry MDS http://zzz.bwh.harvard.edu/plink/res.shtml
 
-### 2018114
+### 20181114
 * setup plink pipeline
 
-### 2018113
+### 20181113
 * gwas meeting
 * what are we testing?
