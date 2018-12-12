@@ -20,7 +20,9 @@
     * ~~snp count before imputing~~, and # of imputed snps
     * new mafs after imputation
     * ~~R2 in vcf limit of 0.3 and 1% maf on imputation results~~
-    * what is clumping r2 for prsice? what are the mismatched snps?
+    * ~~what is clumping r2 for prsice?~~ what are the mismatched snps?
+        * --clump-r2 0.1
+        * --clump-kb 250 (therefore a 500kb window with the index SNP at the center)
     * ~~empirical prsice pval~~
     * ~~rm prsice plots~~
     * use prsice scores in best to look at hc, ibd, late, early dists and roc
