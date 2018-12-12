@@ -3,6 +3,7 @@
     * code changed
     * indep filter does nothing
     * I was not applying the snp list produced by indep--pairwise
+    * hapmap clustering w/ real indep snps kicks out 5 eur samples
 * empirical prsice pval
 
 ### 20181211
