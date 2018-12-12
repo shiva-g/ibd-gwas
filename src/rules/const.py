@@ -24,6 +24,7 @@ DATA = PWD + 'data/'
 LOG = PWD + 'log/'
 CONFIG = PWD + 'configs/'
 PLOTS = PWD + 'writeup/plots/'
+ENVS = PWD + 'envs/'
 
 # containers
 PLINK = "docker://quay.research.chop.edu/evansj/plink-docker:181012"

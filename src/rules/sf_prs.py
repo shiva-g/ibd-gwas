@@ -68,6 +68,8 @@ rule limit_imputed_r2:
         DATA + 'interim/imputed_vcf/chr{c}.dose.vcf.gz'
     output:
         DATA + 'interim/imputed_r2_limit_vcf/chr{c}.vcf.gz'
+    conda:
+        ENVS + 'bcftools-env.yml'
     shell:
         'bcftools filter --include "INFO/R2>0.3 {input} | bgzip -c > {output}'
 
