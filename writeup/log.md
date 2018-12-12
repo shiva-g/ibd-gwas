@@ -2,20 +2,22 @@
 * MAF calcs before indep, on QC snps
     * code changed
     * indep filter does nothing
+    * I was not applying the snp list produced by indep--pairwise
+* empirical prsice pval
 
 ### 20181211
 * Monomorphic sites: 196 on chr22. I thought I removed these. I bet these are monomorphic for just eur.
 * new impute run done
 * mtg
     * check -het. Do flipped gender samples have bad het scores? AFR should have more het than EUR
-    * MAF calcs before indep, on QC snps
+    * ~~MAF calcs before indep, on QC snps~~
     * snp count before imputing, and # of imputed snps
     * new mafs after imputation
     * R2 in vcf limit of 0.3 and 1% maf on imputation results
     * what is clumping r2 for prsice? what are the mismatched snps?
     * empirical prsice pval
-    * rm prsice plots
-    * use prsice scores in best  to look at hc, ibd, late, early dists and roc
+    * ~~rm prsice plots~~
+    * use prsice scores in best to look at hc, ibd, late, early dists and roc
     * veo vs older prs
     * plink assoc veo vs old, veo vs hc, ibd vs hc, all vs hc
  
