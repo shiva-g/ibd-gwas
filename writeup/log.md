@@ -6,6 +6,7 @@
     * hapmap clustering w/ real indep snps kicks out 5 eur samples
 * empirical prsice pval
 * het check
+* R2 in vcf limit of 0.3 and 1% maf on imputation results
 
 ### 20181211
 * Monomorphic sites: 196 on chr22. I thought I removed these. I bet these are monomorphic for just eur.
@@ -13,11 +14,11 @@
 * mtg
     * ~~check -het.~~ Do flipped gender samples have bad het scores? AFR should have more het than EUR
     * ~~MAF calcs before indep, on QC snps~~
-    * snp count before imputing, and # of imputed snps
+    * ~~snp count before imputing~~, and # of imputed snps
     * new mafs after imputation
-    * R2 in vcf limit of 0.3 and 1% maf on imputation results
+    * ~~R2 in vcf limit of 0.3 and 1% maf on imputation results~~
     * what is clumping r2 for prsice? what are the mismatched snps?
-    * empirical prsice pval
+    * ~~empirical prsice pval~~
     * ~~rm prsice plots~~
     * use prsice scores in best to look at hc, ibd, late, early dists and roc
     * veo vs older prs
