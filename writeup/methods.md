@@ -28,6 +28,7 @@
     * AFF: 1895 targets p<0.001. 7511 targets p<0.01 (might have real signal)
     * UNAFF controls: 2058 targets p<0.001. 7932 targets p<0.01
 * gender check (--check-sex) run after indep filter shows two conflicts F of .08 and .06
+* --het check: 0.08715, largest F inbreeding coefficient estimate; smallest -0.09699
 * case vs control missing per target (--test-missing) run after filtering targets with high missing rates and removing chrX. 344 markers have p<0.05. 76 p<0.01. 7 p<0.001
 * mafs after QC
     * Below 1%        50637
