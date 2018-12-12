@@ -156,8 +156,10 @@ rule update_fam:
         o = DATA + 'interim/tmp.fam'
     run:
         cols= ['fid', 'iid', 'f', 'm', 'sex', 'pheno']
-        df_imputed = pd.read_csv(input.imputed_fam, sep=' ', header=None, names=cols)[['iid']]
-        df_dat = pd.read_csv(input.data_fam, sep=' ', header=None, names=cols)
+        int_cols= ['fid', 'f', 'm', 'sex', 'pheno']
+        dtype={'fid':int, 'f':int, 'm':int, 'sex':int, 'pheno':int}
+        df_imputed = pd.read_csv(input.imputed_fam, sep=' ', header=None, names=cols, dtype=dtype)[['iid']]
+        df_dat = pd.read_csv(input.data_fam, sep=' ', header=None, names=cols, dtype=dtype)
         df_dat.loc[:, 'iid'] = df_dat.apply(lambda row: '0_' + row['iid'], axis=1)
         df = pd.merge(df_imputed, df_dat, how='left', on='iid')
         df[cols].to_csv(output.o, sep=' ', index=False, header=False)
@@ -187,12 +189,12 @@ rule prsice:
         DATA + 'interim/prsice/eur.summary'
     singularity:
         PRSICE
-    threads: 8
+    threads: 16
     shell:
         'Rscript /usr/local/bin/PRSice.R --dir {DATA}/interim/prsice/ '
         '--snp SNP --chr CHR --bp BP --A1 A1 --A2 A2 --stat EUR_OR --se EUR_SE --pvalue EUR_PVAL '
         '--prsice /usr/local/bin/PRSice_linux --keep-ambig '
-        '--base {input.a} '
+        '--base {input.a} --perm 1000000 '
         '--target {DATA}processed/bfiles_imputed/eur '
         '--thread {threads} --binary-target T '
         '--out {DATA}interim/prsice/eur'

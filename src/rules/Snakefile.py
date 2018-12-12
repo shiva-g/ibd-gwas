@@ -19,7 +19,8 @@ rule before_imputation:
         expand(DATA + 'interim/missing_test/3groups.{miss}', miss=('imiss', 'lmiss') ),
         DATA + 'interim/sex_check/3groups.sexcheck',
         DATA + 'interim/qc_hwe/3groups.counts',
-        DATA + 'interim/qc_freq_before_impute/3groups.counts'
+        DATA + 'interim/qc_freq_before_impute/3groups.counts',
+        DATA + 'interim/qc_het/3groups.het'
 
 rule after_imputation:
     input:

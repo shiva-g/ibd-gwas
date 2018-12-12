@@ -85,7 +85,8 @@ rule summarize_freq:
 
 rule check_hwe:
     input:
-        expand(DATA + 'interim/bfiles_filter_samples_nox/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
+        f = DATA + 'interim/bfiles_filter_samples_nox/{group}.fam',
+        b = expand(DATA + 'interim/bfiles_filter_samples_nox/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
     output:
         DATA + 'interim/qc_hwe/{group}.hwe'
     singularity:
@@ -93,8 +94,22 @@ rule check_hwe:
     log:
         LOG + 'qc/{group}.hwe'
     shell:
-        "plink --bfile {DATA}interim/bfiles_filter_samples_nox/{wildcards.group} "
-        "--hardy --out {DATA}interim/qc_hwe/{wildcards.group} &> {log}"
+        "plink --bfile $(dirname {input.f})/{wildcards.group} "
+        "--hardy --out $(dirname {output})/{wildcards.group} &> {log}"
+
+rule check_het:
+    input:
+        f = DATA + 'interim/bfiles_indep_nox/{group}.fam',
+        b = expand(DATA + 'interim/bfiles_indep_nox/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
+    output:
+        DATA + 'interim/qc_het/{group}.het'
+    singularity:
+        PLINK
+    log:
+        LOG + 'qc/{group}.het'
+    shell:
+        "plink --bfile $(dirname {input.f})/{wildcards.group} "
+        "--het --out $(dirname {output})/{wildcards.group} &> {log}"
 
 rule summarize_hwe:
     input:
