@@ -7,6 +7,9 @@
 * empirical prsice pval
 * het check
 * R2 in vcf limit of 0.3 and 1% maf on imputation results
+* sample mixups
+    * HC 109 is strange: In the sample table from 11/28, the sample is in the Withdrawn tab b/c there are no samples. In the 12/10 table, the sample is moved to the Has GWAS tab. I'll drop this sample since it is a control.
+    * IBD case 087 is reported as white/black and clusters with the african group. It isn't included for the current EUR analysis, so the gender discrepancy won't matter until we do an AFR analysis.
 
 ### 20181211
 * Monomorphic sites: 196 on chr22. I thought I removed these. I bet these are monomorphic for just eur.
