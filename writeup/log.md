@@ -1,3 +1,8 @@
+### 20181212
+* MAF calcs before indep, on QC snps
+    * code changed
+    * indep filter does nothing
+
 ### 20181211
 * Monomorphic sites: 196 on chr22. I thought I removed these. I bet these are monomorphic for just eur.
 * new impute run done
