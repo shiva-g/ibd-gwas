@@ -7,7 +7,7 @@ IBD vs healthy
 * [Log](writeup/log.md)
 
 ### Run: 
-`conda create env create -f conda_reqs.yml`
+`conda create env create -f envs/project.yml`
 #### before imputation
 `snakemake -s Snakefile.py --use-singularity --singularity-args "-B /mnt/isilon/:/mnt/isilon" --use-conda -j22 before_imputation`
 #### impute with https://imputationserver.sph.umich.edu/index.html w/ data/iterim/eur_vcf/*vcf.gz and download imputed files to data/interim/imputed/
