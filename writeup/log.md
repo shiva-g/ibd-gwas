@@ -15,7 +15,7 @@
 * Monomorphic sites: 196 on chr22. I thought I removed these. I bet these are monomorphic for just eur.
 * new impute run done
 * mtg
-    * ~~check -het.~~ Do flipped gender samples have bad het scores? AFR should have more het than EUR
+    * ~~check het.~~ Do flipped gender samples have bad het scores? AFR should have more het than EUR
     * ~~MAF calcs before indep, on QC snps~~
     * ~~snp count before imputing~~, and # of imputed snps
     * new mafs after imputation
