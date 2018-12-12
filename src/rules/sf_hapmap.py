@@ -20,7 +20,7 @@ rule mk_coords_hapmap:
     input:
         DATA + 'interim/hapmap/hapmap_{pop}_r23a_filtered.bim'
     output:
-        DATA + 'interim/hapmap/{pop}.tolift'
+        DATA + 'interim/hapmap/{pop}.hg18.tolift'
     shell:
         """awk '{{print "chr" $1, $4 -1, $4, $2 }}' {input} | sed 's/chr23/chrX/' | sed 's/chr24/chrY/' > {output}"""
 
@@ -29,19 +29,19 @@ rule mk_coords_hapmap:
 #    output: DATA + 'raw/ucsc/hg18ToHg19.over.chain.gz'
 #    shell:  'mv {input} {output}'
 
-rule lift_hapmap:
-    input:
-        pos = DATA + 'interim/hapmap/{pop}.tolift',
-        chain = DATA + 'raw/ucsc/hg18ToHg19.over.chain.gz'
-    output:
-        mapped = DATA + 'interim/hapmap/{pop}.mapped',
-        unmapped = DATA + 'interim/hapmap/{pop}.unmapped'
-    shell:
-        "liftOver {input.pos} {input.chain} {output.mapped} {output.unmapped}"
+# rule lift_hapmap:
+#     input:
+#         pos = DATA + 'interim/hapmap/{pop}.tolift',
+#         chain = DATA + 'raw/ucsc/hg18ToHg19.over.chain.gz'
+#     output:
+#         mapped = DATA + 'interim/hapmap/{pop}.mapped',
+#         unmapped = DATA + 'interim/hapmap/{pop}.unmapped'
+#     shell:
+#         "liftOver {input.pos} {input.chain} {output.mapped} {output.unmapped}"
 
 rule hapmap_mapped_vars:
     input:
-        DATA + 'interim/hapmap/{pop}.mapped',
+        DATA + 'interim/hapmap/{pop}.fromhg18Tohg19.mapped',
     output:
         DATA + 'interim/hapmap/{pop}.snps'
     shell:

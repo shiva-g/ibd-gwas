@@ -5,6 +5,7 @@ include: "sf_manifest.py"
 include: "sf_filter.py"
 include: "sf_prep.py"
 include: "sf_qc.py"
+include: "sf_liftover.py"
 #include: "https://raw.githubusercontent.com/samesense/snakemake-liftover-workflow/master/Snakefile.py"
 include: "sf_hapmap.py"
 include: "sf_mds.py"
@@ -18,7 +19,7 @@ rule before_imputation:
         expand(DATA + 'interim/missing_test/3groups.{miss}', miss=('imiss', 'lmiss') ),
         DATA + 'interim/sex_check/3groups.sexcheck',
         DATA + 'interim/qc_hwe/3groups.counts',
-        DATA + 'interim/qc_freq/3groups.counts'
+        DATA + 'interim/qc_freq_before_impute/3groups.counts'
 
 rule after_imputation:
     input:

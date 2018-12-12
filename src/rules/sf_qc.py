@@ -37,24 +37,39 @@ rule missing:
         "plink --bfile {DATA}interim/bfiles_filter_snps_nox/{wildcards.group} "
         "--missing --test-missing --out {DATA}interim/missing_test/{wildcards.group} &> {log}"
 
-rule check_freq:
+rule check_freq_before_imputation:
     input:
-        expand(DATA + 'interim/bfiles_indep_nox/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
+        f = DATA + 'interim/bfiles_filter_samples_nox/{group}.fam',
+        b = expand(DATA + 'interim/bfiles_filter_samples_nox/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
     output:
-        DATA + 'interim/qc_freq/{group}.frq'
+        DATA + 'interim/qc_freq_before_impute/{group}.frq'
     singularity:
         PLINK
     log:
         LOG + 'qc/{group}.freq'
     shell:
-        "plink --bfile {DATA}interim/bfiles_indep_nox/{wildcards.group} "
-        "--freq --out {DATA}interim/qc_freq/{wildcards.group} &> {log}"
+        "plink --bfile $(dirname {input.f})/{wildcards.group} "
+        "--freq --out $(dirname {output})/{wildcards.group} &> {log}"
+
+rule check_freq_after_imputation:
+    input:
+        f = DATA + 'interim/bfiles_filter_samples_nox/{group}.fam',
+        b = expand(DATA + 'interim/bfiles_filter_samples_nox/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
+    output:
+        DATA + 'interim/qc_freq_after_impute/{group}.frq'
+    singularity:
+        PLINK
+    log:
+        LOG + 'qc/{group}.freq'
+    shell:
+        "plink --bfile $(dirname {input.f})/{wildcards.group} "
+        "--freq --out $(dirname {output})/{wildcards.group} &> {log}"
 
 rule summarize_freq:
     input:
-        i = DATA + 'interim/qc_freq/{group}.frq'
+        i = DATA + 'interim/qc_freq_{imputeStatus}_impute/{group}.frq'
     output:
-        o = DATA + 'interim/qc_freq/{group}.counts'
+        o = DATA + 'interim/qc_freq_{imputeStatus}_impute/{group}.counts'
     run:
         df = pd.read_csv(input.i, delim_whitespace=True)
         def assign_class(row):
