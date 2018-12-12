@@ -57,15 +57,24 @@ rule prep_gwas:
 # after imputation
 rule unzip_imputed:
     input:
-        DATA + 'interim/imputed/chr_{c}.zip'
+        DATA + 'interim/imputed_vcf/chr_{c}.zip'
     output:
-        DATA + 'interim/imputed/chr{c}.dose.vcf.gz'
+        DATA + 'interim/imputed_vcf/chr{c}.dose.vcf.gz'
     shell:
         'unzip -o -P 6GMoMXi0fkzQ3w -d {DATA}/interim/imputed/ {input}'
 
-rule vcf_to_bfiles:
+rule limit_imputed_r2:
     input:
-        DATA + 'interim/imputed/chr{chr}.dose.vcf.gz'
+        DATA + 'interim/imputed_vcf/chr{c}.dose.vcf.gz'
+    output:
+        DATA + 'interim/imputed_r2_limit_vcf/chr{c}.vcf.gz'
+    shell:
+        'bcftools filter --include "INFO/R2>0.3 {input} | bgzip -c > {output}'
+
+rule vcf_to_bfiles:
+    """Apply 1% maf cutoff."""
+    input:
+        DATA + 'interim/imputed_r2_limit_vcf/chr{chr}.vcf.gz'
     output:
         expand(DATA + 'interim/bfiles_imputed/chr{{chr}}.{suffix}', suffix=('fam', 'bed', 'bim') )
     singularity:
@@ -73,7 +82,7 @@ rule vcf_to_bfiles:
     log:
         LOG + 'prs/{chr}.vcf'
     shell:
-        "plink --vcf {input} --make-bed --const-fid 0 "
+        "plink --vcf {input} --make-bed --const-fid 0 --maf 0.01 "
         "--out {DATA}interim/bfiles_imputed/chr{wildcards.chr} &> {log}"
 
 rule merge_imputed_bfiles_ls:
