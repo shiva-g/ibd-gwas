@@ -3,6 +3,8 @@
 * `docker run --user $(id -u) -d -p 8080:80 -e DOCKER_CORES="4" -v /home/evansj/server/:/data/ --name mis-docker genepi/imputationserver`
 * it runs on refosco
 * local server does not allow HC ref data :(
+* plink association tests
+* prs for other groups
 
 ### 20181212
 * MAF calcs before indep, on QC snps
