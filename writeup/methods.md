@@ -40,6 +40,18 @@
 * EUR sample subset after filtering missing samples (72 HC, 92 IBD)
 * Reference Panel: hrc.r1.1.2016
 * Phasing: eagle
+* mafs after imputation
+    * Below 1%        
+    * 1% to 5%        
+    * Greater 5% 
+* Filter imputed results for imputed score R2>0.3 and maf>1%
+
+### Associations
+* Use plink to find associations for
+    * HC vs IBD
+    * HC vs VEO
+    * HC vs late IBD
+    * VEO vs late IBD
 
 ### Polygenic risk score
 * 227 of 232 base variants included (4 discarded b/c of mismatch). [Base snps](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4881818/). [Nature tables](https://www.nature.com/articles/ng.3359#supplementary-information)

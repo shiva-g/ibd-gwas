@@ -3,6 +3,9 @@
 * `docker run --user $(id -u) -d -p 8080:80 -e DOCKER_CORES="4" -v /home/evansj/server/:/data/ --name mis-docker genepi/imputationserver`
 * it runs on refosco
 * local server does not allow HC ref data :(
+* plink association tests
+* prs for other groups
+* ibd enhancers here? https://www.nature.com/articles/s41467-018-03766-z#additional-information
 
 ### 20181212
 * MAF calcs before indep, on QC snps
@@ -31,9 +34,9 @@
         * --clump-kb 250 (therefore a 500kb window with the index SNP at the center)
     * ~~empirical prsice pval~~
     * ~~rm prsice plots~~
-    * use prsice scores in best to look at hc, ibd, late, early dists and roc
-    * veo vs older prs
-    * plink assoc veo vs old, veo vs hc, ibd vs hc, all vs hc
+    * ~~use prsice scores in best to look at hc, ibd, late, early dists and roc~~
+    * ~~veo vs older prs~~
+    * ~~plink assoc veo vs old, veo vs hc, ibd vs hc, all vs hc~~
  
 ### 20181210
 * rm another sample
