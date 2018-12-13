@@ -1,3 +1,9 @@
+### 20181213
+* try impute server: https://imputationserver.readthedocs.io/en/latest/docker/
+* `docker run --user $(id -u) -d -p 8080:80 -e DOCKER_CORES="4" -v /home/evansj/server/:/data/ --name mis-docker genepi/imputationserver`
+* it runs on refosco
+* local server does not allow HC ref data :(
+
 ### 20181212
 * MAF calcs before indep, on QC snps
     * code changed
