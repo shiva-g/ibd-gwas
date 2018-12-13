@@ -12,6 +12,7 @@ include: "sf_mds.py"
 include: "sf_prep_imputation.py"
 include: "sf_clean_imputed.py"
 include: "sf_prs.py"
+include: "sf_assoc.py"
 
 rule before_imputation:
     input:
@@ -24,8 +25,9 @@ rule before_imputation:
         DATA + 'interim/qc_freq_before_impute/3groups.counts',
         DATA + 'interim/qc_het/3groups.het'
 
+G = ('early', 'all', 'late', 'ibd_all')
 rule after_imputation:
     input:
-        expand(PLOTS + '{group}.eur.prs.roc.png', group=('early', 'all', 'late', 'ibd_all')),
-        expand(PLOTS + '{group}.eur.prs.density.png', group=('early', 'all', 'late', 'ibd_all'))
-
+        expand(PLOTS + '{group}.eur.prs.roc.png', group=G),
+        expand(PLOTS + '{group}.eur.prs.density.png', group=G),
+        expand(DATA + 'interim/plink_assoc_fmt/{group}/eur.assoc', group=G)

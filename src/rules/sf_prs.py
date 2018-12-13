@@ -81,6 +81,7 @@ rule recode_fam_prsice_sample_subsets:
                     sample = sp[1]
                     pheno = str(phenos[sample])
                     print(' '.join(sp[:-1] + [pheno]), file=fout)
+
 rule prsice:
     input:
         b = DATA + 'interim/bfiles_imputed_grouped/{group}/eur.fam',
