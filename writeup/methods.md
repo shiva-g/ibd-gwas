@@ -40,6 +40,10 @@
 * EUR sample subset after filtering missing samples (72 HC, 92 IBD)
 * Reference Panel: hrc.r1.1.2016
 * Phasing: eagle
+* mafs after imputation
+    * Below 1%        
+    * 1% to 5%        
+    * Greater 5% 
 * Filter imputed results for imputed score R2>0.3 and maf>1%
 
 ### Associations
