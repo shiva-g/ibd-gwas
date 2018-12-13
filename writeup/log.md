@@ -33,9 +33,9 @@
         * --clump-kb 250 (therefore a 500kb window with the index SNP at the center)
     * ~~empirical prsice pval~~
     * ~~rm prsice plots~~
-    * use prsice scores in best to look at hc, ibd, late, early dists and roc
-    * veo vs older prs
-    * plink assoc veo vs old, veo vs hc, ibd vs hc, all vs hc
+    * ~~use prsice scores in best to look at hc, ibd, late, early dists and roc~~
+    * ~~veo vs older prs~~
+    * ~~plink assoc veo vs old, veo vs hc, ibd vs hc, all vs hc~~
  
 ### 20181210
 * rm another sample
