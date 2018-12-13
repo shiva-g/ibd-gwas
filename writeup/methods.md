@@ -50,13 +50,15 @@
 * [Barplot](plots/eur_BARPLOT_2018-12-11.png)
 * [Hires plot](plots/eur_HIGH-RES_PLOT_2018-12-11.png)
 
-#### PRSicse
+#### PRSicse IBD vs HC
 | Set |    Threshold   |    R2   |   P   |    Coefficient  |   Standard.Error | Num_SNP |
 | ---- | ----- | ----- | ----- | ----- | ----- | ----- |
 | Base  |  0.0001 | 0.195872  |      5.32139e-06  |   299.55 | 65.8106 | 222 |
 | Base  |  0.0024 | 0.196663   |     5.09771e-06  |   300.708 | 65.9343 | 223 |
 
-#### Summary
+#### Summary IBD vs HC
 | Phenotype  |     Set   |  Threshold   |    PRS.R2  | Full.R2 | Null.R2 | Prevalence  |    Coefficient |    Standard.Error | P    |   Num_SNP |
 | -| ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | --- |
 | -    | Base  |  0.0024 | 0.196663   |     0.196663    |    0   |    -  |     300.708 | 65.9343 | 5.09771e-06  |   223 |
+
+#### PRSicse IBD late vs early

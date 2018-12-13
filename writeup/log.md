@@ -1,3 +1,9 @@
+### 20181213
+* try impute server: https://imputationserver.readthedocs.io/en/latest/docker/
+* `docker run --user $(id -u) -d -p 8080:80 -e DOCKER_CORES="4" -v /home/evansj/server/:/data/ --name mis-docker genepi/imputationserver`
+* it runs on refosco
+* local server does not allow HC ref data :(
+
 ### 20181212
 * MAF calcs before indep, on QC snps
     * code changed
@@ -7,17 +13,22 @@
 * empirical prsice pval
 * het check
 * R2 in vcf limit of 0.3 and 1% maf on imputation results
+* sample mixups
+    * HC 109 is strange: In the sample table from 11/28, the sample is in the Withdrawn tab b/c there are no samples. In the 12/10 table, the sample is moved to the Has GWAS tab. I'll drop this sample since it is a control.
+    * IBD case 087 is reported as white/black and clusters with the african group. It isn't included for the current EUR analysis, so the gender discrepancy won't matter until we do an AFR analysis.
 
 ### 20181211
 * Monomorphic sites: 196 on chr22. I thought I removed these. I bet these are monomorphic for just eur.
 * new impute run done
 * mtg
-    * ~~check -het.~~ Do flipped gender samples have bad het scores? AFR should have more het than EUR
+    * ~~check het.~~ Do flipped gender samples have bad het scores? AFR should have more het than EUR
     * ~~MAF calcs before indep, on QC snps~~
     * ~~snp count before imputing~~, and # of imputed snps
     * new mafs after imputation
     * ~~R2 in vcf limit of 0.3 and 1% maf on imputation results~~
-    * what is clumping r2 for prsice? what are the mismatched snps?
+    * ~~what is clumping r2 for prsice?~~ what are the mismatched snps?
+        * --clump-r2 0.1
+        * --clump-kb 250 (therefore a 500kb window with the index SNP at the center)
     * ~~empirical prsice pval~~
     * ~~rm prsice plots~~
     * use prsice scores in best to look at hc, ibd, late, early dists and roc
