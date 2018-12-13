@@ -9,6 +9,8 @@ include: "sf_liftover.py"
 #include: "https://raw.githubusercontent.com/samesense/snakemake-liftover-workflow/master/Snakefile.py"
 include: "sf_hapmap.py"
 include: "sf_mds.py"
+include: "sf_prep_imputation.py"
+include: "sf_clean_imputed.py"
 include: "sf_prs.py"
 
 rule before_imputation:
@@ -24,5 +26,6 @@ rule before_imputation:
 
 rule after_imputation:
     input:
-        DATA + 'interim/prsice/eur.summary'
+        expand(PLOTS + '{group}.eur.prs.roc.png', group=('early', 'all', 'late')),
+        expand(PLOTS + '{group}.eur.prs.density.png', group=('early', 'all', 'late'))
 

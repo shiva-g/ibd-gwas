@@ -1,50 +1,7 @@
-"""Polygenic risk score"""
-
-rule restrict_white:
-    input:
-        b = DATA + 'interim/bfiles_filter_samples/{group}.fam',
-        k = DATA + 'interim/mds_cut/{group}.keep_samples'
-    output:
-        DATA + 'interim/bfiles_eur/{group}.fam',
-    singularity:
-        PLINK
-    log:
-        LOG + 'prs/restrict.eur.{group}'
-    shell:
-        "plink --bfile {DATA}interim/bfiles_filter_samples/{wildcards.group} --keep {input.k} "
-        "--make-bed --out {DATA}interim/bfiles_eur/{wildcards.group} &> {log}"
-
-rule vcf_white:
-    input:
-        DATA + 'interim/bfiles_eur/{group}.fam',
-    output:
-        DATA + 'interim/bfiles_eur_vcf_chr{chr}/{group}.vcf'
-    singularity:
-        PLINK
-    log:
-        LOG + 'prs/vcf.{chr}.{group}'
-    shell:
-        "plink --bfile {DATA}interim/bfiles_eur/{wildcards.group} --recode vcf --chr {wildcards.chr} "
-        "--out {DATA}interim/bfiles_eur_vcf_chr{wildcards.chr}/{wildcards.group} &> {log}"
-
-rule cp_vcf:
-    input:
-        DATA + 'interim/bfiles_eur_vcf_chr{chr}/{group}.vcf'
-    output:
-        DATA + 'interim/eur_vcf/{group}.{chr}.vcf'
-    shell:
-        'cp {input} {output}'
-
-rule zip_vcf:
-    input:
-        DATA + 'interim/eur_vcf/{group}.{chr}.vcf'
-    output:
-        DATA + "interim/eur_vcf/{group}.{chr}.vcf.gz"
-    wrapper:
-        "0.27.1/bio/vcf/compress"
+"""Polygenic risk score after imputation"""
 
 # https://www.nature.com/articles/ng.3359#supplementary-information
-rule prep_gwas:
+rule prep_gwas_base:
     input:
         i = DATA + 'raw/ibd_gwas/ng.3359-S4.xlsx'
     output:
@@ -54,158 +11,128 @@ rule prep_gwas:
         cols = ['CHR', 'BP', 'SNP', 'A1', 'A2', 'EUR_OR', 'EUR_PVAL', 'EUR_SE']
         df[cols].to_csv(output.o, index=False, sep=' ')
 
-# after imputation
-rule unzip_imputed:
+rule mk_prsice_sample_ls:
     input:
-        DATA + 'interim/imputed_vcf/chr_{c}.zip'
+        m = DATA + 'processed/MANIFEST.csv',
+        k = DATA + 'interim/mds_cut/3groups.keep_samples'
     output:
-        DATA + 'interim/imputed_vcf/chr{c}.dose.vcf.gz'
-    shell:
-        'unzip -o -P 6GMoMXi0fkzQ3w -d {DATA}/interim/imputed/ {input}'
-
-rule limit_imputed_r2:
-    input:
-        DATA + 'interim/imputed_vcf/chr{c}.dose.vcf.gz'
-    output:
-        DATA + 'interim/imputed_r2_limit_vcf/chr{c}.vcf.gz'
-    conda:
-        ENVS + 'bcftools-env.yml'
-    shell:
-        'bcftools filter --include "INFO/R2>0.3 {input} | bgzip -c > {output}'
-
-rule vcf_to_bfiles:
-    """Apply 1% maf cutoff."""
-    input:
-        DATA + 'interim/imputed_r2_limit_vcf/chr{chr}.vcf.gz'
-    output:
-        expand(DATA + 'interim/bfiles_imputed/chr{{chr}}.{suffix}', suffix=('fam', 'bed', 'bim') )
-    singularity:
-        PLINK
-    log:
-        LOG + 'prs/{chr}.vcf'
-    shell:
-        "plink --vcf {input} --make-bed --const-fid 0 --maf 0.01 "
-        "--out {DATA}interim/bfiles_imputed/chr{wildcards.chr} &> {log}"
-
-rule merge_imputed_bfiles_ls:
-    input:
-        expand(DATA + 'interim/bfiles_imputed_ex/chr{chr}.fam', chr=range(1, 23))
-    output:
-        o = DATA + 'interim/bfiles_imputed.eur.ls'
+        keep = DATA + 'interim/sample_subsets.{group}',
     run:
-        with open(output.o, 'w') as fout:
-            for afile in list(input):
-                print(afile.split('.')[0], file=fout)
+        keep_samples = {}
+        with open(input.k) as f:
+            for line in f:
+                keep_samples[line.split()[1].strip()] = True
 
-rule merge_imputed_bfiles_ls_1:
-    input:
-        expand(DATA + 'interim/bfiles_imputed/chr{chr}.fam', chr=range(1, 23))
-    output:
-        o = DATA + 'interim/bfiles_imputed.eur.ls1'
-    run:
-        with open(output.o, 'w') as fout:
-            for afile in list(input):
-                print(afile.split('.')[0], file=fout)
+        def filter_samples(row):
+            if not row['IID'] in keep_samples:
+                return False
 
-rule merge_imputed_bfiles_tmp:
+            if wildcards.group=='all':
+                return True
+            if wildcards.group=='ibd_all':
+                # must recode fam file
+                return row['HC or IBD or ONC'] != 'HC'
+            if wildcards.group=='early':
+                return row['HC or IBD or ONC'] == 'HC' or 'VEO' in row['Study Group']
+            if wildcards.group=='late':
+                return not 'VEO' in row['Study Group']
+
+        df = pd.read_csv(input.m)
+        crit = df.apply(filter_samples, axis=1)
+        df.loc[:, 'iid'] = df.apply(lambda row: '0_' + row['IID'], axis=1)
+        df.loc[:, 'junk'] = 0
+        df[crit][['junk', 'iid']].to_csv(output.keep, sep=' ', header=None, index=False)
+
+# split into groups and recode fam based on groups
+rule mk_prsice_sample_subsets:
     input:
-        DATA + 'interim/bfiles_imputed.eur.ls1'
+        keep = DATA + 'interim/sample_subsets.{group}',
+        b = DATA + 'processed/bfiles_imputed/eur.fam',
     output:
-        DATA + 'interim/bfiles_imputed_tmp/eur-merge.missnp'
+        b = DATA + 'interim/bfiles_imputed_grouped/{group}/eur.fam'
     singularity:
         PLINK
     log:
-        LOG + 'prs/merge_tmp'
+        LOG + 'prs/keep_samples.{group}'
     shell:
-        "plink --merge-list {input} --make-bed "
-        "--out {DATA}interim/bfiles_imputed_tmp/eur &> {log} || touch {output}"
-
-rule rm_tri_allelic:
-    input:
-        f = DATA + 'interim/bfiles_imputed/chr{chr}.fam',
-        ex = DATA + 'interim/bfiles_imputed_tmp/eur-merge.missnp'
-    output:
-        DATA + 'interim/bfiles_imputed_ex/chr{chr}.fam'
-    singularity:
-        PLINK
-    log:
-        LOG + 'prs/{chr}.rm_tri_tmp'
-    shell:
-        "plink --bfile {DATA}/interim/bfiles_imputed/chr{wildcards.chr} "
-        "--exclude {input.ex} --make-bed "
-        "--out {DATA}interim/bfiles_imputed_ex/chr{wildcards.chr} &> {log} "
-
-rule merge_imputed_bfiles:
-    input:
-        DATA + 'interim/bfiles_imputed.eur.ls'
-    output:
-        DATA + 'interim/bfiles_imputed_combined/eur.fam'
-    singularity:
-        PLINK
-    log:
-        LOG + 'prs/merge'
-    shell:
-        "plink --merge-list {input} --make-bed "
-        "--out {DATA}interim/bfiles_imputed_combined/eur &> {log} "
-
-rule mk_rs_names:
-    input:
-        i = DATA + 'interim/ibd_gwas.assoc'
-    output:
-        o = DATA + 'interim/rs_names'
-    run:
-        df = pd.read_csv(input.i, sep=' ')
-        df.loc[:, 'id'] = df.apply(lambda row: str(row['CHR']) + ':' + str(row['BP']), axis=1)
-        df[['id', 'SNP']].to_csv(output.o, index=False, sep=' ', header=None)
-
-rule update_fam:
-    """Mk fam for imputed files b/c imputation removed data"""
-    input:
-        imputed_fam = DATA + 'interim/bfiles_imputed_combined/eur.fam',
-        data_fam = DATA + 'interim/bfiles_eur/3groups.fam'
-    output:
-        o = DATA + 'interim/tmp.fam'
-    run:
-        cols= ['fid', 'iid', 'f', 'm', 'sex', 'pheno']
-        int_cols= ['fid', 'f', 'm', 'sex', 'pheno']
-        dtype={'fid':int, 'f':int, 'm':int, 'sex':int, 'pheno':int}
-        df_imputed = pd.read_csv(input.imputed_fam, sep=' ', header=None, names=cols, dtype=dtype)[['iid']]
-        df_dat = pd.read_csv(input.data_fam, sep=' ', header=None, names=cols, dtype=dtype)
-        df_dat.loc[:, 'iid'] = df_dat.apply(lambda row: '0_' + row['iid'], axis=1)
-        df = pd.merge(df_imputed, df_dat, how='left', on='iid')
-        df[cols].to_csv(output.o, sep=' ', index=False, header=False)
-
-rule rename_rs_imputed_bfiles:
-    input:
-        fam = DATA + 'interim/tmp.fam',
-        f = DATA + 'interim/bfiles_imputed_combined/eur.fam',
-        rs_names = DATA + 'interim/rs_names'
-    output:
-        DATA + 'processed/bfiles_imputed/eur.fam'
-    singularity:
-        PLINK
-    log:
-        LOG + 'prs/rename_rs'
-    shell:
-        "plink --bfile {DATA}/interim/bfiles_imputed_combined/eur "
-        "--update-name {input.rs_names} --make-bed "
-        "--out {DATA}processed/bfiles_imputed/eur &> {log} && "
-        """cp {input.fam} {output}"""
+        """plink --bfile $(dirname {input.b})/eur \
+        --keep {input.keep} --make-bed --out $(dirname {output})/eur &> {log}"""
 
 rule prsice:
     input:
-        b = DATA + 'processed/bfiles_imputed/eur.fam',
+        b = DATA + 'interim/bfiles_imputed_grouped/{group}/eur.fam',
         a = DATA + 'interim/ibd_gwas.assoc'
     output:
-        DATA + 'interim/prsice/eur.summary'
+        DATA + 'interim/prsice/{group}/eur.summary',
+        DATA + 'interim/prsice/{group}/eur.best'
     singularity:
         PRSICE
     threads: 16
+    log:
+        LOG + 'eur.prs.{group}'
     shell:
-        'Rscript /usr/local/bin/PRSice.R --dir {DATA}/interim/prsice/ '
+        'Rscript /usr/local/bin/PRSice.R --dir {DATA}/interim/prsice/{wildcards.group}/ '
         '--snp SNP --chr CHR --bp BP --A1 A1 --A2 A2 --stat EUR_OR --se EUR_SE --pvalue EUR_PVAL '
         '--prsice /usr/local/bin/PRSice_linux --keep-ambig '
         '--base {input.a} --perm 1000000 '
-        '--target {DATA}processed/bfiles_imputed/eur '
+        '--target {DATA}interim/bfiles_imputed_grouped/{wildcards.group}/eur '
         '--thread {threads} --binary-target T '
-        '--out {DATA}interim/prsice/eur'
+        '--out {DATA}interim/prsice/{wildcards.group}/eur &> {log}'
+
+rule annotate_prsice_scores:
+    input:
+        p = DATA + 'interim/prsice/{group}/eur.best',
+        f = DATA + 'interim/bfiles_imputed_grouped/{group}/eur.fam'
+    output:
+        o = DATA + 'interim/prsice_parsed/{group}/eur.dat'
+    run:
+        cols= ['fid', 'IID', 'f', 'm', 'sex', 'pheno']
+        int_cols= ['fid', 'f', 'm', 'sex', 'pheno']
+        dtype={'fid':int, 'f':int, 'm':int, 'sex':int, 'pheno':int}
+        df_dat = pd.read_csv(input.f, sep=' ', header=None, names=cols, dtype=dtype)
+        p = pd.read_csv(input.p, delim_whitespace=True)
+        df = pd.merge(df_dat, p, on='IID', how='outer')
+        df.to_csv(output.o, index=False, sep='\t')
+
+rule plot_prs_dist:
+    input:
+        DATA + 'interim/prsice_parsed/{group}/eur.dat'
+    output:
+        PLOTS + '{group}.eur.prs.density.png'
+    run:
+        R("""
+        require(ggplot2)
+        d = read.delim("{input}", header=TRUE, sep='\t')
+        p = ggplot(data=d) + geom_density(aes(x=PRS, group=pheno, colour=factor(pheno))) +
+        theme_bw()
+        ggsave("{output}", p)
+        """)
+
+rule calc_prs_roc:
+    input:
+        i = DATA + 'interim/prsice_parsed/{group}/eur.dat'
+    output:
+        o = DATA + 'interi/prsice_roc/{group}.eur.roc'
+    run:
+        df = pd.read_csv(input.i, sep='\t')
+        df.loc[:, 'y'] = df.apply(lambda row: 1 if row['pheno']==2 else 0, axis=1)
+        precision, recall, thresholds = precision_recall_curve(df['y'], df['PRS'], pos_label=1)
+        fpr, tpr, thresholds = roc_curve(df['y'], df['PRS'], pos_label=1)
+        curve = {'fpr':fpr, 'tpr':tpr}
+        s = pd.DataFrame(curve, columns=['pre', 'rec', 'fpr', 'tpr'])
+        s.to_csv(output.o, index=False, sep='\t')
+
+rule plot_prs_roc:
+    input:
+        DATA + 'interi/prsice_roc/{group}.eur.roc'
+    output:
+        PLOTS + '{group}.eur.prs.roc.png'
+    run:
+        R("""require(ggplot2)
+             d = read.delim("{input}", sep='\t', header=TRUE)
+             p = ggplot(data=d) + geom_line(aes(x=fpr, y=tpr)) +
+                 theme_bw(base_size=18) +
+                 xlab('False positive rate') + ylab('True positive rate') +
+                 theme(axis.text.x = element_text(angle=90, vjust=.5, hjust=1))
+            ggsave("{output}", p)
+          """)

@@ -1,3 +1,5 @@
+"""Make hapmap and study mds to check race"""
+
 rule combine_hapmap_ibd:
     input:
         expand(DATA + 'interim/bfiles_indep/{group}.fam', group=('3groups', 'hapmap'))
