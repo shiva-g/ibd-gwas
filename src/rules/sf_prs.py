@@ -49,7 +49,7 @@ rule mk_prsice_sample_subsets:
         keep = DATA + 'interim/sample_subsets.{group}',
         b = DATA + 'processed/bfiles_imputed/eur.fam',
     output:
-        b = DATA + 'interim/bfiles_imputed_grouped/{group}/eur.fam'
+        b = DATA + 'interim/bfiles_imputed_grouped_tmp/{group}/eur.fam'
     singularity:
         PLINK
     log:
@@ -58,6 +58,29 @@ rule mk_prsice_sample_subsets:
         """plink --bfile $(dirname {input.b})/eur \
         --keep {input.keep} --make-bed --out $(dirname {output})/eur &> {log}"""
 
+rule recode_fam_prsice_sample_subsets:
+    """Change pheno status for group comparison"""
+    input:
+        b = DATA + 'interim/bfiles_imputed_grouped_tmp/{group}/eur.fam',
+        m = DATA + 'processed/MANIFEST.csv',
+    output:
+        b = DATA + 'interim/bfiles_imputed_grouped/{group}/eur.fam'
+    run:
+        shell('cp $(dirname {input.b})/eur.bim $(dirname {output.b})/eur.bim')
+        shell('cp $(dirname {input.b})/eur.bed $(dirname {output.b})/eur.bed')
+        if wildcards.group != 'ibd_all':
+            shell('cp $(dirname {input.b})/eur.fam $(dirname {output.b})/eur.fam')
+        else:
+            df = pd.read_csv(input.m)
+            df.loc[:, 'pheno'] = df.apply(lambda row: 2 if 'VEO' in row['Study Group'] else 1, axis=1)
+            df.loc[:, 'iid'] = df.apply(lambda row: '0_' + row['IID'], axis=1)
+            phenos = {row['iid']:row['pheno'] for _, row in df.iterrows()}
+            with open(input.b) as fam, open(output.b, 'w') as fout:
+                for line in fam:
+                    sp = line.strip().split()
+                    sample = sp[1]
+                    pheno = str(phenos[sample])
+                    print(' '.join(sp[:-1] + [pheno]), file=fout)
 rule prsice:
     input:
         b = DATA + 'interim/bfiles_imputed_grouped/{group}/eur.fam',

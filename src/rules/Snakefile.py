@@ -26,6 +26,6 @@ rule before_imputation:
 
 rule after_imputation:
     input:
-        expand(PLOTS + '{group}.eur.prs.roc.png', group=('early', 'all', 'late')),
-        expand(PLOTS + '{group}.eur.prs.density.png', group=('early', 'all', 'late'))
+        expand(PLOTS + '{group}.eur.prs.roc.png', group=('early', 'all', 'late', 'ibd_all')),
+        expand(PLOTS + '{group}.eur.prs.density.png', group=('early', 'all', 'late', 'ibd_all'))
 
