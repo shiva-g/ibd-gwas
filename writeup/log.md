@@ -5,6 +5,7 @@
 * local server does not allow HC ref data :(
 * plink association tests
 * prs for other groups
+* ibd enhancers here? https://www.nature.com/articles/s41467-018-03766-z#additional-information
 
 ### 20181212
 * MAF calcs before indep, on QC snps
