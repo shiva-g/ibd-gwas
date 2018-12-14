@@ -1,5 +1,7 @@
-* 524544 chr22 vcf
-* 157166 chr22 bim
+### 20181214
+* does plink bfile->vcf drop vars? no
+    * 157166 chr22 r2 limit vcf
+    * 157166 chr22 bim
 
 ### 20181213
 * try impute server: https://imputationserver.readthedocs.io/en/latest/docker/
