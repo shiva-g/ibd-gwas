@@ -21,9 +21,23 @@ rule limit_imputed_r2:
         'bcftools filter --include "INFO/R2>0.3" {input} | bgzip -c > {output}'
 
 rule vcf_to_bfiles:
-    """Apply 1% maf cutoff to whole cohort."""
     input:
         DATA + 'interim/imputed_r2_limit_vcf/chr{chr}.vcf.gz'
+    output:
+        expand(DATA + 'interim/bfiles_imputed_tmp/chr{{chr}}.{suffix}', suffix=('fam', 'bed', 'bim') )
+    singularity:
+        PLINK
+    log:
+        LOG + 'prs/{chr}.vcf'
+    shell:
+        "plink --vcf {input} --make-bed --const-fid 0 "
+        "--out {DATA}interim/bfiles_imputed_tmp/chr{wildcards.chr} &> {log}"
+
+rule imputed_maf_cutoff:
+    """Apply 1% maf cutoff to whole cohort."""
+    input:
+        expand(DATA + 'interim/bfiles_imputed_tmp/chr{{chr}}.{suffix}', suffix=('fam', 'bed', 'bim') ),
+        b = DATA + 'interim/bfiles_imputed_tmp/chr{chr}.bim'
     output:
         expand(DATA + 'interim/bfiles_imputed/chr{{chr}}.{suffix}', suffix=('fam', 'bed', 'bim') )
     singularity:
@@ -31,7 +45,8 @@ rule vcf_to_bfiles:
     log:
         LOG + 'prs/{chr}.vcf'
     shell:
-        "plink --vcf {input} --make-bed --const-fid 0 --maf 0.01 "
+        "plink -bfile $(dirname {input.b})/chr{wildcards.chr} "
+        "--make-bed --maf 0.01 "
         "--out {DATA}interim/bfiles_imputed/chr{wildcards.chr} &> {log}"
 
 rule merge_imputed_bfiles_ls:

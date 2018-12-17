@@ -20,4 +20,16 @@ rule format_assoc:
         o = DATA + 'interim/plink_assoc_fmt/{group}/eur.assoc'
     run:
         df = pd.read_csv(input.f, delim_whitespace=True).sort_values(by='CHISQ', ascending=False)
+        df = df[pd.notnull(df['P'])]
         df.to_csv(output.o, index=False, sep='\t')
+
+# http://www.gettinggeneticsdone.com/2011/04/annotated-manhattan-plots-and-qq-plots.html
+rule assoc_plot:
+    input:
+        DATA + 'interim/plink_assoc_fmt/{group}/eur.assoc'
+    output:
+        PLOTS + 'manhattan.{group}.png'
+    singularity:
+        "docker://manninglab/metal"
+    shell:
+        "Rscript {SCRIPTS}plot_manhattan.R {input} {output}"

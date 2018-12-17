@@ -30,4 +30,5 @@ rule after_imputation:
     input:
         expand(PLOTS + '{group}.eur.prs.roc.png', group=G),
         expand(PLOTS + '{group}.eur.prs.density.png', group=G),
-        expand(DATA + 'interim/plink_assoc_fmt/{group}/eur.assoc', group=G)
+        expand(DATA + 'interim/plink_assoc_fmt/{group}/eur.assoc', group=G),
+        expand(PLOTS + 'manhattan.{group}.png', group=G)
