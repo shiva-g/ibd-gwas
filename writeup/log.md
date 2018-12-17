@@ -1,3 +1,8 @@
+### 20181217
+* new mds cut
+* manhatn plt
+* annotate gene/pathway
+
 ### 20181214
 * does plink bfile->vcf drop vars? no
     * 157166 chr22 r2 limit vcf
