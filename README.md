@@ -3,6 +3,7 @@ ibd-gwas
 
 IBD vs healthy
 * Manifest: /mnt/isilon/microbiome/perry/ibd-gwas/data/processed/MANIFEST.csv
+* [Results](writeup/results.md)
 * [Methods](writeup/methods.md)
 * [Log](writeup/log.md)
 
