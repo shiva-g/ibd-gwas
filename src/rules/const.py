@@ -18,7 +18,6 @@ if 'src' in p:
 else:
     PWD = p + '/'
 
-WORK = PWD + 'work/'
 FILES = PWD + 'docs/'
 SCRIPTS = PWD + 'src/scripts/'
 DATA = PWD + 'data/'
@@ -30,3 +29,5 @@ ENVS = PWD + 'envs/'
 # containers
 PLINK = "docker://quay.research.chop.edu/evansj/plink-docker:181012"
 PRSICE = "docker://quay.research.chop.edu/evansj/prsice-docker:2.1.4"
+
+G = ('early', 'all', 'late', 'ibd_all')

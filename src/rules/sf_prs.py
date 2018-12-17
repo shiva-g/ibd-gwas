@@ -160,3 +160,15 @@ rule plot_prs_roc:
                  theme(axis.text.x = element_text(angle=90, vjust=.5, hjust=1))
             ggsave("{output}", p)
           """)
+
+rule combine_prs:
+    input:
+        expand(DATA + 'interim/prsice/{group}/eur.summary', group=G)
+    output:
+        o = PWD + 'writeup/prs.md'
+    run:
+        def read_df(afile):
+            df = pd.read_csv(afile, sep='\t')
+            df['test'] = afile.split('/')[-2]
+            return df
+        pd.concat([read_df(af) for af in input]).to_csv(output.o, sep='|', index=False)
