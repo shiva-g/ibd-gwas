@@ -57,10 +57,6 @@
 * 227 of 232 base variants included (4 discarded b/c of mismatch). [Base snps](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4881818/). [Nature tables](https://www.nature.com/articles/ng.3359#supplementary-information)
 * 164 people (98 male(s), 66 female(s)) 72 HC. 92 IBD
 * 223 variants after clumping
-* 1 region(s) with p-value less than 1e-5
-* these results are inflated due to the overfitting
-* [Barplot](plots/eur_BARPLOT_2018-12-11.png)
-* [Hires plot](plots/eur_HIGH-RES_PLOT_2018-12-11.png)
 
 #### PRSicse IBD vs HC
 | Set |    Threshold   |    R2   |   P   |    Coefficient  |   Standard.Error | Num_SNP |
