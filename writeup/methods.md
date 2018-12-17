@@ -60,7 +60,7 @@
 * [IBD vs HC ROC](plots/all.eur.prs.roc.png) [IBD vs HC density](plots/all.eur.prs.density.png)
 * [VEO vs HC ROC](plots/early.eur.prs.roc.png) [VEO vs HC density](plots/early.eur.prs.density.png)
 * [Late IBD vs HC ROC](plots/late.eur.prs.roc.png) [Late IBD vs HC density](plots/late.eur.prs.density.png)
-* [Late IBD vs VEO ROC](plots/all_ibd.eur.prs.roc.png) [Late IBD vs VEO density](plots/all_ibd.eur.prs.density.png)
+* [Late IBD vs VEO ROC](plots/ibd_all.eur.prs.roc.png) [Late IBD vs VEO density](plots/ibd_all.eur.prs.density.png)
 
 | Phenotype  |     Set   |  Threshold   |    PRS.R2  | Full.R2 | Null.R2 | Prevalence  |    Coefficient |    Standard.Error | P  |   Num_SNP | Empirical-P | group |
 | -| ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | --- | --- | -- |
