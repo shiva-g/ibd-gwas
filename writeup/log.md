@@ -1,3 +1,13 @@
+### 20181217
+* new mds cut
+* manhatn plt: why nans in assoc file?
+* annotate gene/pathway
+
+### 20181214
+* does plink bfile->vcf drop vars? no
+    * 157166 chr22 r2 limit vcf
+    * 157166 chr22 bim
+
 ### 20181213
 * try impute server: https://imputationserver.readthedocs.io/en/latest/docker/
 * `docker run --user $(id -u) -d -p 8080:80 -e DOCKER_CORES="4" -v /home/evansj/server/:/data/ --name mis-docker genepi/imputationserver`
