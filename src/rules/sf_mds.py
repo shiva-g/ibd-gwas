@@ -33,7 +33,7 @@ rule list_discordant_pos_hapmap_ibd:
         hp = pd.read_csv(input.hp, sep='\t', header=None, names=names_hp)
         # discord when pos matches, but allele1 and allele2 do not
         m = pd.merge(hp, ibd, on='pos', how='inner')
-        m.to_csv('xxx', index=False, sep='\t')
+        #m.to_csv('xxx', index=False, sep='\t')
         crit = m.apply(lambda row: row['allele1'] != row['allele1_hp'] or row['allele2'] != row['allele2_hp'], axis=1)
         m[crit][['id']].to_csv(output.bout, index=False, header=None)
         m[crit][['id_hp']].to_csv(output.hout, index=False, header=None)
@@ -184,6 +184,21 @@ rule color_mds_ibd:
 rule mds:
     input: DATA + 'interim/mds_dat_ibd/3groups.dat',
            o = DATA + 'interim/mds_dat/ibd_hapmap.dat'
+
+rule plot_with_hapmap_nogroup:
+    input:
+        DATA + 'interim/mds_dat/ibd_hapmap.dat'
+    output:
+        PLOTS + 'hapmap_mds_nogroup.png'
+    run:
+        R("""
+        require(ggplot2)
+        d = read.delim("{input}", header=TRUE, sep='\t')
+        p = ggplot(data=d) + geom_point(aes(x=C1, y=C2, colour=race), alpha=0.25) +
+        theme_bw() 
+        ggsave("{output}", p, units="cm", width=60)
+        """)
+
 
 rule plot_with_hapmap:
     input:

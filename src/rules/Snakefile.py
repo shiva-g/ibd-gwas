@@ -19,6 +19,7 @@ rule before_imputation:
         expand(DATA + 'interim/eur_vcf/3groups.{chr}.vcf.gz', chr=range(1,23)),
         PLOTS + 'eur_mds.png',
         PLOTS + 'hapmap_mds.png',
+        PLOTS + 'hapmap_mds_nogroup.png',
         expand(DATA + 'interim/missing_test/3groups.{miss}', miss=('imiss', 'lmiss') ),
         DATA + 'interim/sex_check/3groups.sexcheck',
         DATA + 'interim/qc_hwe/3groups.counts',
