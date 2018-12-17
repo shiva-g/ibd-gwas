@@ -1,5 +1,6 @@
 ### 20181217
 * new mds cut
+    * odd samples: 201939090193_R10C02, 201939090179_R07C02
 * manhatn plt: why nans in assoc file?
 * annotate gene/pathway
 
