@@ -1,6 +1,6 @@
 ### 20181217
 * new mds cut
-* manhatn plt
+* manhatn plt: why nans in assoc file?
 * annotate gene/pathway
 
 ### 20181214
