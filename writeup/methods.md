@@ -58,8 +58,8 @@
 * 164 people (98 male(s), 66 female(s)) 72 HC. 92 IBD
 * 223 variants after clumping
 
-| Phenotype  |     Set   |  Threshold   |    PRS.R2  | Full.R2 | Null.R2 | Prevalence  |    Coefficient |    Standard.Error | P  |   Num_SNP | group |
-| -| ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | --- | --- |
+| Phenotype  |     Set   |  Threshold   |    PRS.R2  | Full.R2 | Null.R2 | Prevalence  |    Coefficient |    Standard.Error | P  |   Num_SNP | Empirical-P | group |
+| -| ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | --- | --- | -- |
 |-|Base|0.0024|0.179903|0.179903|0|-|289.668|83.8725|0.000553005|223|0.000779999|early|
 |-|Base|0.0024|0.22463200000000003|0.22463200000000003|0|-|332.13800000000003|70.7061|2.63432e-06|223|6.999989999999999e-06|all|
 |-|Base|0.0024|0.285955|0.285955|0|-|412.87199999999996|91.2001|5.9797000000000005e-06|224|2e-05|late|
