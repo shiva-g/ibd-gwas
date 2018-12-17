@@ -58,15 +58,9 @@
 * 164 people (98 male(s), 66 female(s)) 72 HC. 92 IBD
 * 223 variants after clumping
 
-#### PRSicse IBD vs HC
-| Set |    Threshold   |    R2   |   P   |    Coefficient  |   Standard.Error | Num_SNP |
-| ---- | ----- | ----- | ----- | ----- | ----- | ----- |
-| Base  |  0.0001 | 0.195872  |      5.32139e-06  |   299.55 | 65.8106 | 222 |
-| Base  |  0.0024 | 0.196663   |     5.09771e-06  |   300.708 | 65.9343 | 223 |
-
-#### Summary IBD vs HC
-| Phenotype  |     Set   |  Threshold   |    PRS.R2  | Full.R2 | Null.R2 | Prevalence  |    Coefficient |    Standard.Error | P    |   Num_SNP |
+| Phenotype  |     Set   |  Threshold   |    PRS.R2  | Full.R2 | Null.R2 | Prevalence  |    Coefficient |    Standard.Error | P    |   Num_SNP | group |
 | -| ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | --- |
-| -    | Base  |  0.0024 | 0.196663   |     0.196663    |    0   |    -  |     300.708 | 65.9343 | 5.09771e-06  |   223 |
-
-#### PRSicse IBD late vs early
+|-|Base|0.0024|0.179903|0.179903|0|-|289.668|83.8725|0.000553005|223|0.000779999|early|
+|-|Base|0.0024|0.22463200000000003|0.22463200000000003|0|-|332.13800000000003|70.7061|2.63432e-06|223|6.999989999999999e-06|all|
+|-|Base|0.0024|0.285955|0.285955|0|-|412.87199999999996|91.2001|5.9797000000000005e-06|224|2e-05|late|
+|-|Base|0.0001|0.00817932|0.00817932|0|-|-52.8022|70.8431|0.45606599999999997|222|0.462333|ibd_all|
