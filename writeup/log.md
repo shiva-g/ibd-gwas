@@ -1,6 +1,11 @@
 ### 20181217
 * new mds cut
     * odd samples: 201939090193_R10C02, 201939090179_R07C02
+    
+| FID1 | IID1 | FID2 | IID2 | RT | EZ | Z0 | Z1 | Z2 | PI_HAT | PHE | DST | PPC | RATIO |
+|--|--|--|--|--|--|--|--|--|--|--|--|--|--|
+| 0 | 201939090179_R07C02 | 0 | 201939090193_R10C02 | OT | 0 | 0.7159 | 0.2127 | 0.0714 | 0.1777 | -1 | 0.772610 | 1.0000 | 2.7478 |
+
 * manhatn plt: why nans in assoc file?
 * annotate gene/pathway
 
