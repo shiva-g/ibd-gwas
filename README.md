@@ -6,7 +6,7 @@ IBD vs healthy
 * [Results](writeup/results.md)
 * [Methods](writeup/methods.md)
 * [Log](writeup/log.md)
-* [Log](writeup/meetings.md)
+* [Meetings](writeup/meetings.md)
 
 ### Run: 
 `conda create env create -f envs/project.yml`
