@@ -41,7 +41,7 @@
 * Filter imputed results for imputed score R2>0.3 and maf>1%
 
 ### Associations
-* Use plink to find associations for
+* Use plink to find associations and qqman for plots
     * [HC vs IBD](plots/manhattan.all.png)
     * [HC vs VEO](plots/manhattan.early.png)
     * [HC vs late IBD](plots/manhattan.late.png)
