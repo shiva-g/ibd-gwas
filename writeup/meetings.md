@@ -7,7 +7,7 @@
 * [plink association results](methods.md#associations)
 * [related samples](log.md#20181217) after mds w/ fixed indep snps
 
-### Working
+#### Working
 * annotate plink association positions w/ genes/pathways. [fuma?](https://www.nature.com/articles/s41467-017-01261-5)
 * investigate prsice mismatched snps
 
