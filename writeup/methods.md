@@ -31,24 +31,17 @@
 * --het check: 0.08715, largest F inbreeding coefficient estimate; smallest -0.09699
 * case vs control missing per target (--test-missing) run after filtering targets with high missing rates and removing chrX. 344 markers have p<0.05. 76 p<0.01. 7 p<0.001
 * plink --genome table
-* mafs after QC
-    * Below 1%        50637
-    * 1% to 5%        186738
-    * Greater 5%      317792
+* [maf table](tables/maf.md)
     
 ### Imputation
 * Michigan Imputation Server v1.0.4
 * EUR sample subset after filtering missing samples (72 HC, 92 IBD)
 * Reference Panel: hrc.r1.1.2016
 * Phasing: eagle
-* mafs after imputation
-    * Below 1%        
-    * 1% to 5%        
-    * Greater 5% 
 * Filter imputed results for imputed score R2>0.3 and maf>1%
 
 ### Associations
-* Use plink to find associations for
+* Use plink to find associations and qqman for plots
     * [HC vs IBD](plots/manhattan.all.png)
     * [HC vs VEO](plots/manhattan.early.png)
     * [HC vs late IBD](plots/manhattan.late.png)
@@ -58,14 +51,8 @@
 * 227 of 232 base variants included (4 discarded b/c of mismatch). [Base snps](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4881818/). [Nature tables](https://www.nature.com/articles/ng.3359#supplementary-information)
 * 164 people (98 male(s), 66 female(s)) 72 HC. 92 IBD
 * 223 variants after clumping
+* [pval table](tables/prs.md)
 * [IBD vs HC ROC](plots/all.eur.prs.roc.png) [IBD vs HC density](plots/all.eur.prs.density.png)
 * [VEO vs HC ROC](plots/early.eur.prs.roc.png) [VEO vs HC density](plots/early.eur.prs.density.png)
 * [Late IBD vs HC ROC](plots/late.eur.prs.roc.png) [Late IBD vs HC density](plots/late.eur.prs.density.png)
 * [Late IBD vs VEO ROC](plots/ibd_all.eur.prs.roc.png) [Late IBD vs VEO density](plots/ibd_all.eur.prs.density.png)
-
-| Phenotype  |     Set   |  Threshold   |    PRS.R2  | Full.R2 | Null.R2 | Prevalence  |    Coefficient |    Standard.Error | P  |   Num_SNP | Empirical-P | group |
-| -| ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | --- | --- | -- |
-|-|Base|0.0024|0.179903|0.179903|0|-|289.668|83.8725|0.000553005|223|0.000779999|early|
-|-|Base|0.0024|0.22463200000000003|0.22463200000000003|0|-|332.13800000000003|70.7061|2.63432e-06|223|6.999989999999999e-06|all|
-|-|Base|0.0024|0.285955|0.285955|0|-|412.87199999999996|91.2001|5.9797000000000005e-06|224|2e-05|late|
-|-|Base|0.0001|0.00817932|0.00817932|0|-|-52.8022|70.8431|0.45606599999999997|222|0.462333|ibd_all|
