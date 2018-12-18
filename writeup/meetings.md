@@ -5,6 +5,7 @@
 * prsice clumping defaults
 * [prsice results](methods.md#polygenic-risk-score)
 * [plink association results](methods.md#associations)
+* [related samples](log.md#20181217)
 
 #### Notes
 
