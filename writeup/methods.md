@@ -30,6 +30,7 @@
 * gender check (--check-sex) run after indep filter shows two conflicts F of .08 and .06
 * --het check: 0.08715, largest F inbreeding coefficient estimate; smallest -0.09699
 * case vs control missing per target (--test-missing) run after filtering targets with high missing rates and removing chrX. 344 markers have p<0.05. 76 p<0.01. 7 p<0.001
+* plink --genome table
 * mafs after QC
     * Below 1%        50637
     * 1% to 5%        186738
