@@ -41,6 +41,8 @@
 * Filter imputed results for imputed score R2>0.3 and maf>1%
 
 ### Associations
+* 64 HC. 91 IBD (53 late, 38 VEO)
+* 11,966,115 imputed snps
 * Use plink to find associations and qqman for plots
     * [HC vs IBD](plots/manhattan.all.png)
     * [HC vs VEO](plots/manhattan.early.png)
