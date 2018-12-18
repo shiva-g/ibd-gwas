@@ -165,10 +165,12 @@ rule combine_prs:
     input:
         expand(DATA + 'interim/prsice/{group}/eur.summary', group=G)
     output:
-        o = PWD + 'writeup/prs.md'
+        o = PWD + 'writeup/tables/prs.md'
     run:
         def read_df(afile):
             df = pd.read_csv(afile, sep='\t')
             df['test'] = afile.split('/')[-2]
             return df
-        pd.concat([read_df(af) for af in input]).to_csv(output.o, sep='|', index=False)
+        df = pd.concat([read_df(af) for af in input])
+        with open(output.o, 'w') as fout:
+            print(tabulate.tabulate(df.values, df.columns, tablefmt="pipe"), file=fout)

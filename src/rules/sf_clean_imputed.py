@@ -24,30 +24,29 @@ rule vcf_to_bfiles:
     input:
         DATA + 'interim/imputed_r2_limit_vcf/chr{chr}.vcf.gz'
     output:
-        expand(DATA + 'interim/bfiles_imputed_tmp/chr{{chr}}.{suffix}', suffix=('fam', 'bed', 'bim') )
-    singularity:
-        PLINK
-    log:
-        LOG + 'prs/{chr}.vcf'
-    shell:
-        "plink --vcf {input} --make-bed --const-fid 0 "
-        "--out {DATA}interim/bfiles_imputed_tmp/chr{wildcards.chr} &> {log}"
-
-rule imputed_maf_cutoff:
-    """Apply 1% maf cutoff to whole cohort."""
-    input:
-        expand(DATA + 'interim/bfiles_imputed_tmp/chr{{chr}}.{suffix}', suffix=('fam', 'bed', 'bim') ),
-        b = DATA + 'interim/bfiles_imputed_tmp/chr{chr}.bim'
-    output:
         expand(DATA + 'interim/bfiles_imputed/chr{{chr}}.{suffix}', suffix=('fam', 'bed', 'bim') )
     singularity:
         PLINK
     log:
         LOG + 'prs/{chr}.vcf'
     shell:
-        "plink -bfile $(dirname {input.b})/chr{wildcards.chr} "
-        "--make-bed --maf 0.01 "
+        "plink --vcf {input} --make-bed --const-fid 0 "
         "--out {DATA}interim/bfiles_imputed/chr{wildcards.chr} &> {log}"
+
+# rule imputed_maf_cutoff:
+#     input:
+#         expand(DATA + 'interim/bfiles_imputed_tmp/chr{{chr}}.{suffix}', suffix=('fam', 'bed', 'bim') ),
+#         b = DATA + 'interim/bfiles_imputed_tmp/chr{chr}.bim'
+#     output:
+#         expand(DATA + 'interim/bfiles_imputed/chr{{chr}}.{suffix}', suffix=('fam', 'bed', 'bim') )
+#     singularity:
+#         PLINK
+#     log:
+#         LOG + 'prs/{chr}.vcf'
+#     shell:
+#         "plink -bfile $(dirname {input.b})/chr{wildcards.chr} "
+#         "--make-bed "
+#         "--out {DATA}interim/bfiles_imputed/chr{wildcards.chr} &> {log}"
 
 rule merge_imputed_bfiles_ls:
     input:
@@ -146,6 +145,7 @@ rule update_fam:
         df[cols].to_csv(output.o, sep=' ', index=False, header=False)
 
 rule rename_rs_imputed_bfiles:
+    """Apply 1% maf cutoff."""
     input:
         fam = DATA + 'interim/tmp.fam',
         f = DATA + 'interim/bfiles_imputed_combined/eur.fam',
@@ -158,6 +158,6 @@ rule rename_rs_imputed_bfiles:
         LOG + 'prs/rename_rs'
     shell:
         "plink --bfile {DATA}/interim/bfiles_imputed_combined/eur "
-        "--update-name {input.rs_names} --make-bed "
+        "--update-name {input.rs_names} --make-bed --maf 0.01 "
         "--out {DATA}processed/bfiles_imputed/eur &> {log} && "
         """cp {input.fam} {output}"""

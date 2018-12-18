@@ -36,8 +36,8 @@ rule drop_x_imputed_prep:
 
 rule drop_x_imputed:
     input:
-        f = DATA + 'processed/bfiles_imputed/{group}.fam',
-        b = expand(DATA + 'processed/bfiles_imputed/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
+        f = DATA + 'interim/bfiles_imputed_combined/{group}.fam',
+        b = expand(DATA + 'interim/bfiles_imputed_combined/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
     output:
         f = DATA + 'interim/bfiles_imputed_eur_nox/{group}.fam',
         b = expand(DATA + 'interim/bfiles_imputed_eur_nox/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
@@ -135,7 +135,7 @@ rule combine_mafs:
         o = PWD + 'writeup/tables/maf.md'
     run:
         def read_df(afile, label):
-            df = pd.read_csv(afile, sep='\t').rename(columns={0:'snp_count'})
+            df = pd.read_csv(afile, sep='\t').rename(columns={'0':'snp_count'})
             df['dataset'] = label
             return df
         with open(output.o, 'w') as fout:
