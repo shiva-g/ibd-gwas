@@ -140,4 +140,4 @@ rule combine_mafs:
             return df
         with open(output.o, 'w') as fout:
             df = pd.concat([read_df(input.qc, 'afterQC'), read_df(input.eur, 'beforeImpute'), read_df(input.imp, 'afterImpute')])
-            print(tabulate.tabulate(df, tablefmt="markdown", headers="keys"), file=fout)
+            print(tabulate.tabulate(df.values, df.columns, tablefmt="pipe"), file=fout)
