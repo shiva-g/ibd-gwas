@@ -1,7 +1,7 @@
 ibd-gwas
 ==============================
 
-IBD vs healthy
+IBD (late and early onset) vs healthy
 * Manifest: /mnt/isilon/microbiome/perry/ibd-gwas/data/processed/MANIFEST.csv
 * [Results](writeup/results.md)
 * [Methods](writeup/methods.md)

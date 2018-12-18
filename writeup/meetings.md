@@ -6,12 +6,22 @@
 * [prsice results](methods.md#polygenic-risk-score)
 * [plink association results](methods.md#associations)
 * [related samples](log.md#20181217) after mds w/ fixed indep snps
+* qqplot?
 
 #### Working
 * annotate plink association positions w/ genes/pathways. [fuma?](https://www.nature.com/articles/s41467-017-01261-5)
 * investigate prsice mismatched snps
 
 #### Notes
+* impute everyone w/ 1kg ref and run prsice w/ multi ethinic panel base snps
+* plot/list prsice quartiles for splitting samples by quartile
+* where to prsice snps score for assocaition test? plot them
+* auc and pval for rocs
+* why lost base snps in prsice?
+* why does prsice list different snps counts for each test?
+* rm clumping step from prsice so all snps are kept
+* use snptest w/ snp probs and 2 PCs and logistic regression instead of plink
+* mk qqplot from association results
 
 ### 20181211
 
