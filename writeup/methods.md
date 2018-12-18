@@ -42,7 +42,7 @@
 
 ### Associations
 * 64 HC. 91 IBD (53 late, 38 VEO)
-* 11,966,115 imputed snps
+* 7,554,996 imputed snps maf>1%
 * Use plink to find associations and qqman for plots
     * [HC vs IBD](plots/manhattan.all.png)
     * [HC vs VEO](plots/manhattan.early.png)
@@ -52,7 +52,7 @@
 ### Polygenic risk score
 * 227 of 232 base variants included (4 discarded b/c of mismatch). [Base snps](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4881818/). [Nature tables](https://www.nature.com/articles/ng.3359#supplementary-information)
 * 64 HC. 91 IBD (53 late, 38 VEO)
-* 223 variants after clumping
+* 223 variants after clumping (imputed R2>0.3 and maf>1%)
 * [pval table](tables/prs.md)
 * [IBD vs HC ROC](plots/all.eur.prs.roc.png) [IBD vs HC density](plots/all.eur.prs.density.png)
 * [VEO vs HC ROC](plots/early.eur.prs.roc.png) [VEO vs HC density](plots/early.eur.prs.density.png)
