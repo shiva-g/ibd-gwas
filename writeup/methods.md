@@ -31,20 +31,13 @@
 * --het check: 0.08715, largest F inbreeding coefficient estimate; smallest -0.09699
 * case vs control missing per target (--test-missing) run after filtering targets with high missing rates and removing chrX. 344 markers have p<0.05. 76 p<0.01. 7 p<0.001
 * plink --genome table
-* mafs after QC
-    * Below 1%        50637
-    * 1% to 5%        186738
-    * Greater 5%      317792
+* [maf table](tables/maf.md)
     
 ### Imputation
 * Michigan Imputation Server v1.0.4
 * EUR sample subset after filtering missing samples (72 HC, 92 IBD)
 * Reference Panel: hrc.r1.1.2016
 * Phasing: eagle
-* mafs after imputation
-    * Below 1%        
-    * 1% to 5%        
-    * Greater 5% 
 * Filter imputed results for imputed score R2>0.3 and maf>1%
 
 ### Associations
