@@ -1,5 +1,6 @@
 ### 20181218
 * process latest imputed results
+* mafs eur, after impute, all samples
 
 ### 20181217
 * new mds cut
