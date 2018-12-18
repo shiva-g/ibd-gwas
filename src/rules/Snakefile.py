@@ -2,6 +2,7 @@
 
 include: "const.py"
 include: "sf_manifest.py"
+include: "sf_mafs.py"
 include: "sf_filter.py"
 include: "sf_prep.py"
 include: "sf_qc.py"
@@ -23,7 +24,6 @@ rule before_imputation:
         expand(DATA + 'interim/missing_test/3groups.{miss}', miss=('imiss', 'lmiss') ),
         DATA + 'interim/sex_check/3groups.sexcheck',
         DATA + 'interim/qc_hwe/3groups.counts',
-        DATA + 'interim/qc_freq_before_impute/3groups.counts',
         DATA + 'interim/qc_het/3groups.het'
 
 rule after_imputation:
@@ -32,4 +32,5 @@ rule after_imputation:
         expand(PLOTS + '{group}.eur.prs.density.png', group=G),
         expand(DATA + 'interim/plink_assoc_fmt/{group}/eur.assoc', group=G),
         expand(PLOTS + 'manhattan.{group}.png', group=G),
-        PWD + 'writeup/prs.md'
+        PWD + 'writeup/prs.md',
+        PWD + 'writeup/tables/maf.md'

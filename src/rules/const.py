@@ -1,4 +1,4 @@
-import os, sys, numpy
+import os, sys, numpy, tabulate
 import pandas as pd
 from sklearn.metrics import precision_recall_curve, roc_curve
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider

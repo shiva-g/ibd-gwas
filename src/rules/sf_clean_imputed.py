@@ -8,7 +8,7 @@ rule unzip_imputed:
     output:
         DATA + 'interim/imputed_vcf/chr{c}.dose.vcf.gz'
     shell:
-        'unzip -o -P 6GMoMXi0fkzQ3w -d {DATA}/interim/imputed/ {input}'
+        'unzip -o -P "Ok4iEYdK9Ue\Pu" -d {DATA}/interim/imputed_vcf/ {input}'
 
 rule limit_imputed_r2:
     input:
@@ -161,4 +161,3 @@ rule rename_rs_imputed_bfiles:
         "--update-name {input.rs_names} --make-bed "
         "--out {DATA}processed/bfiles_imputed/eur &> {log} && "
         """cp {input.fam} {output}"""
-

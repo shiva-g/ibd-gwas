@@ -105,23 +105,6 @@ rule drop_x_filter_snps:
         "plink --bfile $(dirname {input.f})/{wildcards.group} --chr 1-22 --make-bed "
         "--out $(dirname {output.f})/{wildcards.group} &> {log}"
 
-rule drop_x_filter_samples:
-    """rm x for hwe test
-    """
-    input:
-        f = DATA + 'interim/bfiles_filter_samples/{group}.fam',
-        b = expand(DATA + 'interim/bfiles_filter_samples/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
-    output:
-        f = DATA + 'interim/bfiles_filter_samples_nox/{group}.fam',
-        b = expand(DATA + 'interim/bfiles_filter_samples_nox/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
-    singularity:
-        PLINK
-    log:
-        LOG + 'prep/{group}.filter_samples_nox'
-    shell:
-        "plink --bfile $(dirname {input.f})/{wildcards.group} --chr 1-22 --make-bed "
-        "--out $(dirname {output.f})/{wildcards.group} &> {log}"
-
 rule mk_indep_snps:
     input:
         f = DATA + 'interim/bfiles_filter_samples/{group}.fam',
@@ -152,22 +135,5 @@ rule filter_indep_snps:
         "--make-bed --out $(dirname {output.f})/{wildcards.group} &> {log}"
 
 rule tmp_indep:
-    input: 
-        f = DATA + 'interim/bfiles_indep/3groups.fam',
-
-rule drop_x_indep:
-    """rm x for freq test
-    """
     input:
-        f = DATA + 'interim/bfiles_indep/{group}.fam',
-        b = expand(DATA + 'interim/bfiles_indep/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
-    output:
-        f = DATA + 'interim/bfiles_indep_nox/{group}.fam',
-        b = expand(DATA + 'interim/bfiles_indep_nox/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
-    singularity:
-        PLINK
-    log:
-        LOG + 'prep/{group}.indep_nox'
-    shell:
-        "plink --bfile $(dirname {input.f})/{wildcards.group} --chr 1-22 --make-bed "
-        "--out $(dirname {output.f})/{wildcards.group} &> {log}"
+        f = DATA + 'interim/bfiles_indep/3groups.fam',
