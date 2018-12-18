@@ -98,7 +98,7 @@ rule prsice:
         'Rscript /usr/local/bin/PRSice.R --dir {DATA}/interim/prsice/{wildcards.group}/ '
         '--snp SNP --chr CHR --bp BP --A1 A1 --A2 A2 --stat EUR_OR --se EUR_SE --pvalue EUR_PVAL '
         '--prsice /usr/local/bin/PRSice_linux --keep-ambig '
-        '--base {input.a} --perm 1000000 '
+        '--base {input.a} --perm 1000000 --no-clump '
         '--target {DATA}interim/bfiles_imputed_grouped/{wildcards.group}/eur '
         '--thread {threads} --binary-target T '
         '--out {DATA}interim/prsice/{wildcards.group}/eur &> {log}'
