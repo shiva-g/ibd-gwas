@@ -38,11 +38,11 @@
 * EUR sample subset after filtering missing samples (64 HC, 91 IBD)
 * Reference Panel: hrc.r1.1.2016
 * Phasing: eagle
-* Filter imputed results for imputed score R2>0.3 and maf>1%
+* Filter imputed results for imputed score R2>0.3 and maf>1%. Final snp count: 7,554,996
 
 ### Associations
 * 64 HC. 91 IBD (53 late, 38 VEO)
-* 7,554,996 imputed snps maf>1%
+* 7,554,996 imputed snps (imputed R2>0.3 and maf>1%)
 * Use plink to find associations and qqman for plots
     * [HC vs IBD](plots/manhattan.all.png)
     * [HC vs VEO](plots/manhattan.early.png)
