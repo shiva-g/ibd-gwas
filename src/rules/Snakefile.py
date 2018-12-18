@@ -14,6 +14,7 @@ include: "sf_prep_imputation.py"
 include: "sf_clean_imputed.py"
 include: "sf_prs.py"
 include: "sf_assoc.py"
+include: "sf_ann.py"
 
 rule before_imputation:
     input:
@@ -33,4 +34,5 @@ rule after_imputation:
         expand(DATA + 'interim/plink_assoc_fmt/{group}/eur.assoc', group=G),
         expand(PLOTS + 'manhattan.{group}.png', group=G),
         PWD + 'writeup/tables/prs.md',
-        PWD + 'writeup/tables/maf.md'
+        PWD + 'writeup/tables/maf.md',
+        vcf=DATA + "interim/variants/snpeff/eur.vcf"
