@@ -13,6 +13,15 @@
 * investigate prsice mismatched snps
 
 #### Notes
+* impute everyone w/ 1kg ref and run prsice w/ multi ethinic panel base snps
+* plot/list prsice quartiles for splitting samples by quartile
+* where to prsice snps score for assocaition test? plot them
+* auc and pval for rocs
+* why lost base snps in prsice?
+* why does prsice list different snps counts for each test?
+* rm clumping step from prsice so all snps are kept
+* use snptest w/ snp probs and 2 PCs and logistic regression instead of plink
+* mk qqplot from association results
 
 ### 20181211
 
