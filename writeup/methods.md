@@ -30,6 +30,7 @@
 * gender check (--check-sex) run after indep filter shows two conflicts F of .08 and .06
 * --het check: 0.08715, largest F inbreeding coefficient estimate; smallest -0.09699
 * case vs control missing per target (--test-missing) run after filtering targets with high missing rates and removing chrX. 344 markers have p<0.05. 76 p<0.01. 7 p<0.001
+* plink --genome table
 * mafs after QC
     * Below 1%        50637
     * 1% to 5%        186738
@@ -57,6 +58,10 @@
 * 227 of 232 base variants included (4 discarded b/c of mismatch). [Base snps](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4881818/). [Nature tables](https://www.nature.com/articles/ng.3359#supplementary-information)
 * 164 people (98 male(s), 66 female(s)) 72 HC. 92 IBD
 * 223 variants after clumping
+* [IBD vs HC ROC](plots/all.eur.prs.roc.png) [IBD vs HC density](plots/all.eur.prs.density.png)
+* [VEO vs HC ROC](plots/early.eur.prs.roc.png) [VEO vs HC density](plots/early.eur.prs.density.png)
+* [Late IBD vs HC ROC](plots/late.eur.prs.roc.png) [Late IBD vs HC density](plots/late.eur.prs.density.png)
+* [Late IBD vs VEO ROC](plots/ibd_all.eur.prs.roc.png) [Late IBD vs VEO density](plots/ibd_all.eur.prs.density.png)
 
 | Phenotype  |     Set   |  Threshold   |    PRS.R2  | Full.R2 | Null.R2 | Prevalence  |    Coefficient |    Standard.Error | P  |   Num_SNP | Empirical-P | group |
 | -| ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | --- | --- | -- |

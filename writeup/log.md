@@ -1,3 +1,7 @@
+### 20181218
+* process latest imputed results
+* mafs eur, after impute, all samples
+
 ### 20181217
 * new mds cut
     * odd samples: 201939090193_R10C02, 201939090179_R07C02
