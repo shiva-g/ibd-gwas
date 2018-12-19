@@ -5,11 +5,11 @@ rule prep_gwas_base:
     input:
         i = DATA + 'raw/ibd_gwas/ng.3359-S4.xlsx'
     output:
-        o = DATA + 'interim/ibd_gwas.assoc'
+        o = DATA + 'interim/ibd_gwas.eur.assoc'
     run:
         df = pd.read_excel(input.i, sheet_name='Heterogeneity of effect', skiprows=7)
         cols = ['CHR', 'BP', 'SNP', 'A1', 'A2', 'EUR_OR', 'EUR_PVAL', 'EUR_SE']
-        df[cols].to_csv(output.o, index=False, sep=' ')
+        df[cols].rename(columns={'EUR_OR':'OR', 'EUR_PVAL':'PVAL', 'EUR_SE':'SE'}).to_csv(output.o, index=False, sep=' ')
 
 rule mk_prsice_sample_ls:
     input:
@@ -47,29 +47,29 @@ rule mk_prsice_sample_ls:
 rule mk_prsice_sample_subsets:
     input:
         keep = DATA + 'interim/sample_subsets.{group}',
-        b = DATA + 'processed/bfiles_imputed/eur.fam',
+        b = DATA + 'processed/bfiles_imputed/{pop}.fam',
     output:
-        b = DATA + 'interim/bfiles_imputed_grouped_tmp/{group}/eur.fam'
+        b = DATA + 'interim/bfiles_imputed_grouped_tmp/{group}/{pop}.fam'
     singularity:
         PLINK
     log:
         LOG + 'prs/keep_samples.{group}'
     shell:
-        """plink --bfile $(dirname {input.b})/eur \
-        --keep {input.keep} --make-bed --out $(dirname {output})/eur &> {log}"""
+        """plink --bfile $(dirname {input.b})/{wildcards.pop} \
+        --keep {input.keep} --make-bed --out $(dirname {output})/{wildcards.pop} &> {log}"""
 
 rule recode_fam_prsice_sample_subsets:
     """Change pheno status for group comparison"""
     input:
-        b = DATA + 'interim/bfiles_imputed_grouped_tmp/{group}/eur.fam',
+        b = DATA + 'interim/bfiles_imputed_grouped_tmp/{group}/{pop}.fam',
         m = DATA + 'processed/MANIFEST.csv',
     output:
-        b = DATA + 'interim/bfiles_imputed_grouped/{group}/eur.fam'
+        b = DATA + 'interim/bfiles_imputed_grouped/{group}/{pop}.fam'
     run:
-        shell('cp $(dirname {input.b})/eur.bim $(dirname {output.b})/eur.bim')
-        shell('cp $(dirname {input.b})/eur.bed $(dirname {output.b})/eur.bed')
+        shell('cp $(dirname {input.b})/{wildcards.pop}.bim $(dirname {output.b})/{wildcards.pop}.bim')
+        shell('cp $(dirname {input.b})/{wildcards.pop}.bed $(dirname {output.b})/{wildcards.pop}.bed')
         if wildcards.group != 'ibd_all':
-            shell('cp $(dirname {input.b})/eur.fam $(dirname {output.b})/eur.fam')
+            shell('cp $(dirname {input.b})/{wildcards.pop}.fam $(dirname {output.b})/{wildcards.pop}.fam')
         else:
             df = pd.read_csv(input.m)
             df.loc[:, 'pheno'] = df.apply(lambda row: 2 if 'VEO' in row['Study Group'] else 1, axis=1)
@@ -84,31 +84,31 @@ rule recode_fam_prsice_sample_subsets:
 
 rule prsice:
     input:
-        b = DATA + 'interim/bfiles_imputed_grouped/{group}/eur.fam',
-        a = DATA + 'interim/ibd_gwas.assoc'
+        b = DATA + 'interim/bfiles_imputed_grouped/{group}/{pop}.fam',
+        a = DATA + 'interim/ibd_gwas.{pop}.assoc'
     output:
-        DATA + 'interim/prsice/{group}/eur.summary',
-        DATA + 'interim/prsice/{group}/eur.best'
+        DATA + 'interim/prsice/{group}/{pop}.summary',
+        DATA + 'interim/prsice/{group}/{pop}.best'
     singularity:
         PRSICE
     threads: 16
     log:
-        LOG + 'eur.prs.{group}'
+        LOG + '{pop}.prs.{group}'
     shell:
         'Rscript /usr/local/bin/PRSice.R --dir {DATA}/interim/prsice/{wildcards.group}/ '
-        '--snp SNP --chr CHR --bp BP --A1 A1 --A2 A2 --stat EUR_OR --se EUR_SE --pvalue EUR_PVAL '
+        '--snp SNP --chr CHR --bp BP --A1 A1 --A2 A2 --stat OR --se SE --pvalue PVAL '
         '--prsice /usr/local/bin/PRSice_linux --keep-ambig '
         '--base {input.a} --perm 1000000 --no-clump '
-        '--target {DATA}interim/bfiles_imputed_grouped/{wildcards.group}/eur '
+        '--target {DATA}interim/bfiles_imputed_grouped/{wildcards.group}/{wildcards.pop} '
         '--thread {threads} --binary-target T '
-        '--out {DATA}interim/prsice/{wildcards.group}/eur &> {log}'
+        '--out {DATA}interim/prsice/{wildcards.group}/{wildcards.pop} &> {log}'
 
 rule annotate_prsice_scores:
     input:
-        p = DATA + 'interim/prsice/{group}/eur.best',
-        f = DATA + 'interim/bfiles_imputed_grouped/{group}/eur.fam'
+        p = DATA + 'interim/prsice/{group}/{pop}.best',
+        f = DATA + 'interim/bfiles_imputed_grouped/{group}/{pop}.fam'
     output:
-        o = DATA + 'interim/prsice_parsed/{group}/eur.dat'
+        o = DATA + 'interim/prsice_parsed/{group}/{pop}.dat'
     run:
         cols= ['fid', 'IID', 'f', 'm', 'sex', 'pheno']
         int_cols= ['fid', 'f', 'm', 'sex', 'pheno']
@@ -120,9 +120,9 @@ rule annotate_prsice_scores:
 
 rule plot_prs_dist:
     input:
-        DATA + 'interim/prsice_parsed/{group}/eur.dat'
+        DATA + 'interim/prsice_parsed/{group}/{pop}.dat'
     output:
-        PLOTS + '{group}.eur.prs.density.png'
+        PLOTS + '{group}.{pop}.prs.density.png'
     run:
         R("""
         require(ggplot2)
@@ -134,23 +134,28 @@ rule plot_prs_dist:
 
 rule calc_prs_roc:
     input:
-        i = DATA + 'interim/prsice_parsed/{group}/eur.dat'
+        i = DATA + 'interim/prsice_parsed/{group}/{pop}.dat'
     output:
-        o = DATA + 'interi/prsice_roc/{group}.eur.roc'
+        o = DATA + 'interim/prsice_roc/{group}.{pop}.roc',
+        auc = DATA + 'interim/prsice_roc/{group}.{pop}.auc'
     run:
         df = pd.read_csv(input.i, sep='\t')
         df.loc[:, 'y'] = df.apply(lambda row: 1 if row['pheno']==2 else 0, axis=1)
         precision, recall, thresholds = precision_recall_curve(df['y'], df['PRS'], pos_label=1)
         fpr, tpr, thresholds = roc_curve(df['y'], df['PRS'], pos_label=1)
+        auc = metrics.auc(fpr, tpr)
         curve = {'fpr':fpr, 'tpr':tpr}
         s = pd.DataFrame(curve, columns=['pre', 'rec', 'fpr', 'tpr'])
         s.to_csv(output.o, index=False, sep='\t')
+        with open(output.auc, 'w') as fout:
+            print('test\tauc', file=fout)
+            print('\t'.join((wildcards.group, str(auc))), file=fout)
 
 rule plot_prs_roc:
     input:
-        DATA + 'interi/prsice_roc/{group}.eur.roc'
+        DATA + 'interim/prsice_roc/{group}.{pop}.roc'
     output:
-        PLOTS + '{group}.eur.prs.roc.png'
+        PLOTS + '{group}.{pop}.prs.roc.png'
     run:
         R("""require(ggplot2)
              d = read.delim("{input}", sep='\t', header=TRUE)
@@ -161,15 +166,30 @@ rule plot_prs_roc:
             ggsave("{output}", p)
           """)
 
-rule combine_prs:
+rule join_rs_dat:
     input:
-        expand(DATA + 'interim/prsice/{group}/eur.summary', group=G)
+        prs = DATA + 'interim/prsice/{group}/{pop}.summary',
+        roc = DATA + 'interim/prsice_roc/{group}.{pop}.auc'
     output:
-        o = PWD + 'writeup/tables/prs.md'
+        o = temp(DATA + 'interim/prsice/{group}/{pop}.dat')
     run:
         def read_df(afile):
             df = pd.read_csv(afile, sep='\t')
             df['test'] = afile.split('/')[-2]
+            return df
+
+        df = read_df(input.prs)
+        roc = pd.read_csv(input.roc, sep='\t')
+        pd.merge(df, roc, on='test', how='left').to_csv(output.o, index=False, sep='\t')
+
+rule combine_prs:
+    input:
+        expand(DATA + 'interim/prsice/{group}/{pop}.dat', group=G)
+    output:
+        o = PWD + 'writeup/tables/prs.{pop}.md'
+    run:
+        def read_df(afile):
+            df = pd.read_csv(afile, sep='\t')
             return df
         df = pd.concat([read_df(af) for af in input])
         with open(output.o, 'w') as fout:

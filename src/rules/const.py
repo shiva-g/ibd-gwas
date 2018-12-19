@@ -1,6 +1,7 @@
 import os, sys, numpy, tabulate
 import pandas as pd
 from sklearn.metrics import precision_recall_curve, roc_curve
+from sklearn import metrics
 from snakemake.remote.HTTP import RemoteProvider as HTTPRemoteProvider
 HTTP = HTTPRemoteProvider()
 from snakemake.utils import R
