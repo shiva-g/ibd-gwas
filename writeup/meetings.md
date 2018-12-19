@@ -21,7 +21,7 @@
 * why does prsice list different snps counts for each test?
 * ~~rm clumping step from prsice so all snps are kept~~
 * use snptest w/ snp probs and 2 PCs and logistic regression instead of plink
-* mk qqplot from association results
+* ~~mk qqplot from association results~~
 
 ### 20181211
 
