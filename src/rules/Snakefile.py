@@ -35,4 +35,5 @@ rule after_imputation:
         expand(PLOTS + 'manhattan.{group}.png', group=G),
         PWD + 'writeup/tables/prs.eur.md',
         PWD + 'writeup/tables/maf.md',
-        vcf=DATA + "interim/variants/snpeff/eur.vcf"
+        DATA + "interim/variants/snpeff/eur.vcf",
+        DATA + 'interim/prsice/snp_overlap/all.eur.init'

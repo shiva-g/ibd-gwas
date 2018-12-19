@@ -53,7 +53,7 @@ rule mk_prsice_sample_subsets:
     singularity:
         PLINK
     log:
-        LOG + 'prs/keep_samples.{group}'
+        LOG + 'prs/keep_samples.{group}.{pop}'
     shell:
         """plink --bfile $(dirname {input.b})/{wildcards.pop} \
         --keep {input.keep} --make-bed --out $(dirname {output})/{wildcards.pop} &> {log}"""
@@ -82,6 +82,21 @@ rule recode_fam_prsice_sample_subsets:
                     pheno = str(phenos[sample])
                     print(' '.join(sp[:-1] + [pheno]), file=fout)
 
+rule base_impute_overlap:
+    input:
+        b = DATA + 'interim/bfiles_imputed_grouped/{group}/{pop}.bim',
+        a = DATA + 'interim/ibd_gwas.{pop}.assoc',
+        init = DATA + 'interim/bfiles_{pop}/3groups.bim',
+    output:
+        o = DATA + 'interim/prsice/snp_overlap/{group}.{pop}.imputed_all',
+        oi = DATA + 'interim/prsice/snp_overlap/{group}.{pop}.init'
+    run:
+        shell('cut -f 1,4 {input.b} | sort -u > {output.o}.b')
+        shell('cut -f 1,4 {input.init} | sort -u > {output.o}.init')
+        shell('cut -f 1,2 -d " " {input.a} | sed "s/ /\t/g" | sort -u > {output.o}.a')
+        shell('comm -12 {output.o}.a {output.o}.b > {output.o}')
+        shell('comm -12 {output.o} {output.o}.init > {output.oi}')
+         
 rule prsice:
     input:
         b = DATA + 'interim/bfiles_imputed_grouped/{group}/{pop}.fam',
@@ -184,7 +199,7 @@ rule join_rs_dat:
 
 rule combine_prs:
     input:
-        expand(DATA + 'interim/prsice/{group}/{pop}.dat', group=G)
+        expand(DATA + 'interim/prsice/{group}/{{pop}}.dat', group=G)
     output:
         o = PWD + 'writeup/tables/prs.{pop}.md'
     run:

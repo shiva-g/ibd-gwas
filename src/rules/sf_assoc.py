@@ -1,4 +1,4 @@
-"""Run plink association."""
+"""Plink association after imputation."""
 
 rule plink_assoc:
     input:
