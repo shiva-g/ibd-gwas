@@ -28,7 +28,8 @@ rule assoc_plot:
     input:
         DATA + 'interim/plink_assoc_fmt/{group}/eur.assoc'
     output:
-        PLOTS + 'manhattan.{group}.png'
+        PLOTS + 'manhattan.{group}.png',
+        PLOTS + 'qq.{group}.png'
     singularity:
         "docker://manninglab/metal"
     shell:
