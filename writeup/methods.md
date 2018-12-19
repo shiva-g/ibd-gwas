@@ -51,6 +51,17 @@
 
 ### Polygenic risk score
 * 227 of 232 base variants included (4 discarded b/c of mismatch). [Base snps](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4881818/). [Nature tables](https://www.nature.com/articles/ng.3359#supplementary-information)
+    * 190 on array, 37 imputed
+    * 2 of the mismatched snps are imputed
+    * mismatch
+    
+    -~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
+File_Type       RS_ID   CHR_Target      CHR_File        BP_Target       BP_File A1_Target       A1_File A2_Target       A2_File
+Base    rs3172494       3       3       48681053        48681053        T       A       C       C
+Base    rs9868809       3       3       48731487        48731487        T       A       G       G
+Base    rs4768236       12      12      40528432        40528432        C       C       T       A
+Base    rs11564258      12      12      40756472        40756472        C       G       A       A
+
 * 64 HC. 91 IBD (53 late, 38 VEO)
 * 223 variants after clumping (imputed R2>0.3 and maf>1%)
 * [pval table](tables/prs.md)
