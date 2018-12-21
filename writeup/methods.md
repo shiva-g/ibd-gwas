@@ -52,6 +52,7 @@
 ### Polygenic risk score
 * 231 of 232 base variants. [Base snps](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4881818/). [Nature tables](https://www.nature.com/articles/ng.3359#supplementary-information)
     * 192 on array, 39 imputed
+    * 16:50763781 indel not imputed or on array
 
 * 64 HC. 91 IBD (53 late, 38 VEO)
 * [pval table](tables/prs.md)
