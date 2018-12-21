@@ -1,3 +1,7 @@
+### 20181221
+* what genome version for nature tables? hg19
+* [nature tables messed up](https://mail.google.com/mail/u/0/#sent/QgrcJHsBmtxPmDHJwQbCGTJqzHkgZxlBDCg)
+
 ### 20181218
 * process latest imputed results
 * mafs eur, after impute, all samples
