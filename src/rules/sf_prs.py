@@ -7,8 +7,19 @@ rule prep_gwas_base:
     output:
         o = DATA + 'interim/ibd_gwas.eur.assoc'
     run:
+        def fix_positions(row):
+            if row['SNP']=='rs3172494' and row['BP']==48681053:
+                return 48731487
+            if row['SNP']=='rs9868809' and row['BP']==48731487:
+                return 48681053
+            if row['SNP']=='rs4768236' and row['BP']==40528432:
+                return 40756472
+            if row['SNP']=='rs11564258' and row['BP']==40756472:
+                return 40792300
+            return row['BP']
         df = pd.read_excel(input.i, sheet_name='Heterogeneity of effect', skiprows=7)
         cols = ['CHR', 'BP', 'SNP', 'A1', 'A2', 'EUR_OR', 'EUR_PVAL', 'EUR_SE']
+        df.loc[:, 'BP'] = df.apply(fix_positions, axis=1)
         df[cols].rename(columns={'EUR_OR':'OR', 'EUR_PVAL':'PVAL', 'EUR_SE':'SE'}).to_csv(output.o, index=False, sep=' ')
 
 rule mk_prsice_sample_ls:
@@ -96,7 +107,7 @@ rule base_impute_overlap:
         shell('cut -f 1,2 -d " " {input.a} | sed "s/ /\t/g" | sort -u > {output.o}.a')
         shell('comm -12 {output.o}.a {output.o}.b > {output.o}')
         shell('comm -12 {output.o} {output.o}.init > {output.oi}')
-         
+
 rule prsice:
     input:
         b = DATA + 'interim/bfiles_imputed_grouped/{group}/{pop}.fam',
@@ -165,6 +176,16 @@ rule calc_prs_roc:
         with open(output.auc, 'w') as fout:
             print('test\tauc', file=fout)
             print('\t'.join((wildcards.group, str(auc))), file=fout)
+
+rule calc_prs_roc_pval:
+    input:
+        i = DATA + 'interim/prsice_parsed/{group}/{pop}.dat'
+    output:
+        o = DATA + 'interim/prsice_roc/{group}.{pop}.roc_pval',
+    conda:
+        ENVS + 'verification-env.yml'
+    shell:
+        "Rscript {SCRIPTS}/roc_pval.R {input} {output}"
 
 rule plot_prs_roc:
     input:

@@ -111,9 +111,9 @@ rule merge_imputed_bfiles:
 
 rule mk_rs_names:
     input:
-        i = DATA + 'interim/ibd_gwas.assoc'
+        i = DATA + 'interim/ibd_gwas.{pop}.assoc'
     output:
-        o = DATA + 'interim/rs_names'
+        o = DATA + 'interim/{pop}.rs_names'
     run:
         df = pd.read_csv(input.i, sep=' ')
         df.loc[:, 'id'] = df.apply(lambda row: str(row['CHR']) + ':' + str(row['BP']), axis=1)
@@ -149,13 +149,13 @@ rule rename_rs_imputed_bfiles:
     input:
         fam = DATA + 'interim/tmp.fam',
         f = DATA + 'interim/bfiles_imputed_combined/eur.fam',
-        rs_names = DATA + 'interim/rs_names'
+        rs_names = DATA + 'interim/eur.rs_names'
     output:
         DATA + 'processed/bfiles_imputed/eur.fam'
     singularity:
         PLINK
     log:
-        LOG + 'prs/rename_rs'
+        LOG + 'prs/rename_rs.eur'
     shell:
         "plink --bfile {DATA}/interim/bfiles_imputed_combined/eur "
         "--update-name {input.rs_names} --make-bed --maf 0.01 "
