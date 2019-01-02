@@ -29,6 +29,7 @@ ENVS = PWD + 'envs/'
 
 # containers
 PLINK = "docker://quay.research.chop.edu/evansj/plink-docker:181012"
+PLINK2 = "docker://quay.research.chop.edu/evansj/plink2-docker:11Feb"
 PRSICE = "docker://quay.research.chop.edu/evansj/prsice-docker:2.1.4"
 
 G = ('early', 'all', 'late', 'ibd_all')

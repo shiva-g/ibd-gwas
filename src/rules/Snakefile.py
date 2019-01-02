@@ -14,11 +14,12 @@ include: "sf_prep_imputation.py"
 include: "sf_clean_imputed.py"
 include: "sf_prs.py"
 include: "sf_assoc.py"
+include: "sf_snptest.py"
 include: "sf_ann.py"
 
 rule before_imputation:
     input:
-        expand(DATA + 'interim/eur_vcf/3groups.{chr}.vcf.gz', chr=range(1,23)),
+        expand(DATA + 'interim/{pop}_vcf/3groups.{chr}.vcf.gz', pop=('tpop', 'eur'), chr=range(1,23)),
         PLOTS + 'eur_mds.png',
         PLOTS + 'hapmap_mds.png',
         PLOTS + 'hapmap_mds_nogroup.png',

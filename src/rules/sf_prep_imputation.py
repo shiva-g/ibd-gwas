@@ -22,23 +22,37 @@ rule vcf_white:
     singularity:
         PLINK
     log:
-        LOG + 'prs/vcf.{chr}.{group}'
+        LOG + 'prs/vcf.{chr}.{group}.eur'
     shell:
         "plink --bfile {DATA}interim/bfiles_eur/{wildcards.group} --recode vcf --chr {wildcards.chr} "
         "--out {DATA}interim/bfiles_eur_vcf_chr{wildcards.chr}/{wildcards.group} &> {log}"
 
+rule vcf_tpop:
+    input:
+        DATA + 'interim/bfiles_filter_samples/{group}.fam',
+    output:
+        DATA + 'interim/bfiles_tpop_vcf_chr{chr}/{group}.vcf'
+    singularity:
+        PLINK
+    log:
+        LOG + 'prs/vcf.{chr}.{group}.tpop'
+    shell:
+        "plink --bfile {DATA}interim/bfiles_filter_samples/{wildcards.group} "
+        "--recode vcf --chr {wildcards.chr} "
+        "--out {DATA}interim/bfiles_tpop_vcf_chr{wildcards.chr}/{wildcards.group} &> {log}"
+
 rule cp_vcf:
     input:
-        DATA + 'interim/bfiles_eur_vcf_chr{chr}/{group}.vcf'
+        DATA + 'interim/bfiles_{pop}_vcf_chr{chr}/{group}.vcf'
     output:
-        DATA + 'interim/eur_vcf/{group}.{chr}.vcf'
+        DATA + 'interim/{pop}_vcf/{group}.{chr}.vcf'
     shell:
         'cp {input} {output}'
 
 rule zip_vcf:
     input:
-        DATA + 'interim/eur_vcf/{group}.{chr}.vcf'
+        DATA + 'interim/{pop}_vcf/{group}.{chr}.vcf'
     output:
-        DATA + "interim/eur_vcf/{group}.{chr}.vcf.gz"
+        DATA + "interim/{pop}_vcf/{group}.{chr}.vcf.gz"
     wrapper:
         "0.27.1/bio/vcf/compress"
