@@ -1,3 +1,7 @@
+### 20190102
+* rm? reported white, but appears black: HC (201939090044_R12C01, 2015_CHOP_MIC_BAL_FAM029_SUB)
+* mk tpop vcfs for imputation
+
 ### 20181221
 * what genome version for nature tables? hg19
 * [nature tables messed up](https://mail.google.com/mail/u/0/#sent/QgrcJHsBmtxPmDHJwQbCGTJqzHkgZxlBDCg)
