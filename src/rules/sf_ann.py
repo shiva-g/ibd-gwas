@@ -69,3 +69,16 @@ rule ann_plink_assoc:
         m1 = pd.merge(assoc, adult_gwas, on='SNP', how='left').fillna('')
         crit = m1.apply(lambda row: row['P_plink']<1e-5 or row['A1_adult']!='', axis=1)
         pd.merge(m1[crit], dat, how='left', on='SNP').to_csv(output.o, index=False, sep='\t')
+
+rule gene_assoc:
+    input:
+        a = DATA + 'interim/plink_assoc_fmt_ann/{group}/{pop}.assoc'
+    output:
+        o = PWD + 'writeup/tables/{group}.{pop}.assoc.csv'
+    run:
+        df = pd.read_csv(input.a, sep='\t')
+        df.loc[:, 'gene'] = df.apply(lambda row: row['eff'].split('ANN=')[1].split('|')[3], axis=1)
+        cols = ['SNP', 'gene', 'A1_plink', 'A2_plink', 'P_plink', 'OR_plink',
+                'A1_adult', 'A2_adult', 'PVAL_adult', 'OR_adult',
+                'A1_vcf', 'A2_vcf', 'eff']
+        df[cols].to_csv(output.o, index=False, sep=',')

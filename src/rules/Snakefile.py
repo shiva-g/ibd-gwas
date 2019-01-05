@@ -37,4 +37,4 @@ rule after_imputation:
         PWD + 'writeup/tables/prs.eur.md',
         PWD + 'writeup/tables/maf.md',
         DATA + 'interim/prsice/snp_overlap/all.eur.init',
-        expand(DATA + "interim/plink_assoc_fmt_ann/{group}/eur.assoc", group=G)
+        expand(PWD + "writeup/tables/{group}.eur.assoc.csv", group=G)
