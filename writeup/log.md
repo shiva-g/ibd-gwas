@@ -1,6 +1,9 @@
+### 20190103
+* run snptest conditioning on covariates for pop structure using [cov_names cov1 and cov2](https://mathgen.stats.ox.ac.uk/genetics_software/snptest/snptest.html#conditional_tests) when all sample imputation is done
+
 ### 20190102
-* rm? reported white, but appears black: HC (201939090044_R12C01, 2015_CHOP_MIC_BAL_FAM029_SUB)
-* mk tpop vcfs for imputation
+* rm? reported white, but appears black: HC (201939090044_R12C01, 2015_CHOP_MIC_BAL_FAM029_SUB). No keep this.
+* mk tpop vcfs for imputation. imputation server down
 
 ### 20181221
 * what genome version for nature tables? hg19
