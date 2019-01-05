@@ -48,12 +48,11 @@ rule update_gen_sample:
 
         bad_df = pd.DataFrame(bad_dat, columns=use_cols_short)
         df = pd.merge(df_sample, pd.concat([df_dat[['ID_1', 'sex', 'pheno']], bad_df]), how='left', on='ID_1')
-        #df.loc[:, 'ID_1'] = df.apply(lambda row: row['ID_1'].replace('_','a'), axis=1)
         df[use_cols].to_csv(output.o, sep=' ', index=False)
         shell('cp {input.gen} {output.gen}')
 
-# association
-rule snptest:
+# association eur
+rule snptest_eur:
     input:
         gen = DATA + 'interim/eur_gen/chr{c}.gen',
         sample  = DATA + 'interim/eur_gen/chr{c}.sample',
@@ -74,6 +73,22 @@ rule snptest:
         -pheno pheno \
         -hwe
         """
+
+# association correct for pop structure
+rule snptest_tpop:
+    input:
+        gen = DATA + 'interim/tpop_gen/chr{c}.gen',
+        sample  = DATA + 'interim/tpop_gen/chr{c}.sample',
+    output:
+        DATA + 'interim/top_snptest/chr{c}.out'
+    log:
+        LOG + 'snptest/tpop.chr{c}'
+    singularity:
+        SNPTEST
+    shell:
+        "snptest -data {input.gen} {input.sample} "
+        "-o {output} -genotype_field GP -frequentist 1 "
+        "-method score -pheno pheno -cov_names pc1 pc2 -hwe"
 
 rule gens:
     input:
