@@ -1,6 +1,7 @@
 ### 20190107
 * summarize snptest eur
 * local impute tpop
+    * `docker exec -t -i mis-docker cloudgene run imputationserver --files ${TEST_DATA} --refpanel apps@hapmap2 --conf /etc/hadoop/conf`
     * tpop PCA
     * tpop snptest
 * mybic site - ask shiping for help
