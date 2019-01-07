@@ -1,9 +1,10 @@
 ### 20190107
 * summarize snptest eur
 * local impute tpop
-* tpop PCA
-* tpop snptest
-* mybic site
+    * tpop PCA
+    * tpop snptest
+* mybic site - ask shiping for help
+    * add snp results
 
 ### 20190103
 * run snptest conditioning on covariates for pop structure using [cov_names cov1 and cov2](https://mathgen.stats.ox.ac.uk/genetics_software/snptest/snptest.html#conditional_tests) when all sample imputation is done
