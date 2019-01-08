@@ -12,6 +12,8 @@
 * impute everyone w/ 1kg ref and run prsice w/ multi ethinic panel base snps
 * pval for rocs
 
+#### Notes
+
 ### 20181218
 
 #### Agenda
