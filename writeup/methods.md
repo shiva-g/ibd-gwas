@@ -51,14 +51,14 @@
 * Use snptest for associations (-frequentist 1 -method score -hwe)    
 * [See mybic `EUR association SNP tables` for SNP tables](http://mybic.chop.edu/labs/devoto_lab/ibd-gwas/)
 
-### Polygenic risk score
+### Polygenic risk score (pvals from http://www.biosoft.hacettepe.edu.tr/easyROC/)
 * 231 of 232 base variants. [Base snps](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4881818/). [Nature tables](https://www.nature.com/articles/ng.3359#supplementary-information)
     * 192 on array, 39 imputed
     * 16:50763781 indel not imputed or on array. The position is correct in the supplement, but the imputed have nothing within 30bp of it.
 
 * 64 HC. 91 IBD (53 late, 38 VEO)
 * [pval table](tables/prs.md)
-* [IBD vs HC ROC](plots/all.eur.prs.roc.png) [IBD vs HC density](plots/all.eur.prs.density.png) [IBD vs HC quartiles](plots/all.eur.prs.quartiles.png)
-* [VEO vs HC ROC](plots/early.eur.prs.roc.png) [VEO vs HC density](plots/early.eur.prs.density.png) [VEO vs HC density](plots/early.eur.prs.quartiles.png)
-* [Late IBD vs HC ROC](plots/late.eur.prs.roc.png) [Late IBD vs HC density](plots/late.eur.prs.density.png) [Late IBD vs HC density](plots/late.eur.prs.quartiles.png)
-* [Late IBD vs VEO ROC](plots/ibd_all.eur.prs.roc.png) [Late IBD vs VEO density](plots/ibd_all.eur.prs.density.png) [Late IBD vs VEO ROC](plots/ibd_all.eur.prs.quartiles.png)
+* [IBD vs HC ROC](plots/all.eur.prs.roc.png) [IBD vs HC density](plots/all.eur.prs.density.png) [IBD vs HC quartiles](plots/all.eur.prs.quartiles.png) ROC pval: 1.596776e-09
+* [VEO vs HC ROC](plots/early.eur.prs.roc.png) [VEO vs HC density](plots/early.eur.prs.density.png) [VEO vs HC density](plots/early.eur.prs.quartiles.png) ROC pval: 0.000238243
+* [Late IBD vs HC ROC](plots/late.eur.prs.roc.png) [Late IBD vs HC density](plots/late.eur.prs.density.png) [Late IBD vs HC density](plots/late.eur.prs.quartiles.png) ROC pval: 6.77093e-09
+* [Late IBD vs VEO ROC](plots/ibd_all.eur.prs.roc.png) [Late IBD vs VEO density](plots/ibd_all.eur.prs.density.png) [Late IBD vs VEO ROC](plots/ibd_all.eur.prs.quartiles.png) ROC pval: 	0.7775863
