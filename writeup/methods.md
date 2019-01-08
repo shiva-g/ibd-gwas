@@ -61,5 +61,5 @@
 * [pval table](tables/prs.md)
 * [IBD vs HC ROC](plots/all.eur.prs.roc.png) [IBD vs HC density](plots/all.eur.prs.density.png) [IBD vs HC quartiles](plots/all.eur.prs.quartiles.png) ROC pval: 1.596776e-09
 * [VEO vs HC ROC](plots/early.eur.prs.roc.png) [VEO vs HC density](plots/early.eur.prs.density.png) [VEO vs HC density](plots/early.eur.prs.quartiles.png) ROC pval: 0.000238243
-* [Late IBD vs HC ROC](plots/late.eur.prs.roc.png) [Late IBD vs HC density](plots/late.eur.prs.density.png) [Late IBD vs HC density](plots/late.eur.prs.quartiles.png) ROC pval: 6.77093e-09
-* [Late IBD vs VEO ROC](plots/ibd_all.eur.prs.roc.png) [Late IBD vs VEO density](plots/ibd_all.eur.prs.density.png) [Late IBD vs VEO ROC](plots/ibd_all.eur.prs.quartiles.png) ROC pval: 	0.7775863
+* [Late IBD vs HC ROC](plots/late.eur.prs.roc.png) [Late IBD vs HC density](plots/late.eur.prs.density.png) [Late IBD vs HC quartiles](plots/late.eur.prs.quartiles.png) ROC pval: 6.77093e-09
+* [Late IBD vs VEO ROC](plots/ibd_all.eur.prs.roc.png) [Late IBD vs VEO density](plots/ibd_all.eur.prs.density.png) [Late IBD vs VEO ROC quartiles](plots/ibd_all.eur.prs.quartiles.png) ROC pval: 	0.7775863
