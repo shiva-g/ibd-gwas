@@ -195,7 +195,7 @@ rule plot_with_hapmap_nogroup:
         require(ggplot2)
         d = read.delim("{input}", header=TRUE, sep='\t')
         p = ggplot(data=d) + geom_point(aes(x=C1, y=C2, colour=race), alpha=0.25) +
-        theme_bw() 
+        theme_bw()
         ggsave("{output}", p, units="cm", width=60)
         """)
 
