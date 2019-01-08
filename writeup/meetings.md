@@ -2,13 +2,21 @@
 
 #### Agenda
 * [mybic docs](http://mybic.chop.edu/labs/devoto_lab/ibd-gwas/)
-* [EUR plink & snptest assoc results](http://mybic.chop.edu/labs/devoto_lab/ibd-gwas/)
+* [EUR plink & snptest annotated assoc results](http://mybic.chop.edu/labs/devoto_lab/ibd-gwas/)
 * [QQ plots for plink assoc test](https://github.com/samesense/ibd-gwas/blob/master/writeup/methods.md#associations)
-* Alt local compute imputation?
+* [PRSice quartile plots](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.md)
 * [AUC for PRSice ROC curves](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.md)
+* [pvals for rocs](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.md)
+* Michigan alternative for local compute imputation?
+* [Welcome trust data form](https://www.dropbox.com/s/u60f4i2uhh7jtmc/Screenshot%202019-01-08%2014.15.14.png?dl=0)
+* UK biobank registration under review
 
 #### Working
 * impute everyone w/ 1kg ref and run prsice w/ multi ethinic panel base snps
+* Welcome trust 1st edition ibd adult and Uk biobank ibd adult data
+* automate roc pvals
+
+#### Notes
 
 ### 20181218
 
@@ -26,11 +34,11 @@
 
 #### Notes
 * impute everyone w/ 1kg ref and run prsice w/ multi ethinic panel base snps
-* plot/list prsice quartiles for splitting samples by quartile
+* ~plot/list prsice quartiles for splitting samples by quartile~
 * ~what are prsice snps scores for assocation test?~ plot them
-* ~~auc~~ and pval for rocs
-* why lost base snps in prsice?
-* why does prsice list different snps counts for each test?
+* ~~auc~~ and ~pval for rocs~
+* ~why lost base snps in prsice?~
+* ~why does prsice list different snps counts for each test?~
 * ~~rm clumping step from prsice so all snps are kept~~
 * use snptest w/ snp probs and 2 PCs and logistic regression instead of plink
 * ~~mk qqplot from association results~~
