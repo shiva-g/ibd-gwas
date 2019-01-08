@@ -1,5 +1,13 @@
 ### 20190108
-* assoc results
+
+#### Agenda
+* [mybic docs](http://mybic.chop.edu/labs/devoto_lab/ibd-gwas/)
+* [EUR plink & snptest assoc results](http://mybic.chop.edu/labs/devoto_lab/ibd-gwas/)
+* Alt local compute imputation?
+* [AUC for PRSice ROC curves](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.md)
+
+#### Working
+* impute everyone w/ 1kg ref and run prsice w/ multi ethinic panel base snps
 
 ### 20181218
 
@@ -12,13 +20,13 @@
 * qqplot?
 
 #### Working
-* annotate plink association positions w/ genes/pathways. [fuma?](https://www.nature.com/articles/s41467-017-01261-5)
+* annotate plink association positions w/ ~genes~/pathways. [fuma?](https://www.nature.com/articles/s41467-017-01261-5)
 * ~~nvestigate prsice mismatched snps~~
 
 #### Notes
 * impute everyone w/ 1kg ref and run prsice w/ multi ethinic panel base snps
 * plot/list prsice quartiles for splitting samples by quartile
-* what are prsice snps scores for assocation test? plot them
+* ~what are prsice snps scores for assocation test?~ plot them
 * ~~auc~~ and pval for rocs
 * why lost base snps in prsice?
 * why does prsice list different snps counts for each test?
