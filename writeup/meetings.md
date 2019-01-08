@@ -3,6 +3,7 @@
 #### Agenda
 * [mybic docs](http://mybic.chop.edu/labs/devoto_lab/ibd-gwas/)
 * [EUR plink & snptest assoc results](http://mybic.chop.edu/labs/devoto_lab/ibd-gwas/)
+* [QQ plots for plink assoc test](https://github.com/samesense/ibd-gwas/blob/master/writeup/methods.md#associations)
 * Alt local compute imputation?
 * [AUC for PRSice ROC curves](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.md)
 
