@@ -51,7 +51,8 @@
 * Use snptest for associations (-frequentist 1 -method score -hwe)    
 * [See mybic `EUR association SNP tables` for SNP tables](http://mybic.chop.edu/labs/devoto_lab/ibd-gwas/)
 
-### Polygenic risk score (pvals from http://www.biosoft.hacettepe.edu.tr/easyROC/)
+### Polygenic risk score
+* pvals from http://www.biosoft.hacettepe.edu.tr/easyROC/)
 * 231 of 232 base variants. [Base snps](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4881818/). [Nature tables](https://www.nature.com/articles/ng.3359#supplementary-information)
     * 192 on array, 39 imputed
     * 16:50763781 indel not imputed or on array. The position is correct in the supplement, but the imputed have nothing within 30bp of it.
