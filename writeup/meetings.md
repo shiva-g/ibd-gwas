@@ -8,6 +8,7 @@
 * [AUC for PRSice ROC curves](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.md)
 * [pvals for rocs](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.md)
 * Michigan alternative for local compute imputation?
+* [Welcome trust data form](https://www.dropbox.com/s/u60f4i2uhh7jtmc/Screenshot%202019-01-08%2014.15.14.png?dl=0)
 
 #### Working
 * impute everyone w/ 1kg ref and run prsice w/ multi ethinic panel base snps
