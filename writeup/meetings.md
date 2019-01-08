@@ -2,7 +2,7 @@
 
 #### Agenda
 * [mybic docs](http://mybic.chop.edu/labs/devoto_lab/ibd-gwas/)
-* [EUR plink annotated assoc results](http://mybic.chop.edu/labs/devoto_lab/ibd-gwas/)
+* [EUR plink annotated assoc results](http://mybic.chop.edu/labs/devoto_lab/ibd-gwas/). [ex table all ibd vs hc](tables/all.eur.assoc.csv)
 * [QQ plots for plink assoc test](https://github.com/samesense/ibd-gwas/blob/master/writeup/methods.md#associations)
 * [PRSice quartile plots](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.md)
 * [AUC for PRSice ROC curves](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.md)
