@@ -1,3 +1,12 @@
+### 20190107
+* summarize snptest eur
+* local impute tpop
+    * `docker exec -t -i mis-docker cloudgene run imputationserver --files ${TEST_DATA} --refpanel apps@hapmap2 --conf /etc/hadoop/conf`
+    * tpop PCA
+    * tpop snptest
+* mybic site - ask shiping for help
+    * add snp results
+
 ### 20190103
 * run snptest conditioning on covariates for pop structure using [cov_names cov1 and cov2](https://mathgen.stats.ox.ac.uk/genetics_software/snptest/snptest.html#conditional_tests) when all sample imputation is done
 
