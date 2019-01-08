@@ -2,7 +2,7 @@
 
 #### Agenda
 * [mybic docs](http://mybic.chop.edu/labs/devoto_lab/ibd-gwas/)
-* [EUR plink & snptest annotated assoc results](http://mybic.chop.edu/labs/devoto_lab/ibd-gwas/)
+* [EUR plink annotated assoc results](http://mybic.chop.edu/labs/devoto_lab/ibd-gwas/)
 * [QQ plots for plink assoc test](https://github.com/samesense/ibd-gwas/blob/master/writeup/methods.md#associations)
 * [PRSice quartile plots](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.md)
 * [AUC for PRSice ROC curves](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.md)
@@ -15,6 +15,7 @@
 * impute everyone w/ 1kg ref and run prsice w/ multi ethinic panel base snps
 * Welcome trust 1st edition ibd adult and Uk biobank ibd adult data
 * automate roc pvals
+* add snptest results to eur plink assoc table
 
 #### Notes
 
