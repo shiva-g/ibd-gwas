@@ -48,6 +48,7 @@
     * [HC vs VEO](plots/manhattan.early.png), [qq](plots/qq.early.png)
     * [HC vs late IBD](plots/manhattan.late.png), [qq](plots/qq.late.png)
     * [VEO vs late IBD](plots/manhattan.ibd_all.png), [qq](plots/qq.ibd_all.png)
+* Use snptest for associations (-frequentist 1 -method score -hwe)    
 * [See mybic `EUR association SNP tables` for SNP tables](http://mybic.chop.edu/labs/devoto_lab/ibd-gwas/)
 
 ### Polygenic risk score
