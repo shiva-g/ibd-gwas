@@ -6,12 +6,13 @@
 * [QQ plots for plink assoc test](https://github.com/samesense/ibd-gwas/blob/master/writeup/methods.md#associations)
 * [PRSice quartile plots](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.md)
 * [AUC for PRSice ROC curves](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.md)
+* [pvals for rocs](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.md)
 * Michigan alternative for local compute imputation?
 
 #### Working
 * impute everyone w/ 1kg ref and run prsice w/ multi ethinic panel base snps
-* pval for rocs
 * Welcome trust 1st edition ibd adult and Uk biobank ibd adult data
+* automate roc pvals
 
 #### Notes
 
@@ -33,7 +34,7 @@
 * impute everyone w/ 1kg ref and run prsice w/ multi ethinic panel base snps
 * ~plot/list prsice quartiles for splitting samples by quartile~
 * ~what are prsice snps scores for assocation test?~ plot them
-* ~~auc~~ and pval for rocs
+* ~~auc~~ and ~pval for rocs~
 * ~why lost base snps in prsice?~
 * ~why does prsice list different snps counts for each test?~
 * ~~rm clumping step from prsice so all snps are kept~~
