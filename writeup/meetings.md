@@ -18,6 +18,17 @@
 * add snptest results to eur plink assoc table
 
 #### Notes
+* Fix agenda links
+* Fix devoto mybic group
+* Add ibd group colors to quantile plots
+* Send ibd quantile groups to yue with subject IDs
+* use easyROC cuts for splitting IBD vs HC to split IBD samples
+* utilize impute2
+* for fut2, card9, and nod2, how do how do adult risk allele vs non-risk split up patients?
+* assign genes to pathways; how do patients split by pathways using risk alleles?
+* split snp assoc results and adult alleles into two tables
+* do adult and ped effect agree?
+* label risk alleles and be able to split patients by hom, any risk, no risk
 
 ### 20181218
 
