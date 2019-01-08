@@ -11,6 +11,7 @@
 #### Working
 * impute everyone w/ 1kg ref and run prsice w/ multi ethinic panel base snps
 * pval for rocs
+* Welcome trust 1st edition ibd adult and Uk biobank ibd adult data
 
 #### Notes
 
