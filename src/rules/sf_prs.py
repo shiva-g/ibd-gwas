@@ -136,6 +136,15 @@ rule annotate_prsice_scores:
     output:
         o = DATA + 'interim/prsice_parsed/{group}/{pop}.dat'
     run:
+        pheno_dict = { 'all': {1:'HC', 2:'IBD'},
+                       'early': {1:'HC', 2:'VEO'},
+                       'late': {1:'HC', 2:'Late IBD'},
+                       'ibd_all': {1:'Late IBD', 2:'VEO'},
+        }
+
+        def recode_pheno(row):
+            return pheno_dict[wildcards.group][row['pheno']]
+
         cols= ['fid', 'IID', 'f', 'm', 'sex', 'pheno']
         int_cols= ['fid', 'f', 'm', 'sex', 'pheno']
         dtype={'fid':int, 'f':int, 'm':int, 'sex':int, 'pheno':int}
@@ -144,6 +153,7 @@ rule annotate_prsice_scores:
         df = pd.merge(df_dat, p, on='IID', how='outer')
         quantile_labels = pd.qcut(df['PRS'], 4, labels=["very-low", "low-medium", "high-medium", "high"])
         df.loc[:, 'quantile'] = quantile_labels
+        df.loc[:, 'pheno'] = df.apply(recode_pheno, axis=1)
         df.to_csv(output.o, index=False, sep='\t')
 
 rule plot_prs_quantiles:
@@ -155,8 +165,8 @@ rule plot_prs_quantiles:
         R("""
         require(ggplot2)
         d = read.delim("{input}", header=TRUE, sep='\t')
-        p = ggplot(data=d, aes(y=PRS, x=factor(pheno), group=pheno, colour=factor(pheno))) + geom_point() + 
-        theme_bw() + facet_grid(quantile~., scale="free_y") + ylab('')
+        p = ggplot(data=d, aes(y=PRS, x=factor(pheno), group=pheno)) + geom_point() +
+        theme_bw() + facet_grid(quantile~., scale="free_y") + ylab('') + xlab('')
         ggsave("{output}", p)
         """)
 
