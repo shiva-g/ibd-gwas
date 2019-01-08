@@ -132,7 +132,8 @@ rule prsice:
 rule annotate_prsice_scores:
     input:
         p = DATA + 'interim/prsice/{group}/{pop}.best',
-        f = DATA + 'interim/bfiles_imputed_grouped/{group}/{pop}.fam'
+        f = DATA + 'interim/bfiles_imputed_grouped/{group}/{pop}.fam',
+        m = DATA + 'processed/MANIFEST.csv'
     output:
         o = DATA + 'interim/prsice_parsed/{group}/{pop}.dat'
     run:
@@ -145,6 +146,8 @@ rule annotate_prsice_scores:
         def recode_pheno(row):
             return pheno_dict[wildcards.group][row['pheno']]
 
+        m = pd.read_csv(input.m)[['IID', 'HC or IBD or ONC', 'Study Group']].rename(columns={'Study Group':'studyGroup'})
+        m.loc[:, 'IID'] = m.apply(lambda row: '0_' + row['IID'], axis=1)
         cols= ['fid', 'IID', 'f', 'm', 'sex', 'pheno']
         int_cols= ['fid', 'f', 'm', 'sex', 'pheno']
         dtype={'fid':int, 'f':int, 'm':int, 'sex':int, 'pheno':int}
@@ -154,7 +157,7 @@ rule annotate_prsice_scores:
         quantile_labels = pd.qcut(df['PRS'], 4, labels=["very-low", "low-medium", "high-medium", "high"])
         df.loc[:, 'quantile'] = quantile_labels
         df.loc[:, 'pheno'] = df.apply(recode_pheno, axis=1)
-        df.to_csv(output.o, index=False, sep='\t')
+        pd.merge(df, m, on='IID', how='left').to_csv(output.o, index=False, sep='\t')
 
 rule plot_prs_quantiles:
     input:
@@ -165,7 +168,7 @@ rule plot_prs_quantiles:
         R("""
         require(ggplot2)
         d = read.delim("{input}", header=TRUE, sep='\t')
-        p = ggplot(data=d, aes(y=PRS, x=factor(pheno), group=pheno)) + geom_point() +
+        p = ggplot(data=d, aes(y=PRS, x=factor(pheno), group=pheno, colour=studyGroup)) + geom_point() +
         theme_bw() + facet_grid(quantile~., scale="free_y") + ylab('') + xlab('')
         ggsave("{output}", p)
         """)

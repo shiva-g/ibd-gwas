@@ -139,5 +139,11 @@ rule snptest_collapse:
     output:
         o = DATA + 'interim/{pop}_snptest_final/snptest.out'
     run:
-        dfs = [pd.read_csv(_, comment='#', sep=' ') for _ in input]
+        def read_csv(afile):
+            chrom = afile.split('/')[-1].split('.')[3:]
+            df = pd.read_csv(_, comment='#', sep=' ')
+            df.loc[:, 'chromosome'] = chrom
+            return df
+
+        dfs = [read_csv(_) for _ in input]
         pd.concat(dfs).to_csv(output.o, index=False, sep='\t')
