@@ -56,6 +56,7 @@ rule parse_vcf_ann:
 rule ann_plink_assoc:
     input:
         a = DATA + 'interim/plink_assoc_fmt/{group}/{pop}.assoc',
+        st = DATA + 'interim/{group}_snptest_final/snptest.out',
         g = DATA + 'interim/ibd_gwas.{pop}.assoc',
         s = DATA + "interim/variants/snpeff_parsed/{pop}"
     output:

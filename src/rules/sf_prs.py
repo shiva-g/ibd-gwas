@@ -142,7 +142,23 @@ rule annotate_prsice_scores:
         df_dat = pd.read_csv(input.f, sep=' ', header=None, names=cols, dtype=dtype)
         p = pd.read_csv(input.p, delim_whitespace=True)
         df = pd.merge(df_dat, p, on='IID', how='outer')
+        quantile_labels = pd.qcut(df['PRS'], 4, labels=["very-low", "low-medium", "high-medium", "high"])
+        df.loc[:, 'quantile'] = quantile_labels
         df.to_csv(output.o, index=False, sep='\t')
+
+rule plot_prs_quantiles:
+    input:
+        DATA + 'interim/prsice_parsed/{group}/{pop}.dat'
+    output:
+        PLOTS + '{group}.{pop}.prs.quantiles.png'
+    run:
+        R("""
+        require(ggplot2)
+        d = read.delim("{input}", header=TRUE, sep='\t')
+        p = ggplot(data=d, aes(y=PRS, x=factor(pheno), group=pheno, colour=factor(pheno))) + geom_point() + 
+        theme_bw() + facet_grid(quantile~., scale="free_y") + ylab('')
+        ggsave("{output}", p)
+        """)
 
 rule plot_prs_dist:
     input:

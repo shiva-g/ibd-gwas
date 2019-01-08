@@ -32,9 +32,11 @@ rule after_imputation:
     input:
         expand(PLOTS + '{group}.eur.prs.roc.png', group=G),
         expand(PLOTS + '{group}.eur.prs.density.png', group=G),
+        expand(PLOTS + '{group}.eur.prs.quantiles.png', group=G),
         expand(DATA + 'interim/plink_assoc_fmt/{group}/eur.assoc', group=G),
         expand(PLOTS + 'manhattan.{group}.png', group=G),
         PWD + 'writeup/tables/prs.eur.md',
         PWD + 'writeup/tables/maf.md',
         DATA + 'interim/prsice/snp_overlap/all.eur.init',
-        expand(PWD + "writeup/tables/{group}.eur.assoc.csv", group=G)
+        expand(PWD + "writeup/tables/{group}.eur.assoc.csv", group=G),
+        DATA + 'interim/eur_snptest_final/snptest.out'

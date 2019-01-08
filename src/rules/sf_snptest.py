@@ -133,6 +133,11 @@ rule snptest_tpop:
         "-o {output} -genotype_field GP -frequentist 1 "
         "-method score -pheno pheno -cov_names C1 C2 -hwe"
 
-rule gens:
+rule snptest_collapse:
     input:
-        expand(DATA + 'interim/eur_snptest/chr{c}.out', c=range(22,23))
+        expand(DATA + 'interim/{{pop}}_snptest/chr{c}.out', c=range(1, 23))
+    output:
+        o = DATA + 'interim/{pop}_snptest_final/snptest.out'
+    run:
+        dfs = [pd.read_csv(_, comment='#', sep=' ') for _ in input]
+        pd.concat(dfs).to_csv(output.o, index=False, sep='\t')
