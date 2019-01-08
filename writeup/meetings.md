@@ -4,9 +4,9 @@
 * [mybic docs](http://mybic.chop.edu/labs/devoto_lab/ibd-gwas/)
 * [EUR plink annotated assoc results](http://mybic.chop.edu/labs/devoto_lab/ibd-gwas/). [ex table all ibd vs hc](tables/all.eur.assoc.csv)
 * [QQ plots for plink assoc test](https://github.com/samesense/ibd-gwas/blob/master/writeup/methods.md#associations)
-* [PRSice quartile plots](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.md)
+* [PRSice quartile plots](https://github.com/samesense/ibd-gwas/blob/master/writeup/methods.md#polygenic-risk-score)
 * [AUC for PRSice ROC curves](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.md)
-* [pvals for rocs](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.md)
+* [pvals for rocs](https://github.com/samesense/ibd-gwas/blob/master/writeup/methods.md#polygenic-risk-score)
 * Michigan alternative for local compute imputation?
 * [Welcome trust data form](https://www.dropbox.com/s/u60f4i2uhh7jtmc/Screenshot%202019-01-08%2014.15.14.png?dl=0)
 * UK biobank registration under review
@@ -18,9 +18,9 @@
 * add snptest results to eur plink assoc table
 
 #### Notes
-* Fix agenda links
-* Fix devoto mybic group
-* Add judith to mybic
+* ~Fix agenda links~
+* ~Fix devoto mybic group~
+* ~Add judith to mybic~
 * Add ibd group colors to quantile plots
 * Send ibd quantile groups to yue with subject IDs
 * use easyROC cuts for splitting IBD vs HC to split IBD samples
