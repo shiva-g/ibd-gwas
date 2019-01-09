@@ -1,5 +1,6 @@
 ### 20190109
 * michigan server is up. Running all pop in queue position 4.
+* FUT2 chr19:49206674 [rs601338](https://www.ncbi.nlm.nih.gov/snp/rs601338) G>A ref is G. What does each allele do?
 
 ### 20190108
 * meeting
