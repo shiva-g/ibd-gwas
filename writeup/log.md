@@ -1,3 +1,11 @@
+### 20190109
+* michigan server is up. Running all pop in queue position 4. dl results
+* FUT2 chr19:49206674 [rs601338](https://www.ncbi.nlm.nih.gov/snp/rs601338) G>A ref is G. What does each allele do? [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4992076/)
+
+### 20190108
+* meeting
+* not enough docker space to grab 1kg for imputation
+
 ### 20190107
 * summarize snptest eur
 * local impute tpop
