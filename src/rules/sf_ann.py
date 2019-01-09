@@ -53,14 +53,35 @@ rule parse_vcf_ann:
                     eff = sp[7]
                     print('\t'.join( (key, ref, alt, eff)), file=fout)
 
-rule ann_plink_assoc:
+rule ann_plink_adult_assoc:
     input:
         a = DATA + 'interim/plink_assoc_fmt/{group}/{pop}.assoc',
         st = DATA + 'interim/{pop}_snptest_final/snptest.out',
         g = DATA + 'interim/ibd_gwas.{pop}.assoc',
         s = DATA + "interim/variants/snpeff_parsed/{pop}"
     output:
-        o = DATA + 'interim/plink_assoc_fmt_ann/{group}/{pop}.assoc'
+        o = DATA + 'interim/adult_assoc_ann/{group}/{pop}.assoc'
+    run:
+        dat = pd.read_csv(input.s, sep='\t')
+        st_cols = {'frequentist_add_pvalue':'P_snptest', 'alleleA':'A1_snptest', 'alleleB':'A2_snptest', 'all_OR':'OR_snptest'}
+        snptest = pd.read_csv(input.st, sep='\t')[['frequentist_add_pvalue', 'chromosome', 'position', 'alleleA', 'alleleB', 'cases_maf', 'controls_maf', 'all_OR']].rename(columns=st_cols).fillna(1)
+        snptest.loc[:, 'SNP'] = snptest.apply(lambda row: str(row['chromosome']) + ':' + str(row['position']), axis=1)
+        assoc = pd.read_csv(input.a, sep='\t').rename(columns={'A1':'A1_plink', 'A2':'A2_plink', 'P':'P_plink', 'OR':'OR_plink'})
+        assoc.loc[:, 'SNP'] = assoc.apply(lambda row: str(row['CHR']) + ':' + str(row['BP']), axis=1)
+        full_assoc = pd.merge(assoc, snptest, on='SNP', how='left')
+        adult_gwas = pd.read_csv(input.g, delim_whitespace=True).rename(columns={'SNP':'rs', 'A1':'A1_adult', 'A2':'A2_adult', 'OR':'OR_adult', 'PVAL':'PVAL_adult', 'SE':'SE_adult'})
+        adult_gwas.loc[:, 'SNP'] = adult_gwas.apply(lambda row: str(row['CHR']) + ':' + str(row['BP']), axis=1)
+        m1 = pd.merge(adult_gwas, full_assoc, on='SNP', how='left').fillna('')
+        pd.merge(m1, dat, how='left', on='SNP').to_csv(output.o, index=False, sep='\t')
+
+rule ann_plink_ped_assoc:
+    input:
+        a = DATA + 'interim/plink_assoc_fmt/{group}/{pop}.assoc',
+        st = DATA + 'interim/{pop}_snptest_final/snptest.out',
+        g = DATA + 'interim/ibd_gwas.{pop}.assoc',
+        s = DATA + "interim/variants/snpeff_parsed/{pop}"
+    output:
+        o = DATA + 'interim/ped_assoc_ann/{group}/{pop}.assoc'
     run:
         dat = pd.read_csv(input.s, sep='\t')
         st_cols = {'frequentist_add_pvalue':'P_snptest', 'alleleA':'A1_snptest', 'alleleB':'A2_snptest', 'all_OR':'OR_snptest'}
@@ -72,17 +93,17 @@ rule ann_plink_assoc:
         adult_gwas = pd.read_csv(input.g, delim_whitespace=True).rename(columns={'SNP':'rs', 'A1':'A1_adult', 'A2':'A2_adult', 'OR':'OR_adult', 'PVAL':'PVAL_adult', 'SE':'SE_adult'})
         adult_gwas.loc[:, 'SNP'] = adult_gwas.apply(lambda row: str(row['CHR']) + ':' + str(row['BP']), axis=1)
         m1 = pd.merge(full_assoc, adult_gwas, on='SNP', how='left').fillna('')
-        crit = m1.apply(lambda row: row['P_plink']<1e-5 or row['A1_adult']!='', axis=1)
+        crit = m1.apply(lambda row: row['P_snptest']<1e-5 or row['P_plink']<1e-5, axis=1)
         pd.merge(m1[crit], dat, how='left', on='SNP').to_csv(output.o, index=False, sep='\t')
 
 rule gene_assoc:
     input:
-        a = DATA + 'interim/plink_assoc_fmt_ann/{group}/{pop}.assoc'
+        a = DATA + 'interim/{age}_assoc_ann/{group}/{pop}.assoc'
     output:
-        o = PWD + 'writeup/tables/{group}.{pop}.assoc.csv'
+        o = PWD + 'writeup/tables/{age}.{group}.{pop}.assoc.csv'
     run:
         df = pd.read_csv(input.a, sep='\t')
-        df.loc[:, 'gene'] = df.apply(lambda row: row['eff'].split('ANN=')[1].split('|')[3], axis=1)
+        df.loc[:, 'gene'] = df.apply(lambda row: str(row['eff']).split('ANN=')[1].split('|')[3] if 'ANN=' in str(row['eff']) else 'none', axis=1)
         cols = ['SNP', 'gene', 'A1_plink', 'A2_plink', 'P_plink', 'OR_plink',
                 'A1_snptest', 'A2_snptest', 'P_snptest', 'OR_snptest',
                 'cases_maf', 'controls_maf',

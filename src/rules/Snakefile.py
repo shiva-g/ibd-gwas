@@ -38,5 +38,4 @@ rule after_imputation:
         PWD + 'writeup/tables/prs.eur.md',
         PWD + 'writeup/tables/maf.md',
         DATA + 'interim/prsice/snp_overlap/all.eur.init',
-        expand(PWD + "writeup/tables/{group}.eur.assoc.csv", group=G),
-        DATA + 'interim/eur_snptest_final/snptest.out'
+        expand(PWD + "writeup/tables/{age}.{group}.eur.assoc.csv", age=('ped', 'adult'), group=G),
