@@ -1,3 +1,9 @@
+### 20190109
+* michigan server is up. Running all pop in queue position 4.
+
+### 20190108
+* meeting
+
 ### 20190107
 * summarize snptest eur
 * local impute tpop
