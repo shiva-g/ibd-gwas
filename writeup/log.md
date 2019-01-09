@@ -3,6 +3,7 @@
 
 ### 20190108
 * meeting
+* not enough docker space to grab 1kg for imputation
 
 ### 20190107
 * summarize snptest eur
