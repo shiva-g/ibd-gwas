@@ -23,6 +23,7 @@
 * ~Add judith to mybic~
 * Add ibd group colors to quantile plots
 * Send ibd quantile groups to yue with subject IDs
+* Report of analysis this far
 * use easyROC cuts for splitting IBD vs HC to split IBD samples
 * utilize impute2
 * for fut2, card9, and nod2, how do how do adult risk allele vs non-risk split up patients?
