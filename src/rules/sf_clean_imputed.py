@@ -1,20 +1,27 @@
 """Make imputed vcf files into bfiles w/ correct snp names and fam data.
    Only use good imputations (r2>0.3) and maf>1%
 """
+rule unzip_tpop_imputed:
+    input:
+        DATA + 'interim/imputed_vcf_tpop/chr_{c}.zip'
+    output:
+        DATA + 'interim/imputed_vcf_tpop/chr{c}.dose.vcf.gz'
+    shell:
+        'unzip -o -P "tsUsKloDJe8Q5c" -d {DATA}/interim/imputed_vcf_tpop/ {input}'
 
-rule unzip_imputed:
+rule unzip_eur_imputed:
     input:
         DATA + 'interim/imputed_vcf/chr_{c}.zip'
     output:
-        DATA + 'interim/imputed_vcf/chr{c}.dose.vcf.gz'
+        DATA + 'interim/imputed_vcf_eur/chr{c}.dose.vcf.gz'
     shell:
-        'unzip -o -P "Ok4iEYdK9Ue\Pu" -d {DATA}/interim/imputed_vcf/ {input}'
+        'unzip -o -P "Ok4iEYdK9Ue\Pu" -d {DATA}/interim/imputed_vcf_eur/ {input}'
 
 rule limit_imputed_r2:
     input:
-        DATA + 'interim/imputed_vcf/chr{c}.dose.vcf.gz'
+        DATA + 'interim/imputed_vcf_{pop}/chr{c}.dose.vcf.gz'
     output:
-        DATA + 'interim/imputed_r2_limit_vcf/chr{c}.vcf.gz'
+        DATA + 'interim/imputed_r2_limit_vcf_{pop}/chr{c}.vcf.gz'
     conda:
         ENVS + 'bcftools-env.yml'
     shell:
@@ -22,16 +29,16 @@ rule limit_imputed_r2:
 
 rule vcf_to_bfiles:
     input:
-        DATA + 'interim/imputed_r2_limit_vcf/chr{chr}.vcf.gz'
+        DATA + 'interim/imputed_r2_limit_vcf_{pop}/chr{chr}.vcf.gz'
     output:
-        expand(DATA + 'interim/bfiles_imputed/chr{{chr}}.{suffix}', suffix=('fam', 'bed', 'bim') )
+        expand(DATA + 'interim/bfiles_imputed/{{pop}}/chr{{chr}}.{suffix}', suffix=('fam', 'bed', 'bim') )
     singularity:
         PLINK
     log:
-        LOG + 'prs/{chr}.vcf'
+        LOG + 'prs/{chr}.{pop}.vcf'
     shell:
         "plink --vcf {input} --make-bed --const-fid 0 "
-        "--out {DATA}interim/bfiles_imputed/chr{wildcards.chr} &> {log}"
+        "--out {DATA}interim/bfiles_imputed/{wildcards.pop}/chr{wildcards.chr} &> {log}"
 
 # rule imputed_maf_cutoff:
 #     input:
@@ -50,9 +57,9 @@ rule vcf_to_bfiles:
 
 rule merge_imputed_bfiles_ls:
     input:
-        expand(DATA + 'interim/bfiles_imputed_ex/chr{chr}.fam', chr=range(1, 23))
+        expand(DATA + 'interim/bfiles_imputed_ex/{{pop}}/chr{chr}.fam', chr=range(1, 23))
     output:
-        o = DATA + 'interim/bfiles_imputed.eur.ls'
+        o = DATA + 'interim/bfiles_imputed.{pop}.ls'
     run:
         with open(output.o, 'w') as fout:
             for afile in list(input):
@@ -60,9 +67,9 @@ rule merge_imputed_bfiles_ls:
 
 rule merge_imputed_bfiles_ls_1:
     input:
-        expand(DATA + 'interim/bfiles_imputed/chr{chr}.fam', chr=range(1, 23))
+        expand(DATA + 'interim/bfiles_imputed/{{pop}}/chr{chr}.fam', chr=range(1, 23))
     output:
-        o = DATA + 'interim/bfiles_imputed.eur.ls1'
+        o = DATA + 'interim/bfiles_imputed.{pop}.ls1'
     run:
         with open(output.o, 'w') as fout:
             for afile in list(input):
@@ -70,44 +77,44 @@ rule merge_imputed_bfiles_ls_1:
 
 rule merge_imputed_bfiles_tmp:
     input:
-        DATA + 'interim/bfiles_imputed.eur.ls1'
+        DATA + 'interim/bfiles_imputed.{pop}.ls1'
     output:
-        DATA + 'interim/bfiles_imputed_tmp/eur-merge.missnp'
+        DATA + 'interim/bfiles_imputed_tmp/{pop}-merge.missnp'
     singularity:
         PLINK
     log:
-        LOG + 'prs/merge_tmp'
+        LOG + 'prs/merge_tmp.{pop}'
     shell:
         "plink --merge-list {input} --make-bed "
-        "--out {DATA}interim/bfiles_imputed_tmp/eur &> {log} || touch {output}"
+        "--out {DATA}interim/bfiles_imputed_tmp/{wildcards.pop} &> {log} || touch {output}"
 
 rule rm_imputed_tri_allelic:
     input:
-        f = DATA + 'interim/bfiles_imputed/chr{chr}.fam',
-        ex = DATA + 'interim/bfiles_imputed_tmp/eur-merge.missnp'
+        f = DATA + 'interim/bfiles_imputed/{pop}/chr{chr}.fam',
+        ex = DATA + 'interim/bfiles_imputed_tmp/{pop}-merge.missnp'
     output:
-        DATA + 'interim/bfiles_imputed_ex/chr{chr}.fam'
+        DATA + 'interim/bfiles_imputed_ex/{pop}/chr{chr}.fam'
     singularity:
         PLINK
     log:
-        LOG + 'prs/{chr}.rm_tri_tmp'
+        LOG + 'prs/{chr}.{pop}.rm_tri_tmp'
     shell:
-        "plink --bfile {DATA}/interim/bfiles_imputed/chr{wildcards.chr} "
+        "plink --bfile {DATA}/interim/bfiles_imputed/{wildcards.pop}/chr{wildcards.chr} "
         "--exclude {input.ex} --make-bed "
-        "--out {DATA}interim/bfiles_imputed_ex/chr{wildcards.chr} &> {log} "
+        "--out {DATA}interim/bfiles_imputed_ex/{wildcards.pop}/chr{wildcards.chr} &> {log}"
 
 rule merge_imputed_bfiles:
     input:
-        DATA + 'interim/bfiles_imputed.eur.ls'
+        DATA + 'interim/bfiles_imputed.{pop}.ls'
     output:
-        DATA + 'interim/bfiles_imputed_combined/eur.fam'
+        DATA + 'interim/bfiles_imputed_combined/{pop}.fam'
     singularity:
         PLINK
     log:
-        LOG + 'prs/merge'
+        LOG + 'prs/merge.{pop}'
     shell:
         "plink --merge-list {input} --make-bed "
-        "--out {DATA}interim/bfiles_imputed_combined/eur &> {log} "
+        "--out {DATA}interim/bfiles_imputed_combined/{wildcards.pop} &> {log}"
 
 rule mk_rs_names:
     input:
@@ -125,10 +132,10 @@ rule update_fam:
        These await a new imputation run.
     """
     input:
-        imputed_fam = DATA + 'interim/bfiles_imputed_combined/eur.fam',
-        data_fam = DATA + 'interim/bfiles_eur/3groups.fam'
+        imputed_fam = DATA + 'interim/bfiles_imputed_combined/{pop}.fam',
+        data_fam = DATA + 'interim/bfiles_{pop}/3groups.fam'
     output:
-        o = DATA + 'interim/tmp.fam'
+        o = DATA + 'interim/tmp.{pop}.fam'
     run:
         cols= ['fid', 'iid', 'f', 'm', 'sex', 'pheno']
         int_cols= ['fid', 'f', 'm', 'sex', 'pheno']
@@ -147,17 +154,17 @@ rule update_fam:
 rule rename_rs_imputed_bfiles:
     """Apply 1% maf cutoff."""
     input:
-        fam = DATA + 'interim/tmp.fam',
-        f = DATA + 'interim/bfiles_imputed_combined/eur.fam',
-        rs_names = DATA + 'interim/eur.rs_names'
+        fam = DATA + 'interim/tmp.{pop}.fam',
+        f = DATA + 'interim/bfiles_imputed_combined/{pop}.fam',
+        rs_names = DATA + 'interim/{pop}.rs_names'
     output:
-        DATA + 'processed/bfiles_imputed/eur.fam'
+        DATA + 'processed/bfiles_imputed/{pop}.fam'
     singularity:
         PLINK
     log:
-        LOG + 'prs/rename_rs.eur'
+        LOG + 'prs/rename_rs.{pop}'
     shell:
-        "plink --bfile {DATA}/interim/bfiles_imputed_combined/eur "
+        "plink --bfile {DATA}/interim/bfiles_imputed_combined/{wildcards.pop} "
         "--update-name {input.rs_names} --make-bed --maf 0.01 "
-        "--out {DATA}processed/bfiles_imputed/eur &> {log} && "
+        "--out {DATA}processed/bfiles_imputed/{wildcards.pop} &> {log} && "
         """cp {input.fam} {output}"""

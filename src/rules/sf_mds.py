@@ -116,10 +116,13 @@ rule cut_mds:
     input:
         i = DATA + 'interim/mds_dat/ibd_hapmap.dat'
     output:
-        o = DATA + 'interim/mds_cut/3groups.keep_samples'
+        o = DATA + 'interim/mds_cut/{pop}.keep_samples'
     run:
         df = pd.read_csv(input.i, sep='\t')
-        df[(df.C1<-.025) & (df.C2>.025) & ( (df.group=='IBD') | (df.group=='HC') | (df.group=='ONC'))][['FID', 'IID']].to_csv(output.o, index=False, header=None, sep=' ')
+        if wildcards.pop == 'eur':
+            df[(df.C1<-.025) & (df.C2>.025) & ( (df.group=='IBD') | (df.group=='HC') | (df.group=='ONC'))][['FID', 'IID']].to_csv(output.o, index=False, header=None, sep=' ')
+        if wildcards.pop == 'tpop':
+            df[ (df.group=='IBD') | (df.group=='HC') | (df.group=='ONC')][['FID', 'IID']].to_csv(output.o, index=False, header=None, sep=' ')
 
 rule restrict_ibd_samples:
     input:

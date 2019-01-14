@@ -1,7 +1,7 @@
 """Polygenic risk score after imputation"""
 
 # https://www.nature.com/articles/ng.3359#supplementary-information
-rule prep_gwas_base:
+rule prep_gwas_base_eur:
     input:
         i = DATA + 'raw/ibd_gwas/ng.3359-S4.xlsx'
     output:
@@ -22,12 +22,34 @@ rule prep_gwas_base:
         df.loc[:, 'BP'] = df.apply(fix_positions, axis=1)
         df[cols].rename(columns={'EUR_OR':'OR', 'EUR_PVAL':'PVAL', 'EUR_SE':'SE'}).to_csv(output.o, index=False, sep=' ')
 
+# use eur snps for now
+rule prep_gwas_base_tpop:
+    input:
+        i = DATA + 'raw/ibd_gwas/ng.3359-S4.xlsx'
+    output:
+        o = DATA + 'interim/ibd_gwas.tpop.assoc'
+    run:
+        def fix_positions(row):
+            if row['SNP']=='rs3172494' and row['BP']==48681053:
+                return 48731487
+            if row['SNP']=='rs9868809' and row['BP']==48731487:
+                return 48681053
+            if row['SNP']=='rs4768236' and row['BP']==40528432:
+                return 40756472
+            if row['SNP']=='rs11564258' and row['BP']==40756472:
+                return 40792300
+            return row['BP']
+        df = pd.read_excel(input.i, sheet_name='Heterogeneity of effect', skiprows=7)
+        cols = ['CHR', 'BP', 'SNP', 'A1', 'A2', 'EUR_OR', 'EUR_PVAL', 'EUR_SE']
+        df.loc[:, 'BP'] = df.apply(fix_positions, axis=1)
+        df[cols].rename(columns={'EUR_OR':'OR', 'EUR_PVAL':'PVAL', 'EUR_SE':'SE'}).to_csv(output.o, index=False, sep=' ')
+
 rule mk_prsice_sample_ls:
     input:
         m = DATA + 'processed/MANIFEST.csv',
-        k = DATA + 'interim/mds_cut/3groups.keep_samples'
+        k = DATA + 'interim/mds_cut/{pop}.keep_samples'
     output:
-        keep = DATA + 'interim/sample_subsets.{group}',
+        keep = DATA + 'interim/sample_subsets/{pop}.{group}',
     run:
         keep_samples = {}
         with open(input.k) as f:
@@ -57,7 +79,7 @@ rule mk_prsice_sample_ls:
 # split into groups and recode fam based on groups
 rule mk_prsice_sample_subsets:
     input:
-        keep = DATA + 'interim/sample_subsets.{group}',
+        keep = DATA + 'interim/sample_subsets/{pop}.{group}',
         b = DATA + 'processed/bfiles_imputed/{pop}.fam',
     output:
         b = DATA + 'interim/bfiles_imputed_grouped_tmp/{group}/{pop}.fam'
@@ -108,26 +130,48 @@ rule base_impute_overlap:
         shell('comm -12 {output.o}.a {output.o}.b > {output.o}')
         shell('comm -12 {output.o} {output.o}.init > {output.oi}')
 
-rule prsice:
+rule prsice_eur:
     input:
-        b = DATA + 'interim/bfiles_imputed_grouped/{group}/{pop}.fam',
-        a = DATA + 'interim/ibd_gwas.{pop}.assoc'
+        b = DATA + 'interim/bfiles_imputed_grouped/{group}/eur.fam',
+        a = DATA + 'interim/ibd_gwas.eur.assoc'
     output:
-        DATA + 'interim/prsice/{group}/{pop}.summary',
-        DATA + 'interim/prsice/{group}/{pop}.best'
+        DATA + 'interim/prsice/{group}/eur.summary',
+        DATA + 'interim/prsice/{group}/eur.best'
     singularity:
         PRSICE
     threads: 16
     log:
-        LOG + '{pop}.prs.{group}'
+        LOG + 'eur.prs.{group}'
     shell:
         'Rscript /usr/local/bin/PRSice.R --dir {DATA}/interim/prsice/{wildcards.group}/ '
         '--snp SNP --chr CHR --bp BP --A1 A1 --A2 A2 --stat OR --se SE --pvalue PVAL '
         '--prsice /usr/local/bin/PRSice_linux --keep-ambig '
         '--base {input.a} --perm 1000000 --no-clump '
-        '--target {DATA}interim/bfiles_imputed_grouped/{wildcards.group}/{wildcards.pop} '
+        '--target {DATA}interim/bfiles_imputed_grouped/{wildcards.group}/eur '
         '--thread {threads} --binary-target T '
-        '--out {DATA}interim/prsice/{wildcards.group}/{wildcards.pop} &> {log}'
+        '--out {DATA}interim/prsice/{wildcards.group}/eur &> {log}'
+
+# use 1st two pcs
+rule prsice_tpop:
+    input:
+        b = DATA + 'interim/bfiles_imputed_grouped/{group}/tpop.fam',
+        a = DATA + 'interim/ibd_gwas.tpop.assoc'
+    output:
+        DATA + 'interim/prsice/{group}/tpop.summary',
+        DATA + 'interim/prsice/{group}/tpop.best'
+    singularity:
+        PRSICE
+    threads: 16
+    log:
+        LOG + 'tpop.prs.{group}'
+    shell:
+        'Rscript /usr/local/bin/PRSice.R --dir {DATA}/interim/prsice/{wildcards.group}/ '
+        '--snp SNP --chr CHR --bp BP --A1 A1 --A2 A2 --stat OR --se SE --pvalue PVAL '
+        '--prsice /usr/local/bin/PRSice_linux --keep-ambig '
+        '--base {input.a} --perm 1000000 --no-clump '
+        '--target {DATA}interim/bfiles_imputed_grouped/{wildcards.group}/tpop '
+        '--thread {threads} --binary-target T '
+        '--out {DATA}interim/prsice/{wildcards.group}/tpop &> {log}'
 
 rule annotate_prsice_scores:
     input:
@@ -200,7 +244,11 @@ rule calc_prs_roc:
         auc = DATA + 'interim/prsice_roc/{group}.{pop}.auc'
     run:
         df = pd.read_csv(input.i, sep='\t')
-        df.loc[:, 'y'] = df.apply(lambda row: 1 if row['pheno']==2 else 0, axis=1)
+        if wildcards.group != 'ibd_all':
+            df.loc[:, 'y'] = df.apply(lambda row: 0 if row['pheno']=='HC' else 1, axis=1)
+        else:
+            df.loc[:, 'y'] = df.apply(lambda row: 1 if row['pheno']=='VEO' else 0, axis=1)
+
         precision, recall, thresholds = precision_recall_curve(df['y'], df['PRS'], pos_label=1)
         fpr, tpr, thresholds = roc_curve(df['y'], df['PRS'], pos_label=1)
         auc = metrics.auc(fpr, tpr)

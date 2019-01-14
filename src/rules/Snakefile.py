@@ -30,12 +30,12 @@ rule before_imputation:
 
 rule after_imputation:
     input:
-        expand(PLOTS + '{group}.eur.prs.roc.png', group=G),
-        expand(PLOTS + '{group}.eur.prs.density.png', group=G),
-        expand(PLOTS + '{group}.eur.prs.quantiles.png', group=G),
-        expand(DATA + 'interim/plink_assoc_fmt/{group}/eur.assoc', group=G),
-        expand(PLOTS + 'manhattan.{group}.png', group=G),
-        PWD + 'writeup/tables/prs.eur.md',
-        PWD + 'writeup/tables/maf.md',
-        DATA + 'interim/prsice/snp_overlap/all.eur.init',
-        expand(PWD + "writeup/tables/{age}.{group}.eur.assoc.csv", age=('ped', 'adult'), group=G),
+        expand(PLOTS + '{group}.{pop}.prs.roc.png', group=G, pop=('eur', 'tpop')),
+        expand(PLOTS + '{group}.{pop}.prs.density.png', group=G, pop=('eur', 'tpop')),
+        expand(PLOTS + '{group}.{pop}.prs.quantiles.png', group=G, pop=('eur', 'tpop')),
+        # expand(DATA + 'interim/plink_assoc_fmt/{group}/eur.assoc', group=G),
+        # expand(PLOTS + 'manhattan.{group}.png', group=G),
+        expand(PWD + 'writeup/tables/prs.{pop}.md', pop=('eur', 'tpop')),
+        # PWD + 'writeup/tables/maf.md',
+        # expand(DATA + 'interim/prsice/snp_overlap/all.{pop}.init', pop=('eur', 'tpop')),
+        # expand(PWD + "writeup/tables/{age}.{group}.eur.assoc.csv", age=('ped', 'adult'), group=G),

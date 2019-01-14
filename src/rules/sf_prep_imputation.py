@@ -27,6 +27,14 @@ rule vcf_white:
         "plink --bfile {DATA}interim/bfiles_eur/{wildcards.group} --recode vcf --chr {wildcards.chr} "
         "--out {DATA}interim/bfiles_eur_vcf_chr{wildcards.chr}/{wildcards.group} &> {log}"
 
+rule hack_tpop_fam:
+    input:
+        DATA + 'interim/bfiles_filter_samples/{group}.fam',
+    output:
+        DATA + 'interim/bfiles_tpop/{group}.fam',
+    shell:
+        'cp {input} {output}'
+
 rule vcf_tpop:
     input:
         DATA + 'interim/bfiles_filter_samples/{group}.fam',
