@@ -3,16 +3,16 @@
 # https://swvanderlaan.github.io/post/converting-m3vcf-to-anything-else/
 rule gen:
     input:
-        DATA + 'interim/imputed_r2_limit_vcf/chr{c}.vcf.gz'
+        DATA + 'interim/imputed_r2_limit_vcf_{pop}/chr{c}.vcf.gz'
     output:
-        o = DATA + 'interim/eur_gen/chr{c}.tmp.gen'
+        o = DATA + 'interim/{pop}_gen/chr{c}.tmp.gen'
     singularity:
         PLINK2
     threads:
         32
     shell:
         "plink2 --vcf {input} dosage=GP --export oxford --const-fid 0 "
-        "--threads {threads} --out {DATA}interim/eur_gen/chr{wildcards.c}.tmp"
+        "--threads {threads} --out {DATA}interim/{wildcards.pop}_gen/chr{wildcards.c}.tmp"
 
 rule update_gen_sample:
     """Mk fam for imputed files b/c imputation removed data.
@@ -66,7 +66,7 @@ rule update_gen_sample_tpop:
         pcs = pd.read_csv(input.pcs, sep='\t')
         sample_file = input.gen.replace('.gen', '.sample')
         use_cols = ['ID_1', 'ID_2', 'missing', 'sex', 'pheno', 'C1', 'C2']
-        use_cols_short = ['ID_1', 'sex', 'pheno']
+        use_cols_short = ['ID_1', 'sex', 'pheno', 'C1', 'C2']
         cols= ['fid', 'iid', 'f', 'm', 'sex', 'pheno']
         int_cols= ['fid', 'f', 'm', 'sex', 'pheno']
         dtype={'fid':int, 'f':int, 'm':int, 'sex':int, 'pheno':int}
@@ -75,7 +75,7 @@ rule update_gen_sample_tpop:
         df_sample['ID_2'] = 0
         df_dat = pd.read_csv(input.data_fam, sep=' ', header=None, names=cols, dtype=dtype)
         df_dat.loc[:, 'ID_1'] = df_dat.apply(lambda row: '0_' + row['iid'], axis=1)
-        pcs.loc[:, 'ID_1'] = pcs.apply(lambda row: lambda row: '0_' + row['IID'], axis=1)
+        pcs.loc[:, 'ID_1'] = pcs.apply(lambda row: '0_' + row['IID'], axis=1)
         pcs = pcs[['ID_1', 'C1', 'C2']]
         df_dat = pd.merge(df_dat, pcs, on='ID_1', how='left')
         # fails for NAs
@@ -84,7 +84,7 @@ rule update_gen_sample_tpop:
         bad_dat = []
         for bad_sample in bad_samples:
             if bad_sample == '0':
-                bad_dat.append( [bad_sample, 'D', 'B', 'P', 'P'])
+                bad_dat.append( [bad_sample, 'D', 'B', 'C', 'C'])
             else:
                 bad_dat.append( [bad_sample, '0', 'NA', 'NA', 'NA'])
 
@@ -93,6 +93,9 @@ rule update_gen_sample_tpop:
         df[use_cols].to_csv(output.o, sep=' ', index=False)
         shell('cp {input.gen} {output.gen}')
 
+rule tmp_p:
+    input:
+        DATA + 'interim/tpop_snptest/chr22.out',
 
 # association eur
 rule snptest_eur:
@@ -114,7 +117,7 @@ rule snptest_eur:
         -frequentist 1 \
         -method score \
         -pheno pheno \
-        -hwe
+        -hwe &> {log}
         """
 
 # association correct for pop structure
@@ -123,7 +126,7 @@ rule snptest_tpop:
         gen = DATA + 'interim/tpop_gen/chr{c}.gen',
         sample  = DATA + 'interim/tpop_gen/chr{c}.sample',
     output:
-        DATA + 'interim/top_snptest/chr{c}.out'
+        DATA + 'interim/tpop_snptest/chr{c}.out'
     log:
         LOG + 'snptest/tpop.chr{c}'
     singularity:
@@ -131,7 +134,7 @@ rule snptest_tpop:
     shell:
         "snptest -data {input.gen} {input.sample} "
         "-o {output} -genotype_field GP -frequentist 1 "
-        "-method score -pheno pheno -cov_names C1 C2 -hwe"
+        "-method score -pheno pheno -cov_names C1 C2 -hwe &> {log}"
 
 rule snptest_collapse:
     input:

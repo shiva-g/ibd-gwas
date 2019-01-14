@@ -2,22 +2,22 @@
 
 rule plink_assoc:
     input:
-        b = DATA + 'interim/bfiles_imputed_grouped/{group}/eur.fam',
+        b = DATA + 'interim/bfiles_imputed_grouped/{group}/{pop}.fam',
     output:
-        f = DATA + 'interim/plink_assoc/{group}/eur.assoc'
+        f = DATA + 'interim/plink_assoc/{group}/{pop}.assoc'
     singularity:
         PLINK
     log:
-        LOG + 'assoc/{group}.as'
+        LOG + 'assoc/{group}.{pop}.as'
     shell:
-        "plink --bfile $(dirname {input.b})/eur --assoc "
-        "--out $(dirname {output.f})/eur &> {log}"
+        "plink --bfile $(dirname {input.b})/{wildcards.pop} --assoc "
+        "--out $(dirname {output.f})/{wildcards.pop} &> {log}"
 
 rule format_assoc:
     input:
-        f = DATA + 'interim/plink_assoc/{group}/eur.assoc'
+        f = DATA + 'interim/plink_assoc/{group}/{pop}.assoc'
     output:
-        o = DATA + 'interim/plink_assoc_fmt/{group}/eur.assoc'
+        o = DATA + 'interim/plink_assoc_fmt/{group}/{pop}.assoc'
     run:
         df = pd.read_csv(input.f, delim_whitespace=True).sort_values(by='CHISQ', ascending=False)
         df = df[pd.notnull(df['P'])]

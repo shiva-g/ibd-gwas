@@ -151,11 +151,21 @@ rule prsice_eur:
         '--thread {threads} --binary-target T '
         '--out {DATA}interim/prsice/{wildcards.group}/eur &> {log}'
 
+rule mk_covfile:
+    input:
+        pcs = DATA + 'interim/mds_dat/ibd_hapmap.dat'
+    output:
+        o = DATA + 'interim/prs/tpop.covfile'
+    run:
+        df = pd.read_csv(input.pcs, sep='\t')
+        df[['FID', 'IID', 'C1', 'C2']].to_csv(output.o, index=False, sep=',')
+
 # use 1st two pcs
 rule prsice_tpop:
     input:
         b = DATA + 'interim/bfiles_imputed_grouped/{group}/tpop.fam',
-        a = DATA + 'interim/ibd_gwas.tpop.assoc'
+        a = DATA + 'interim/ibd_gwas.tpop.assoc',
+        cv = DATA + 'interim/prs/tpop.covfile'
     output:
         DATA + 'interim/prsice/{group}/tpop.summary',
         DATA + 'interim/prsice/{group}/tpop.best'
@@ -171,6 +181,7 @@ rule prsice_tpop:
         '--base {input.a} --perm 1000000 --no-clump '
         '--target {DATA}interim/bfiles_imputed_grouped/{wildcards.group}/tpop '
         '--thread {threads} --binary-target T '
+        '--cov-file {input.cv} '
         '--out {DATA}interim/prsice/{wildcards.group}/tpop &> {log}'
 
 rule annotate_prsice_scores:
