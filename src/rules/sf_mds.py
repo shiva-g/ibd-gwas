@@ -171,6 +171,10 @@ rule color_mds_ibd:
     output:
         o = DATA + 'interim/mds_dat_ibd/{group}.dat'
     run:
+        def mk_subject_id(row):
+            si = re.findall(r"\d+", row['SSID'].split('CHOP_')[1])[0]
+            return int(si)
+
         mds = pd.read_csv(input.mds, delim_whitespace=True)
         manifest = pd.read_csv(input.man)
         manifest.loc[:, 'FID'] = 0
@@ -178,6 +182,7 @@ rule color_mds_ibd:
                                                   if not str(row['HC or IBD or ONC'])
                                                   in ('IBD', 'HC', 'ONC')
                                                   else row['HC or IBD or ONC'], axis=1)
+        manifest.loc[:, 'SubjectID'] = manifest.apply(mk_subject_id, axis=1)
         df = pd.merge(mds, manifest, on=['IID', 'FID'], how='left')
         df.to_csv(output.o, index=False, sep='\t')
 

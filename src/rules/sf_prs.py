@@ -146,8 +146,13 @@ rule annotate_prsice_scores:
         def recode_pheno(row):
             return pheno_dict[wildcards.group][row['pheno']]
 
-        m = pd.read_csv(input.m)[['IID', 'HC or IBD or ONC', 'Study Group']].rename(columns={'Study Group':'studyGroup'})
+        def mk_subject_id(row):
+            si = re.findall(r"\d+", row['SSID'].split('CHOP_')[1])[0]
+            return int(si)
+
+        m = pd.read_csv(input.m)[['IID', 'HC or IBD or ONC', 'Study Group', 'SSID']].rename(columns={'Study Group':'studyGroup'})
         m.loc[:, 'IID'] = m.apply(lambda row: '0_' + row['IID'], axis=1)
+        m.loc[:, 'SubjectID'] = m.apply(mk_subject_id, axis=1)
         cols= ['fid', 'IID', 'f', 'm', 'sex', 'pheno']
         int_cols= ['fid', 'f', 'm', 'sex', 'pheno']
         dtype={'fid':int, 'f':int, 'm':int, 'sex':int, 'pheno':int}
