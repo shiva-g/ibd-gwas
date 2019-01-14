@@ -1,6 +1,9 @@
+### 20190114
+* IBD supplement does not have multi ethnic pvals, so I'll use eur for now
+
 ### 20190109
 * michigan server is up. Running all pop in queue position 4. dl results
-* FUT2 chr19:49206674 [rs601338](https://www.ncbi.nlm.nih.gov/snp/rs601338) G>A ref is G. What does each allele do? [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4992076/)
+* FUT2 chr19:49206674 [rs601338](https://www.ncbi.nlm.nih.gov/snp/rs601338) G>A ref is G. What does each allele do? [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4992076/) This SNP is not on the chip, but [rs516246](https://www.ncbi.nlm.nih.gov/snp/rs516246) is. [Individuals with the homozygote A/A genotype are defined as non-secretors. Non-secretors, who are homozygous for the loss-of-function alleles of FUT2 gene (sese), have increased susceptibility to Crohn's disease](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4992076/) T or A is the risk allele. I can look up cases and controls maf from the snptest results. How do I split the cohort based on a SNP?
 
 ### 20190108
 * meeting
