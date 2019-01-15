@@ -6,4 +6,4 @@
 * [CARD9 and NOD2 (not FUT2) have slight associations w/ IBD for EUR](tables/adult.all.eur.assoc.csv)
 * [NOD2 (not FUT2;CARD9) has slight association w/ IBD for all pops](tables/adult.all.tpop.assoc.csv)
 * [MIR3169-PCDH20 has the top association for all pops; also high for EUR](tables/ped.all.tpop.assoc.csv)
-* [PRKCQ and ERBB4 have the top associations for EUR; not high for all pops](tables/ped.all.eur.assoc.csv)
+* [PRKCQ and ERBB4 have the top associations for EUR; not high for all pops](tables/ped.all.eur.assoc.csv), [PRKCQ ref](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4848113/)
