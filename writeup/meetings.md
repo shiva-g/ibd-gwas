@@ -1,6 +1,6 @@
 ### 20190115
 
-### Updates
+#### Updates
 * Multi-ethic analysis (94 HC, 116 IBD) (43 VEO, 73 late IBD)
     * Binary calls, not bgen
     * First 2 PCs
@@ -11,7 +11,7 @@
     * [Multi-ethnic snptest](tables/ped.all.tpop.assoc.csv) ([EUR](tables/ped.all.eur.assoc.csv))
 * [EUR polygenic risk score quantiles](plots/all.eur.prs.quantiles.png)
 
-### Working
+#### Working
 * for fut2, card9, and nod2, how do how do adult risk allele vs non-risk split up patients?
 * assign genes to pathways; how do patients split by pathways using risk alleles?
 * do adult and ped effect agree?
