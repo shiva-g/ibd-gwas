@@ -158,7 +158,8 @@ rule mk_covfile:
         o = DATA + 'interim/prs/tpop.covfile'
     run:
         df = pd.read_csv(input.pcs, sep='\t')
-        df[['FID', 'IID', 'C1', 'C2']].to_csv(output.o, index=False, sep=',')
+        df.loc[:, 'IID'] = df.apply(lambda row: '0_' + row['IID'], axis=1)
+        df[['FID', 'IID', 'C1', 'C2']].to_csv(output.o, index=False, sep='\t')
 
 # use 1st two pcs
 rule prsice_tpop:
@@ -181,7 +182,7 @@ rule prsice_tpop:
         '--base {input.a} --perm 1000000 --no-clump '
         '--target {DATA}interim/bfiles_imputed_grouped/{wildcards.group}/tpop '
         '--thread {threads} --binary-target T '
-        '--cov-file {input.cv} '
+        '--cov-file {input.cv} --cov-col "@C[1-2]" '
         '--out {DATA}interim/prsice/{wildcards.group}/tpop &> {log}'
 
 rule annotate_prsice_scores:
