@@ -14,6 +14,7 @@
 ### Working
 * for fut2, card9, and nod2, how do how do adult risk allele vs non-risk split up patients?
 * assign genes to pathways; how do patients split by pathways using risk alleles?
+* do adult and ped effect agree?
 
 ### 20190108
 
