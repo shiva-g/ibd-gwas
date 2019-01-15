@@ -14,9 +14,12 @@
 * Have UK biobank data access
 
 #### Working
-* for fut2, card9, and nod2, how do adult risk allele vs non-risk split up patients?
+* ~for fut2, card9, and nod2, how do adult risk allele vs non-risk split up patients?~
 * assign genes to pathways; how do patients split by pathways using risk alleles?
 * do adult and ped effect agree?
+
+#### Notes
+* [more data](https://mail.google.com/mail/u/0/#inbox/FMfcgxwBVDKqJbCSJrRCzNkLHvWCjNGc) to run by itself. Check overlap with existing samples.
 
 ### 20190108
 
@@ -46,7 +49,7 @@
 * Report of analysis this far
 * use easyROC cuts for splitting IBD vs HC to split IBD samples
 * utilize impute2
-* for fut2, card9, and nod2, how do how do adult risk allele vs non-risk split up patients?
+* ~for fut2, card9, and nod2, how do how do adult risk allele vs non-risk split up patients?~
 * assign genes to pathways; how do patients split by pathways using risk alleles?
 * ~split snp assoc results and adult alleles into two tables~
 * do adult and ped effect agree?
