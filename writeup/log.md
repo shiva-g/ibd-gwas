@@ -1,3 +1,6 @@
+### 20190115
+* NOD2 variant [rs2066844](https://www.snpedia.com/index.php/Rs2066844) at 16:50745926. T/A is the risk allele.
+
 ### 20190114
 * IBD supplement does not have multi ethnic pvals, so I'll use eur for now
 * Using PRS w/ 2 PCs looks very similar to PRS w/o PCs for total populations and EUR base SNPs
