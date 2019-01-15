@@ -1,5 +1,6 @@
 ### 20190115
 * NOD2 variant [rs2066844](https://www.snpedia.com/index.php/Rs2066844) at 16:50745926. T/A is the risk allele.
+* CARD9 9:139266405 [rs10781499](https://www.ebi.ac.uk/gwas/variants/rs10781499) T/A is the risk allele.
 
 ### 20190114
 * IBD supplement does not have multi ethnic pvals, so I'll use eur for now
