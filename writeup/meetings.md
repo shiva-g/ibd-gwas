@@ -1,7 +1,7 @@
 ### 20190115
 
 #### Updates
-* Multi-ethic analysis (94 HC, 116 IBD) (43 VEO, 73 late IBD)
+* Multi-ethnic analysis (94 HC, 116 IBD) (43 VEO, 73 late IBD)
     * Binary calls, not bgen
     * First 2 PCs
     * Use adult EUR 231 base snps
