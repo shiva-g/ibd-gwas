@@ -2,7 +2,7 @@
 
 #### Updates
 * Multi-ethnic analysis (94 HC, 116 IBD) (43 VEO, 73 late IBD)
-    * Binary calls, not bgen
+    * PRS: Binary calls, not bgen, snptest: bgen
     * First 2 PCs
     * Use adult EUR 231 base snps
     * [Multi-ethnic polygenic risk score table](tables/prs.tpop.md)
