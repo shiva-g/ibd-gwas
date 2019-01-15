@@ -4,4 +4,6 @@
 * [EUR and multi-ethnic polygenic risk score can split IBD from HC](tables/prs.tpop.md) [ROC](https://github.com/samesense/ibd-gwas/blob/master/writeup/plots/all.tpop.prs.roc.png)
 * [PRS quantiles can split IBD samples](plots/ibd_all.tpop.prs.quantiles.png)
 * [CARD9 and NOD2 (not FUT2) have slight associations w/ IBD for EUR](tables/adult.all.eur.assoc.csv)
-* [NOD2 (not FUT2;CARD9) has slight association w/ IBD for alll pops](tables/adult.all.tpop.assoc.csv)
+* [NOD2 (not FUT2;CARD9) has slight association w/ IBD for all pops](tables/adult.all.tpop.assoc.csv)
+* [MIR3169-PCDH20 has the top association for all pops; also high for EUR](tables/ped.all.tpop.assoc.csv)
+* [PRKCQ and ERBB4 have the top associations for EUR; not high for all pops](tables/ped.all.eur.assoc.csv)
