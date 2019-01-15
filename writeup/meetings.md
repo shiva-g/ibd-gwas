@@ -13,7 +13,7 @@
 * [EUR polygenic risk score quantiles](plots/all.eur.prs.quantiles.png)
 
 #### Working
-* for fut2, card9, and nod2, how do how do adult risk allele vs non-risk split up patients?
+* for fut2, card9, and nod2, how do adult risk allele vs non-risk split up patients?
 * assign genes to pathways; how do patients split by pathways using risk alleles?
 * do adult and ped effect agree?
 
