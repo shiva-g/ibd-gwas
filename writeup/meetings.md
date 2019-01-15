@@ -31,10 +31,10 @@
 * UK biobank registration under review
 
 #### Working
-* impute everyone w/ 1kg ref and run prsice w/ multi ethinic panel base snps
+* ~impute everyone w/ 1kg ref and run prsice w/ multi ethinic panel base snps~
 * Welcome trust 1st edition ibd adult and Uk biobank ibd adult data
 * automate roc pvals
-* add snptest results to eur plink assoc table
+* ~add snptest results to eur plink assoc table~
 
 #### Notes
 * ~Fix agenda links~
