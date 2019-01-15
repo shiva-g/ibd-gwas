@@ -7,9 +7,13 @@
     * [Multi-ethnic polygenic risk score table](tables/prs.tpop.md)
     * [Multi-ethnic polygenic risk score quantiles](plots/all.tpop.prs.quantiles.png)
     * [Multi-ethnic polygenic risk score roc](plots/all.tpop.prs.roc.png)
+    * [Multi-ethnic snptest for adult SNPs](tables/adult.all.tpop.assoc.csv) ([EUR](tables/adult.all.eur.assoc.csv))
+    * [Multi-ethnic snptest](tables/ped.all.tpop.assoc.csv) ([EUR](tables/ped.all.eur.assoc.csv))
 * [EUR polygenic risk score quantiles](plots/all.eur.prs.quantiles.png)
 
 ### Working
+* for fut2, card9, and nod2, how do how do adult risk allele vs non-risk split up patients?
+* assign genes to pathways; how do patients split by pathways using risk alleles?
 
 ### 20190108
 
@@ -41,7 +45,7 @@
 * utilize impute2
 * for fut2, card9, and nod2, how do how do adult risk allele vs non-risk split up patients?
 * assign genes to pathways; how do patients split by pathways using risk alleles?
-* split snp assoc results and adult alleles into two tables
+* ~split snp assoc results and adult alleles into two tables~
 * do adult and ped effect agree?
 * label risk alleles and be able to split patients by hom, any risk, no risk
 
