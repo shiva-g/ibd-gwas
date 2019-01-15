@@ -4,6 +4,7 @@
 * Multi-ethic analysis (94 HC, 116 IBD) (43 VEO, 73 late IBD)
     * Binary calls, not bgen
     * First 2 PCs
+    * Use adult EUR 231 base snps
     * [Multi-ethnic polygenic risk score table](tables/prs.tpop.md)
     * [Multi-ethnic polygenic risk score quantiles](plots/all.tpop.prs.quantiles.png)
     * [Multi-ethnic polygenic risk score roc](plots/all.tpop.prs.roc.png)
