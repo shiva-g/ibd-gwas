@@ -1,3 +1,16 @@
+### 20190115
+
+### Updates
+* Multi-ethic analysis
+    * Binary calls, not bgen
+    * First 2 PCs
+    * [Multi-ethnic polygenic risk score table](tables/prs.tpop.md)
+    * [Multi-ethnic polygenic risk score quantiles](plots/all.tpop.prs.quantiles.png)
+    * [Multi-ethnic polygenic risk score roc](plots/all.tpop.prs.roc.png)
+* [EUR polygenic risk score quantiles](plots/all.eur.prs.quantiles.png)
+
+### Working
+
 ### 20190108
 
 #### Agenda

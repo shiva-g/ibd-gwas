@@ -1,5 +1,6 @@
 ### 20190114
 * IBD supplement does not have multi ethnic pvals, so I'll use eur for now
+* Using PRS w/ 2 PCs looks very similar to PRS w/o PCs for total populations and EUR base SNPs
 
 ### 20190109
 * michigan server is up. Running all pop in queue position 4. dl results
