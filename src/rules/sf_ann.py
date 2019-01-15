@@ -109,4 +109,4 @@ rule gene_assoc:
                 'cases_maf', 'controls_maf',
                 'A1_adult', 'A2_adult', 'PVAL_adult', 'OR_adult',
                 'A1_vcf', 'A2_vcf', 'eff']
-        df[cols].to_csv(output.o, index=False, sep=',')
+        df[cols].sort_values(by='P_snptest', ascending=True).to_csv(output.o, index=False, sep=',')
