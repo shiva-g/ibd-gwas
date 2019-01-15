@@ -2,6 +2,6 @@
 * EUR: 64 HC. 91 IBD (53 late, 38 VEO)
 * all pops: 94 HC, 116 IBD (43 VEO, 73 late IBD)
 * [EUR and multi-ethnic polygenic risk score can split IBD from HC](tables/prs.tpop.md) [ROC](https://github.com/samesense/ibd-gwas/blob/master/writeup/plots/all.tpop.prs.roc.png)
-* [PRS quantiles can split IBD samples](plots/all.tpop.prs.quantiles.png)
+* [PRS quantiles can split IBD samples](plots/ibd_all.tpop.prs.quantiles.png)
 * [CARD9 and NOD2 (not FUT2) have slight associations w/ IBD for EUR](tables/adult.all.eur.assoc.csv)
 * [NOD2 (not FUT2;CARD9) has slight association w/ IBD for alll pops](tables/adult.all.tpop.assoc.csv)
