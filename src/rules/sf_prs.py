@@ -189,7 +189,8 @@ rule annotate_prsice_scores:
     input:
         p = DATA + 'interim/prsice/{group}/{pop}.best',
         f = DATA + 'interim/bfiles_imputed_grouped/{group}/{pop}.fam',
-        m = DATA + 'processed/MANIFEST.csv'
+        m = DATA + 'processed/MANIFEST.csv',
+        r = DATA + 'interim/snp_groups/{pop}'
     output:
         o = DATA + 'interim/prsice_parsed/{group}/{pop}.dat'
     run:
@@ -207,6 +208,8 @@ rule annotate_prsice_scores:
             return int(si)
 
         m = pd.read_csv(input.m)[['IID', 'HC or IBD or ONC', 'Study Group', 'SSID']].rename(columns={'Study Group':'studyGroup'})
+        r = pd.read_csv(input.r, sep='\t')
+        m = pd.merge(m, r, on='IID', how='left')
         m.loc[:, 'IID'] = m.apply(lambda row: '0_' + row['IID'], axis=1)
         m.loc[:, 'SubjectID'] = m.apply(mk_subject_id, axis=1)
         cols= ['fid', 'IID', 'f', 'm', 'sex', 'pheno']
