@@ -11,6 +11,7 @@
     * [Multi-ethnic snptest for adult SNPs](tables/adult.all.tpop.assoc.csv) ([EUR](tables/adult.all.eur.assoc.csv))
     * [Multi-ethnic snptest](tables/ped.all.tpop.assoc.csv) ([EUR](tables/ped.all.eur.assoc.csv))
 * [EUR polygenic risk score quantiles](plots/all.eur.prs.quantiles.png)
+* Have UK biobank data access
 
 #### Working
 * for fut2, card9, and nod2, how do adult risk allele vs non-risk split up patients?
