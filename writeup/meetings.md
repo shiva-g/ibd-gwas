@@ -1,7 +1,7 @@
 ### 20190115
 
 ### Updates
-* [Multi-ethic analysis]
+* Multi-ethic analysis
     * Binary calls, not bgen
     * First 2 PCs
     * [Multi-ethnic polygenic risk score table](tables/prs.tpop.md)
