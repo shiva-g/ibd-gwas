@@ -16,6 +16,7 @@ include: "sf_prs.py"
 include: "sf_assoc.py"
 include: "sf_snptest.py"
 include: "sf_ann.py"
+include: "sf_snp_splits.py"
 
 rule before_imputation:
     input:
@@ -39,3 +40,4 @@ rule after_imputation:
         # PWD + 'writeup/tables/maf.md',
         # expand(DATA + 'interim/prsice/snp_overlap/all.{pop}.init', pop=('eur', 'tpop')),
         expand(PWD + "writeup/tables/{age}.{group}.{pop}.assoc.csv", age=('ped', 'adult'), pop=('tpop', 'eur'), group=G),
+        DATA + 'interim/extracted_snps/tpop.ped'
