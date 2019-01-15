@@ -1,15 +1,22 @@
 ### 20190115
 
-### Updates
-* Multi-ethic analysis
-    * Binary calls, not bgen
+#### Updates
+* Multi-ethnic analysis (94 HC, 116 IBD) (43 VEO, 73 late IBD)
+    * PRS: Binary calls, not bgen, snptest: bgen
     * First 2 PCs
+    * Use adult EUR 231 base snps
     * [Multi-ethnic polygenic risk score table](tables/prs.tpop.md)
     * [Multi-ethnic polygenic risk score quantiles](plots/all.tpop.prs.quantiles.png)
     * [Multi-ethnic polygenic risk score roc](plots/all.tpop.prs.roc.png)
+    * [Multi-ethnic snptest for adult SNPs](tables/adult.all.tpop.assoc.csv) ([EUR](tables/adult.all.eur.assoc.csv))
+    * [Multi-ethnic snptest](tables/ped.all.tpop.assoc.csv) ([EUR](tables/ped.all.eur.assoc.csv))
 * [EUR polygenic risk score quantiles](plots/all.eur.prs.quantiles.png)
+* Have UK biobank data access
 
-### Working
+#### Working
+* for fut2, card9, and nod2, how do adult risk allele vs non-risk split up patients?
+* assign genes to pathways; how do patients split by pathways using risk alleles?
+* do adult and ped effect agree?
 
 ### 20190108
 
@@ -25,10 +32,10 @@
 * UK biobank registration under review
 
 #### Working
-* impute everyone w/ 1kg ref and run prsice w/ multi ethinic panel base snps
+* ~impute everyone w/ 1kg ref and run prsice w/ multi ethinic panel base snps~
 * Welcome trust 1st edition ibd adult and Uk biobank ibd adult data
 * automate roc pvals
-* add snptest results to eur plink assoc table
+* ~add snptest results to eur plink assoc table~
 
 #### Notes
 * ~Fix agenda links~
@@ -41,7 +48,7 @@
 * utilize impute2
 * for fut2, card9, and nod2, how do how do adult risk allele vs non-risk split up patients?
 * assign genes to pathways; how do patients split by pathways using risk alleles?
-* split snp assoc results and adult alleles into two tables
+* ~split snp assoc results and adult alleles into two tables~
 * do adult and ped effect agree?
 * label risk alleles and be able to split patients by hom, any risk, no risk
 
@@ -60,14 +67,14 @@
 * ~~nvestigate prsice mismatched snps~~
 
 #### Notes
-* impute everyone w/ 1kg ref and run prsice w/ multi ethinic panel base snps
+* ~impute everyone w/ 1kg ref and run prsice w/ multi ethinic panel base snps~
 * ~plot/list prsice quartiles for splitting samples by quartile~
 * ~what are prsice snps scores for assocation test?~ plot them
 * ~~auc~~ and ~pval for rocs~
 * ~why lost base snps in prsice?~
 * ~why does prsice list different snps counts for each test?~
 * ~~rm clumping step from prsice so all snps are kept~~
-* use snptest w/ snp probs and 2 PCs and logistic regression instead of plink
+* ~use snptest w/ snp probs and 2 PCs and logistic regression instead of plink~
 * ~~mk qqplot from association results~~
 
 ### 20181211
