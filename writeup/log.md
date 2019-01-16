@@ -1,5 +1,6 @@
 ### 20190116
 * merging new gsa data is not simple b/c the snp IDs disagree
+* need to adjust mds rules to account for different dataset
 
 ### 20190115
 * NOD2 variant [rs2066844](https://www.snpedia.com/index.php/Rs2066844) at 16:50745926. T/A is the risk allele.
