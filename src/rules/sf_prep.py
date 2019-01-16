@@ -1,4 +1,5 @@
-"""Prep CAG PLINK data"""
+"""Prep CAG GSA+ PLINK data.
+   """
 
 rule cp_cag_bfiles:
     """Mv bfiles to folder to fix bim name."""
@@ -30,7 +31,7 @@ rule discard_cag_samples:
         """plink --bfile $(dirname {input.f})/{wildcards.group} \
         --remove {input.d} --make-bed --out $(dirname {output})/{wildcards.group} &> {log}"""
 
-rule fix_cag_bfiles:
+rule fix_gsaplus_cag_bfiles:
     """Fill in pheno and gender.
        Missing samples.
     """

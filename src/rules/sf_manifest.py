@@ -3,7 +3,10 @@
 rule format_manifest:
     input: ibd = DATA + 'raw/conrad/CAG_Data_updated12.04.2018.xlsx',
            cag1 = DATA + 'raw/cag/IRB_Microbiome_0.csv',
-           cag2 = DATA + 'raw/cag/IRB_Microbiome11-2-18.csv'
+           cag2 = DATA + 'raw/cag/IRB_Microbiome11-2-18.csv',
+           gsa_sex = DATA + 'raw/veo-ibd/veo_gender',
+           gsa_hc = DATA + 'raw/veo-ibd/IJUK_GSA_719_Controls_12-1-17_PlinkFiles/IJUK_GSA_719_Controls_12-1-17.fam',
+           gsa_veo = DATA + 'raw/veo-ibd/IJUK_VEOIBDx266_11-10-17PLINKFILES/IJUK_VEOIBDx266_11-10-17.fam'
     output:
         o = DATA + 'processed/MANIFEST.csv',
         d = DATA + 'processed/DISCARD_SAMPLES'
@@ -53,4 +56,45 @@ rule format_manifest:
         #     if 'nan' == str(df.at[sample, 'gender']):
         #         df.loc[sample, 'gender'] = 'Female'
 
-        df.reset_index().to_csv(output.o, index=False)
+        df = df.reset_index()
+        df['chip'] = 'GSA+'
+        def load_gsa_samples(fam_file):
+            samples = {}
+            with open(fam_file) as f:
+                for line in f:
+                    if '\t' in line:
+                        sp = line.strip().split('\t')
+                    else:
+                        sp = line.strip().split()
+                    samples[sp[1]] = True
+            return samples
+
+        gsa_hc = load_gsa_samples(input.gsa_hc)
+        gsa_veo = load_gsa_samples(input.gsa_veo)
+        gsa = pd.read_csv(input.gsa_sex, sep='\t', header=None, names=['IID', 'gender'])
+        ls = [ [_, '-9'] for _ in gsa_hc]
+        hc_df = pd.DataFrame(ls, columns=['IID', 'gender'])
+        def fix_gsa_gender(row):
+            assert row['gender'] in ('M', 'F'), row['gender']
+            return 'Female' if row['gender']=='F' else 'Male'
+
+        def fix_gsa_study_group(row):
+            if row['IID'] in gsa_hc:
+                return 'Healthy CAG'
+            if row['IID'] in gsa_veo:
+                return 'VEO'
+            i = 1/0
+
+        def fix_gsa_sample_type(row):
+            if row['IID'] in gsa_hc:
+                return 'HC'
+            if row['IID'] in gsa_veo:
+                return 'IBD'
+            i = 1/0
+
+        gsa.loc[:, 'gender'] = gsa.apply(fix_gsa_gender, axis=1)
+        gsa = pd.concat([hc_df, gsa])
+        gsa['chip'] = 'GSA'
+        gsa.loc[:, 'Study Group'] = gsa.apply(fix_gsa_study_group, axis=1)
+        gsa.loc[:, 'HC or IBD or ONC'] = gsa.apply(fix_gsa_sample_type, axis=1)
+        pd.concat([df, gsa]).to_csv(output.o, index=False)
