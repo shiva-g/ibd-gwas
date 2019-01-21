@@ -1,6 +1,6 @@
 ### 20190121
 * after gsa, hapmap merge, no snp has less than 5% of samples missing
-* fix w/ plink flip?
+* gsa bim files are 0/1! Not nucs
 
 ### 20190116
 * merging new gsa data is not simple b/c the snp IDs disagree
