@@ -1,6 +1,7 @@
 ### 20190121
 * after gsa, hapmap merge, no snp has less than 5% of samples missing
-* gsa bim files are 0/1! Not nucs
+* gsa bim files are 0/1! Not nucs. Fixed
+* Next fix race in /mnt/isilon/microbiome/perry/ibd-gwas/data/interim/mds_dat/ibd_gsa_hapmap.dat
 
 ### 20190116
 * merging new gsa data is not simple b/c the snp IDs disagree
