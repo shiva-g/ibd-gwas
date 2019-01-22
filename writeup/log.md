@@ -1,3 +1,12 @@
+### 20190121
+* after gsa, hapmap merge, no snp has less than 5% of samples missing
+* gsa bim files are 0/1! Not nucs. Fixed
+* Next fix race in /mnt/isilon/microbiome/perry/ibd-gwas/data/interim/mds_dat/ibd_gsa_hapmap.dat
+
+### 20190116
+* merging new gsa data is not simple b/c the snp IDs disagree
+* need to adjust mds rules to account for different dataset
+
 ### 20190115
 * NOD2 variant [rs2066844](https://www.snpedia.com/index.php/Rs2066844) at 16:50745926. T/A is the risk allele.
 * CARD9 9:139266405 [rs10781499](https://www.ebi.ac.uk/gwas/variants/rs10781499) T/A is the risk allele.
