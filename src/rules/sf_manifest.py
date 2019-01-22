@@ -33,13 +33,11 @@ rule format_manifest:
             return row['SSID']
 
         def fix_race(row):
-            if str(row['race']).strip() == '':
-                return 'Unknown'
             if row['race'] in ('White', 'white'):
                 return 'White'
             if row['race'] in ('Black / African American', 'Black/African American'):
                 return 'Black/African American'
-            if row['race'] in ('UN', 'Declined to Answer', 'Declined to answer'):
+            if row['race'] in ('UN', 'Declined to Answer', 'Declined to answer') or str(row['race']).strip() == '' or str(row['race'])=='nan':
                 return 'Unknown'
             if row['race'] in ('White,Black/African American', 'White,Black / African American', 'Black / African American,White'):
                 return 'White, Black/African American'
@@ -90,8 +88,8 @@ rule format_manifest:
         gsa_hc = load_gsa_samples(input.gsa_hc)
         gsa_veo = load_gsa_samples(input.gsa_veo)
         gsa = pd.read_csv(input.gsa_sex, sep='\t', header=None, names=['IID', 'gender'])
-        ls = [ [_, '-9', 'Unknown', 'Unknown'] for _ in gsa_hc]
-        hc_df = pd.DataFrame(ls, columns=['IID', 'gender','race','ethnicity'])
+        ls = [ [_, '-9'] for _ in gsa_hc]
+        hc_df = pd.DataFrame(ls, columns=['IID', 'gender',])
         def fix_gsa_gender(row):
             assert row['gender'] in ('M', 'F'), row['gender']
             return 'Female' if row['gender']=='F' else 'Male'
