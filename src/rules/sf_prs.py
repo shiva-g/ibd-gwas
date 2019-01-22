@@ -207,11 +207,11 @@ rule annotate_prsice_scores:
             si = re.findall(r"\d+", row['SSID'].split('CHOP_')[1])[0]
             return int(si)
 
-        m = pd.read_csv(input.m)[['IID', 'HC or IBD or ONC', 'Study Group', 'SSID']].rename(columns={'Study Group':'studyGroup'})
+        m = pd.read_csv(input.m)[['SubjectID', 'IID', 'HC or IBD or ONC', 'Study Group', 'SSID']].rename(columns={'Study Group':'studyGroup'})
+        m.loc[:, 'SubjectID'] = m.apply(lambda row: 'Subj ' + str(int(row['SubjectID'])) if str(row['SubjectID'])!='nan' else 'NA', axis=1)
         r = pd.read_csv(input.r, sep='\t')
         m = pd.merge(m, r, on='IID', how='left')
         m.loc[:, 'IID'] = m.apply(lambda row: '0_' + row['IID'], axis=1)
-        m.loc[:, 'SubjectID'] = m.apply(mk_subject_id, axis=1)
         cols= ['fid', 'IID', 'f', 'm', 'sex', 'pheno']
         int_cols= ['fid', 'f', 'm', 'sex', 'pheno']
         dtype={'fid':int, 'f':int, 'm':int, 'sex':int, 'pheno':int}
@@ -251,6 +251,9 @@ rule plot_prs_dist:
         ggsave("{output}", p)
         """)
 
+rule tmp_yue:
+    input:
+        expand(DATA + 'interim/prsice_parsed/{group}/{pop}.dat', group='all', pop=('eur', 'tpop'))
 rule calc_prs_roc:
     input:
         i = DATA + 'interim/prsice_parsed/{group}/{pop}.dat'

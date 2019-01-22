@@ -6,7 +6,8 @@ rule format_manifest:
            cag2 = DATA + 'raw/cag/IRB_Microbiome11-2-18.csv',
            gsa_sex = DATA + 'raw/veo-ibd/veo_gender',
            gsa_hc = DATA + 'raw/veo-ibd/IJUK_GSA_719_Controls_12-1-17_PlinkFiles/IJUK_GSA_719_Controls_12-1-17.fam',
-           gsa_veo = DATA + 'raw/veo-ibd/IJUK_VEOIBDx266_11-10-17PLINKFILES/IJUK_VEOIBDx266_11-10-17.fam'
+           gsa_veo = DATA + 'raw/veo-ibd/IJUK_VEOIBDx266_11-10-17PLINKFILES/IJUK_VEOIBDx266_11-10-17.fam',
+           veo_dat = DATA + 'raw/veo-ibd/SNPList_01162019.xls'
     output:
         o = DATA + 'processed/MANIFEST.csv',
         d = DATA + 'processed/DISCARD_SAMPLES'
@@ -25,11 +26,28 @@ rule format_manifest:
                    '2017_CHOP_BAL_VEO_007':'2018_CHOP_BAL_VEO_007',
                    '2017_CHOP_BAL_VEO_009':'2018_CHOP_BAL_VEO_009',
                    '2017_CHOP_BAL_VEO_010':'2018_CHOP_BAL_VEO_010'}
+
         def rename_cag(row):
             if row['SSID'] in new_cag:
                 return new_cag[row['SSID']]
             return row['SSID']
 
+        def fix_race(row):
+            if str(row['race']).strip() == '':
+                return 'Unknown'
+            if row['race'] in ('White', 'white'):
+                return 'White'
+            if row['race'] in ('Black / African American', 'Black/African American'):
+                return 'Black/African American'
+            if row['race'] in ('UN', 'Declined to Answer', 'Declined to answer'):
+                return 'Unknown'
+            if row['race'] in ('White,Black/African American', 'White,Black / African American', 'Black / African American,White'):
+                return 'White, Black/African American'
+            return row['race']
+
+        veo_df = pd.read_excel(input.veo_dat, sheet_name='SNP Array').rename(columns={'Subject ID':'IID', 'Race':'race', 'Ethnicity':'ethnicity'})[['IID', 'race', 'ethnicity']]
+        dup_df = pd.read_excel(input.veo_dat, sheet_name='Patient duplicates')
+        gsa_dups = dup_df['Subject ID'].values
         cag1 = pd.read_csv(input.cag1, skiprows=8)
         cag2 = pd.read_csv(input.cag2, skiprows=8)
         cag = pd.concat([cag1, cag2])[['Sample_ID', 'SentrixBarcode_A', 'SentrixPosition_A']].rename(columns={'Sample_ID':'SSID'})
@@ -45,7 +63,7 @@ rule format_manifest:
         discard_df[['tmp']].to_csv(output.d, index=False, header=None)
         cag.loc[:, 'SSID'] = cag.apply(rename_cag, axis=1)
 
-        ibd = pd.read_excel(input.ibd, sheet_name='Has GWAS', skiprows=2)
+        ibd = pd.read_excel(input.ibd, sheet_name='Has GWAS', skiprows=2).rename(columns={'study_id':'SubjectID'})
         ibd.loc[:, 'race'] = ibd.apply(lambda row: 'White' if str(row['race'])=='Whtie' else str(row['race']).strip(), axis=1)
         # set sex for missing samples
         females = ['201939090006_R06C02', '201939090044_R03C01', '201939090044_R04C02', '201939090076_R03C02', '201939090076_R07C01', '201939090076_R08C02', '201939090114_R07C02',
@@ -72,8 +90,8 @@ rule format_manifest:
         gsa_hc = load_gsa_samples(input.gsa_hc)
         gsa_veo = load_gsa_samples(input.gsa_veo)
         gsa = pd.read_csv(input.gsa_sex, sep='\t', header=None, names=['IID', 'gender'])
-        ls = [ [_, '-9'] for _ in gsa_hc]
-        hc_df = pd.DataFrame(ls, columns=['IID', 'gender'])
+        ls = [ [_, '-9', 'Unknown', 'Unknown'] for _ in gsa_hc]
+        hc_df = pd.DataFrame(ls, columns=['IID', 'gender','race','ethnicity'])
         def fix_gsa_gender(row):
             assert row['gender'] in ('M', 'F'), row['gender']
             return 'Female' if row['gender']=='F' else 'Male'
@@ -97,4 +115,8 @@ rule format_manifest:
         gsa['chip'] = 'GSA'
         gsa.loc[:, 'Study Group'] = gsa.apply(fix_gsa_study_group, axis=1)
         gsa.loc[:, 'HC or IBD or ONC'] = gsa.apply(fix_gsa_sample_type, axis=1)
-        pd.concat([df, gsa]).to_csv(output.o, index=False)
+        gsa = pd.merge(gsa, veo_df, on='IID', how='left')
+        df = pd.concat([df, gsa])
+        df.loc[:, 'is_gsa_duplicate'] = df.apply(lambda row: row['IID'] in gsa_dups, axis=1)
+        df.loc[:, 'race'] = df.apply(fix_race, axis=1)
+        df.to_csv(output.o, index=False)

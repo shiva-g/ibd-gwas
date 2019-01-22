@@ -2,73 +2,99 @@
    https://mail.google.com/mail/u/0/#inbox/FMfcgxwBVDKqJbCSJrRCzNkLHvWCjNGc
    data/raw/veo-ibd/
 """
-def mk_raw_bfiles(wc):
-    if wc.group=='44':
-        return DATA + 'raw/plink44/paths.txt.GSA-mGluR_enrichd_20011739X343186_B2.ped.fam'
-    elif wc.group=='185':
-        return DATA + 'raw/plink185/paths.txt.GSA-mGluR_enrichd_20011739X343186_B2.ped.fam'
 
- rule fix_bfiles:
-    """Fill in pheno.
-       Make everyone male
-    """
-    input:  i = mk_raw_bfiles
-    output: expand(DATA + 'interim/bfiles/{{group,44|185}}.{suffix}', suffix = ('fam', 'bim', 'bed') )
-    run:
-        bim = input.i.replace('.fam', '_Forward.bim')
-        shell('cp {bim} {DATA}interim/bfiles/{wildcards.group}.bim')
-
-         bed = input.i.replace('.fam', '.bed')
-        shell('cp {bed} {DATA}interim/bfiles/{wildcards.group}.bed')
-
-         if wildcards.group=='44':
-            pheno = '2' # case
-        elif wildcards.group=='185':
-            pheno = '1' # control
-        else:
-            pheno = 1/0
-        sex = '1' # male
-        with open(input.i) as f, open(DATA + 'interim/bfiles/' + wildcards.group + '.fam', 'w') as fout:
-            for line in f:
-                sp = line.strip().split()
-                print(' '.join(sp[:-2] + [sex, pheno]), file=fout)
-
- rule combine_bfiles:
-    input:
-        expand(DATA + 'interim/bfiles/{group}.fam', group=(44, 185))
-    output:
-        DATA + 'interim/bfiles/3groups.fam'
-    singularity:
-        PLINK
-    log:
-        LOG + 'prep/combine_44_185'
-    shell:
-        "plink --bfile {DATA}interim/bfiles/185 --bmerge {DATA}interim/bfiles/44 "
-        "--autosome-xy --make-bed --out {DATA}interim/bfiles/3groups &> {log}"
-
-rule fix_gsa_cag_bfiles:
+rule fix_veo_gsa_bfiles:
     """Fill in pheno and gender.
     """
     input:
-        i = DATA + 'interim/bfiles_cag/{group}.fam',
-        m = DATA + 'processed/MANIFEST.csv'
+        i = DATA + 'raw/veo-ibd/IJUK_VEOIBDx266_11-10-17PLINKFILES/IJUK_VEOIBDx266_11-10-17.fam',
+        m = DATA + 'processed/MANIFEST.csv',
     output:
-        expand(DATA + 'interim/bfiles/{{group,44|185}}.{suffix}', suffix = ('fam', 'bim', 'bed') ),
-        DATA + 'processed/onc_samples.{group}'
+        expand(DATA + 'interim/gsa_bfiles_fixed/veo-gsa.{suffix}', suffix = ('fam', 'bim', 'bed') )
     run:
-        bim = input.i.replace('.fam', '.bim')
-        shell('cp {bim} {DATA}interim/bfiles/{wildcards.group}.bim')
+        bim = input.i.replace('.fam', '_Forward.bim')
+        shell('cp {bim} {DATA}interim/gsa_bfiles_fixed/veo-gsa.bim')
 
         bed = input.i.replace('.fam', '.bed')
-        shell('cp {bed} {DATA}interim/bfiles/{wildcards.group}.bed')
+        shell('cp {bed} {DATA}interim/gsa_bfiles_fixed/veo-gsa.bed')
+
+        pheno = '2' # case
+        df = pd.read_csv(input.m)
+        sexes = {row['IID']:row['gender'] for _, row in df.iterrows()}
 
         def calc_sex(row):
-            if row['gender']=='Male':
+            if row=='Male':
                 return '1'
-            elif row['gender']=='Female':
+            elif row=='Female':
                 return '2'
             else:
                 i = 1/0
                 print('no sex', row)
-                return 'wtf'
 
+        with open(input.i) as f, open(DATA + 'interim/gsa_bfiles_fixed/veo-gsa.fam', 'w') as fout:
+            for line in f:
+                sp = line.strip().split('\t')
+                s = sexes[sp[1]]
+                sex = calc_sex(s)
+                print(' '.join(sp[:-2] + [sex, pheno]), file=fout)
+
+rule fix_hc_gsa_bfiles:
+    """Fill in pheno.
+       No sex info available.
+    """
+    input:  i = DATA + 'raw/veo-ibd/IJUK_GSA_719_Controls_12-1-17_PlinkFiles/IJUK_GSA_719_Controls_12-1-17.fam'
+    output: expand(DATA + 'interim/gsa_bfiles_fixed/hc-gsa.{suffix}', suffix = ('fam', 'bim', 'bed') )
+    run:
+        bim = input.i.replace('.fam', '_Forward.bim')
+        shell('cp {bim} {DATA}interim/gsa_bfiles_fixed/hc-gsa.bim')
+
+        bed = input.i.replace('.fam', '.bed')
+        shell('cp {bed} {DATA}interim/gsa_bfiles_fixed/hc-gsa.bed')
+
+        pheno = '1' # control
+        sex = '-9'
+        with open(input.i) as f, open(DATA + 'interim/gsa_bfiles_fixed/hc-gsa.fam', 'w') as fout:
+            for line in f:
+                sp = line.strip().split()
+                print(' '.join(sp[:-2] + [sex, pheno]), file=fout)
+
+rule list_discordant_pos_gsa:
+    input:
+        ibd = DATA + 'interim/gsa_bfiles_fixed/veo-gsa.bim',
+        hc = DATA + 'interim/gsa_bfiles_fixed/hc-gsa.bim'
+    output:
+        bout = DATA + 'interim/gsa_discord/veo.discord',
+        hout = DATA + 'interim/gsa_discord/hc.discord',
+    run:
+        names = ['chrom', 'id', 'blank', 'pos', 'allele1', 'allele2']
+        names_hp = ['chrom', 'id_hp', 'blank', 'pos', 'allele1_hp', 'allele2_hp']
+        ibd = pd.read_csv(input.ibd, sep='\t', header=None, names=names)
+        hp = pd.read_csv(input.hc, sep='\t', header=None, names=names_hp)
+        # discord when pos matches, but allele1 and allele2 do not
+        m = pd.merge(hp, ibd, on='pos', how='inner')
+        #m.to_csv('xxx', index=False, sep='\t')
+        crit = m.apply(lambda row: row['allele1'] != row['allele1_hp'] or row['allele2'] != row['allele2_hp'], axis=1)
+        m[crit][['id']].to_csv(output.bout, index=False, header=None)
+        m[crit][['id_hp']].to_csv(output.hout, index=False, header=None)
+
+rule combine_gsa_cag_bfiles:
+    input:
+        expand(DATA + 'interim/gsa_bfiles_fixed/{group}.fam', group=('hc-gsa', 'veo-gsa')),
+        ex_hc = DATA + 'interim/gsa_discord/hc.discord',
+        ex_veo = DATA + 'interim/gsa_discord/veo.discord',
+    output:
+        f=DATA + 'interim/bfiles/gsa.fam',
+        a=expand(DATA + 'interim/bfiles/gsa.{s}', s=('bim', 'bed', 'fam'))
+    singularity:
+        PLINK
+    log:
+        LOG + 'prep/combine_gsa'
+    shell:
+        "plink --bfile {DATA}interim/gsa_bfiles_fixed/veo-gsa "
+        "--exclude {input.ex_veo} "
+        "--make-bed --out {DATA}interim/bfiles/veo-gsa &> {log}.v && "
+        "plink --bfile {DATA}interim/gsa_bfiles_fixed/hc-gsa -exclude {input.ex_hc} "
+        "--make-bed --out {DATA}interim/bfiles/hc-gsa &> {log}.h && "
+        "plink --bfile {DATA}interim/bfiles/veo-gsa "
+        "--bmerge {DATA}interim/bfiles/hc-gsa --merge-mode 1 --merge-equal-pos "
+        "--allow-no-sex --chr 1-22, x --make-bed --out $(dirname {output.f})/gsa &> {log}"

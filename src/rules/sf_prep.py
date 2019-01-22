@@ -54,8 +54,8 @@ rule fix_gsaplus_cag_bfiles:
             elif row['gender']=='Female':
                 return '2'
             else:
-                i = 1/0
-                print('no sex', row)
+                #i = 1/0
+                #print('no sex', row)
                 return 'wtf'
 
         df = pd.read_csv(input.m)
@@ -106,7 +106,7 @@ rule rm_dups_and_onc:
         "--out $(dirname {output})/{wildcards.group} &> {log} && "
         "rm tmp_samples.{wildcards.group}"
 
-rule combine_cag_bfiles:
+rule combine_gsaplus_cag_bfiles:
     input:
         f = expand(DATA + 'interim/bfiles_rm_samples/{group}.fam', group=(44, 185)),
         m = DATA + 'processed/MANIFEST.csv'

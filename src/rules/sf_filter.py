@@ -25,7 +25,7 @@ rule filter_snps:
         LOG + 'prep/{group}.filter_snps'
     shell:
         "plink --bfile {DATA}interim/bfiles/{wildcards.group} --min-ac 1 --geno 0.05 "
-        "--exclude {input.m} "
+        "--exclude {input.m} --allow-no-sex "
         "--make-bed --out {DATA}interim/bfiles_filter_snps_1/{wildcards.group} &> {log}"
 
 rule list_dup_pos:
@@ -117,7 +117,7 @@ rule mk_indep_snps:
         LOG + 'prep/{group}.indep_snps'
     shell:
         "plink --bfile $(dirname {input.f})/{wildcards.group} --indep-pairwise 50 5 0.2 "
-        "--make-bed --out $(dirname {output.f})/{wildcards.group} &> {log}"
+        "--allow-no-sex --make-bed --out $(dirname {output.f})/{wildcards.group} &> {log}"
 
 rule filter_indep_snps:
     input:

@@ -1,31 +1,53 @@
 """Make hapmap and study mds to check race"""
 
-rule combine_hapmap_ibd:
+rule combine_hapmap_ibd_0:
     input:
-        expand(DATA + 'interim/bfiles_indep/{group}.fam', group=('3groups', 'hapmap'))
+        DATA + 'interim/bfiles_indep/hapmap.fam',
+        DATA + 'interim/bfiles_indep/{group}.fam',
     output:
-        DATA + 'interim/bfiles_tmp/hapmap.bim',
-        DATA + 'interim/bfiles_tmp/3groups.bim',
+        ex = DATA + 'interim/bfiles_tmp/{group}/ibd_hapmap_{group}.ex'
     singularity:
         PLINK
     log:
-        LOG + 'prep/combine_ibd_hapmap'
+        LOG + 'prep/combine_ibd_hapmap_{group}'
     shell:
-        "plink --bfile {DATA}interim/bfiles_indep/3groups --bmerge {DATA}interim/bfiles_indep/hapmap "
-        "--out {DATA}interim/bfiles_tmp/ibd_hapmap &> {log}.1 || "
-        """grep "Warning: Multiple " {DATA}interim/bfiles_tmp/ibd_hapmap.log | """
-        """cut -f 7 -d " " | sed "s/.\{{2\}}$//" | sed "s/^.\{{1\}}//" > {DATA}/interim/bfiles_tmp/multi_pos && """
-        "cat {DATA}/interim/bfiles_tmp/multi_pos {DATA}interim/bfiles_tmp/ibd_hapmap.missnp > {DATA}interim/bfiles_tmp/ibd_hapmap.ex && "
-        "plink --bfile {DATA}interim/bfiles_indep/3groups --biallelic-only strict --exclude {DATA}interim/bfiles_tmp/ibd_hapmap.ex --make-bed --out {DATA}interim/bfiles_tmp/3groups &> {log}.2 && "
-        "plink --bfile {DATA}interim/bfiles_indep/hapmap --biallelic-only strict --exclude {DATA}interim/bfiles_tmp/ibd_hapmap.ex --make-bed --out {DATA}interim/bfiles_tmp/hapmap &> {log}.3 "
+        "plink --bfile {DATA}interim/bfiles_indep/{wildcards.group} "
+        "--bmerge {DATA}interim/bfiles_indep/hapmap --biallelic-only strict "
+        "--out {DATA}interim/bfiles_tmp/{wildcards.group}/ibd_hapmap_{wildcards.group} &> {log} || touch {DATA}interim/bfiles_tmp/{wildcards.group}/ibd_hapmap_{wildcards.group}.log; "
+        """grep "Warning: Multiple " {DATA}interim/bfiles_tmp/{wildcards.group}/ibd_hapmap_{wildcards.group}.log | """
+        """cut -f 7 -d " " | sed "s/.\{{2\}}$//" | sed "s/^.\{{1\}}//" > {DATA}/interim/bfiles_tmp/{wildcards.group}/multi_pos.{wildcards.group} || touch {DATA}/interim/bfiles_tmp/{wildcards.group}/multi_pos.{wildcards.group}; """
+        "touch {DATA}interim/bfiles_tmp/{wildcards.group}/ibd_hapmap_{wildcards.group}.missnp "
+        "cat {DATA}/interim/bfiles_tmp/{wildcards.group}/multi_pos.{wildcards.group} "
+        "{DATA}interim/bfiles_tmp/{wildcards.group}/ibd_hapmap_{wildcards.group}.missnp > "
+        "{output.ex}"
+
+rule combine_hapmap_ibd_1:
+    input:
+        DATA + 'interim/bfiles_indep/hapmap.fam',
+        DATA + 'interim/bfiles_indep/{group}.fam',
+        ex = DATA + 'interim/bfiles_tmp/{group}/ibd_hapmap_{group}.ex'
+    output:
+        DATA + 'interim/bfiles_tmp/{group}/hapmap.bim',
+        DATA + 'interim/bfiles_tmp/{group}/{group}.bim',
+    singularity:
+        PLINK
+    log:
+        LOG + 'prep/combine1_ibd_hapmap_{group}'
+    shell:
+        "plink --bfile {DATA}interim/bfiles_indep/{wildcards.group} "
+        "--biallelic-only strict --exclude {input.ex} "
+        "--make-bed --out {DATA}interim/bfiles_tmp/{wildcards.group}/{wildcards.group} &> {log}.2 && "
+        "plink --bfile {DATA}interim/bfiles_indep/hapmap --biallelic-only strict "
+        "--exclude {input.ex} --make-bed "
+        "--out {DATA}interim/bfiles_tmp/{wildcards.group}/hapmap &> {log}.3 "
 
 rule list_discordant_pos_hapmap_ibd:
     input:
-        ibd = DATA + 'interim/bfiles_tmp/3groups.bim',
-        hp = DATA + 'interim/bfiles_tmp/hapmap.bim'
+        ibd = DATA + 'interim/bfiles_tmp/{group}/{group}.bim',
+        hp = DATA + 'interim/bfiles_tmp/{group}/hapmap.bim'
     output:
-        bout = DATA + 'interim/bfiles_tmp/3groups.discord',
-        hout = DATA + 'interim/bfiles_tmp/hapmap.discord',
+        bout = DATA + 'interim/bfiles_tmp/{group}/{group}.discord',
+        hout = DATA + 'interim/bfiles_tmp/{group}/hapmap.discord',
     run:
         names = ['chrom', 'id', 'blank', 'pos', 'allele1', 'allele2']
         names_hp = ['chrom', 'id_hp', 'blank', 'pos', 'allele1_hp', 'allele2_hp']
@@ -40,22 +62,26 @@ rule list_discordant_pos_hapmap_ibd:
 
 rule combine_hapmap_ibd_2:
     input:
-        b=expand(DATA + 'interim/bfiles_tmp/{group}.bim', group=('3groups', 'hapmap')),
-        ibd_rm = DATA + 'interim/bfiles_tmp/3groups.discord',
-        hp_rm = DATA + 'interim/bfiles_tmp/hapmap.discord',
+        b=DATA + 'interim/bfiles_tmp/{group}/{group}.bim',
+        h=DATA + 'interim/bfiles_tmp/{group}/hapmap.bim',
+        ibd_rm = DATA + 'interim/bfiles_tmp/{group}/{group}.discord',
+        hp_rm = DATA + 'interim/bfiles_tmp/{group}/hapmap.discord',
     output:
-        expand(DATA + 'interim/bfiles/ibd_hapmap.{s}', s=('bed', 'bim', 'fam')),
-        DATA + 'interim/bfiles_tmp2/3groups.bim',
-        DATA + 'interim/bfiles_tmp2/hapmap.bim'
+        expand(DATA + 'interim/bfiles/ibd_{{group}}_hapmap.{s}', s=('bed', 'bim', 'fam')),
+        DATA + 'interim/bfiles_tmp2/{group}/{group}.bim',
+        DATA + 'interim/bfiles_tmp2/{group}/hapmap.bim'
     singularity:
         PLINK
     log:
-        LOG + 'prep/combine_ibd_hapmap_2'
+        LOG + 'prep/combine_ibd_hapmap_2_{group}'
     shell:
-        "plink --bfile {DATA}interim/bfiles_tmp/3groups --exclude {DATA}interim/bfiles_tmp/3groups.discord --make-bed --out {DATA}interim/bfiles_tmp2/3groups &> {log}.4 && "
-        "plink --bfile {DATA}interim/bfiles_tmp/hapmap -exclude {DATA}interim/bfiles_tmp/hapmap.discord --make-bed --out {DATA}interim/bfiles_tmp2/hapmap &> {log}.5 && "
-        "plink --bfile {DATA}interim/bfiles_tmp2/3groups --bmerge {DATA}interim/bfiles_tmp2/hapmap "
-        "--merge-mode 1 --merge-equal-pos --make-bed --out {DATA}interim/bfiles/ibd_hapmap &> {log}"
+        "plink --bfile {DATA}interim/bfiles_tmp/{wildcards.group}/{wildcards.group} "
+        "--exclude {DATA}interim/bfiles_tmp/{wildcards.group}/{wildcards.group}.discord "
+        "--make-bed --out {DATA}interim/bfiles_tmp2/{wildcards.group}/{wildcards.group} &> {log}.4 && "
+        "plink --bfile {DATA}interim/bfiles_tmp/{wildcards.group}/hapmap -exclude {DATA}interim/bfiles_tmp/{wildcards.group}/hapmap.discord "
+        "--make-bed --out {DATA}interim/bfiles_tmp2/{wildcards.group}/hapmap &> {log}.5 && "
+        "plink --bfile {DATA}interim/bfiles_tmp2/{wildcards.group}/{wildcards.group} --bmerge {DATA}interim/bfiles_tmp2/{wildcards.group}/hapmap "
+        "--allow-no-sex --merge-mode 1 --merge-equal-pos --make-bed --out {DATA}interim/bfiles/ibd_{wildcards.group}_hapmap &> {log}"
 
 rule ibd_hapmap_ibd:
     input:
@@ -87,14 +113,14 @@ rule ibd_hapmap_mds:
 
 rule color_mds:
     input:
-        mds = DATA + 'interim/plink_mds/{group}.mds',
+        mds = DATA + 'interim/plink_mds/ibd_{group}_hapmap.mds',
         yri = DATA + 'interim/hapmap/YRI.fam',
         ceu = DATA + 'interim/hapmap/CEU.fam',
         asn = DATA + 'interim/hapmap/JPT_CHB.fam',
-        ibd = DATA + 'interim/bfiles_filter_samples/3groups.fam',
+        ibd = DATA + 'interim/bfiles_filter_samples/{group}.fam',
         man = DATA + 'processed/MANIFEST.csv'
     output:
-        o = DATA + 'interim/mds_dat/{group}.dat'
+        o = DATA + 'interim/mds_dat/ibd_{group}_hapmap.dat'
     run:
         mds = pd.read_csv(input.mds, delim_whitespace=True)
         mds.loc[:, 'FID'] = mds.apply(lambda row: row['FID'].lstrip().strip(), axis=1)
@@ -111,6 +137,10 @@ rule color_mds:
         df = pd.merge(mds, fam, on=['IID', 'FID'], how='left')
         df.to_csv(output.o, index=False, sep='\t')
 
+rule mds_tmp:
+    input:
+        expand(DATA + 'interim/mds_dat/ibd_{group}_hapmap.dat', group=('3groups', 'gsa'))
+
 rule cut_mds:
     """Restrict study samples."""
     input:
@@ -119,6 +149,7 @@ rule cut_mds:
         o = DATA + 'interim/mds_cut/{pop}.keep_samples'
     run:
         df = pd.read_csv(input.i, sep='\t')
+        df.loc[:, 'race'] = df.apply(lambda row: row['race'] if str(row['race'])!='-9' else 'Unknown', axis=1)
         if wildcards.pop == 'eur':
             df[(df.C1<-.025) & (df.C2>.025) & ( (df.group=='IBD') | (df.group=='HC') | (df.group=='ONC'))][['FID', 'IID']].to_csv(output.o, index=False, header=None, sep=' ')
         if wildcards.pop == 'tpop':
@@ -175,8 +206,11 @@ rule color_mds_ibd:
         o = DATA + 'interim/mds_dat_ibd/{group}.dat'
     run:
         def mk_subject_id(row):
-            si = re.findall(r"\d+", row['SSID'].split('CHOP_')[1])[0]
-            return int(si)
+            if 'CHOP' in str(row['SSID']):
+                si = re.findall(r"\d+", row['SSID'].split('CHOP_')[1])[0]
+                return int(si)
+            else:
+                return -1
 
         mds = pd.read_csv(input.mds, delim_whitespace=True)
         manifest = pd.read_csv(input.man)
@@ -185,13 +219,13 @@ rule color_mds_ibd:
                                                   if not str(row['HC or IBD or ONC'])
                                                   in ('IBD', 'HC', 'ONC')
                                                   else row['HC or IBD or ONC'], axis=1)
-        manifest.loc[:, 'SubjectID'] = manifest.apply(mk_subject_id, axis=1)
         df = pd.merge(mds, manifest, on=['IID', 'FID'], how='left')
+        df.loc[:, 'race'] = df.apply(lambda row: row['race'] if str(row['race'])!='-9' else 'Unknown', axis=1)
         df.to_csv(output.o, index=False, sep='\t')
 
 rule mds:
-    input: DATA + 'interim/mds_dat_ibd/3groups.dat',
-           o = DATA + 'interim/mds_dat/ibd_hapmap.dat'
+    input: #DATA + 'interim/mds_dat_ibd/3groups.dat',
+           PLOTS + 'hapmap_mds.gsa.png'
 
 rule plot_with_hapmap_nogroup:
     input:
@@ -207,12 +241,11 @@ rule plot_with_hapmap_nogroup:
         ggsave("{output}", p, units="cm", width=60)
         """)
 
-
 rule plot_with_hapmap:
     input:
-        DATA + 'interim/mds_dat/ibd_hapmap.dat'
+        DATA + 'interim/mds_dat/ibd_{group}_hapmap.dat'
     output:
-        PLOTS + 'hapmap_mds.png'
+        PLOTS + 'hapmap_mds.{group}.png'
     run:
         R("""
         require(ggplot2)
