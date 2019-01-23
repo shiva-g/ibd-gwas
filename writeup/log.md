@@ -1,3 +1,7 @@
+### 20190123
+* Missing race for one gsa sample
+* Fixed race sample name issues
+
 ### 20190121
 * after gsa, hapmap merge, no snp has less than 5% of samples missing
 * gsa bim files are 0/1! Not nucs. Fixed
