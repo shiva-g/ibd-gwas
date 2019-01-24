@@ -4,7 +4,7 @@ rule format_manifest_gsa:
     input:
         gsa_hc = DATA + 'raw/veo-ibd/IJUK_GSA_719_Controls_12-1-17_PlinkFiles/IJUK_GSA_719_Controls_12-1-17.fam',
         gsa_veo = DATA + 'raw/veo-ibd/IJUK_VEOIBDx266_11-10-17PLINKFILES/IJUK_VEOIBDx266_11-10-17.fam',
-        veo_dat = DATA + 'raw/veo-ibd/SNPList_01162019.xls'
+        veo_dat = DATA + 'raw/veo-ibd/SNPList_01162019.xlsx'
     output:
         o = DATA + 'interim/manifest/gsa.csv',
     run:
@@ -45,8 +45,7 @@ rule format_manifest_gsa:
             xls_samples = set(veo_df['IID'].values) | set(dup_df['IID'].values)
             fam_samples = set(samples)
             not_in_xls = fam_samples - xls_samples
-            # add assert back when learn about 6152A
-            #assert not len(not_in_xls), not_in_xls
+            assert not len(not_in_xls), not_in_xls
             not_in_fam = xls_samples - fam_samples
             assert not len(not_in_fam), not_in_fam
 
