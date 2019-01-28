@@ -1,4 +1,4 @@
-### SNP filters
+### GSA+ SNP filters
 * Start with 683369 markers across 118 cases and 99 controls. 
 * Use plink to remove 97585 monomorphic snps and markers not called for more than 5% of samples (geno 0.05). 
 * Remove 1363 duplicated variants and 4560 positions that appeared more than once with plink.
@@ -48,7 +48,7 @@
     * AFF: 4588 targets p<0.001. 13982 targets p<0.01 (might have real signal)
     * UNAFF controls: nan
 * ~gender check (--check-sex) run after indep filter shows two conflicts F of .08 and .06~
-* ~--het check: 0.08715, largest F inbreeding coefficient estimate; smallest -0.09699~
+* --het check: 0.365, largest F inbreeding coefficient estimate; smallest -0.15
 * ~case vs control missing per target (--test-missing) run after filtering targets with high missing rates and removing chrX. 344 markers have p<0.05. 76 p<0.01. 7 p<0.001~
 * ~plink --genome table~
 * ~[maf table](tables/maf.md)~
