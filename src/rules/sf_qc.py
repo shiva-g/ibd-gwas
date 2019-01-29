@@ -28,14 +28,15 @@ rule missing:
     input:
         expand(DATA + 'interim/bfiles_filter_snps_nox/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
     output:
-        expand(DATA + 'interim/missing_test/{{group}}.{miss}', miss=('imiss', 'lmiss') )
+        expand(DATA + 'interim/missing_test/{{group}}.{miss}', miss=('imiss', 'lmiss', 'missing') )
     singularity:
         PLINK
     log:
         LOG + 'qc/{group}.missing'
     shell:
         "plink --bfile {DATA}interim/bfiles_filter_snps_nox/{wildcards.group} "
-        "--missing --test-missing --out {DATA}interim/missing_test/{wildcards.group} &> {log}"
+        "--allow-no-sex --missing --test-missing "
+        "--out {DATA}interim/missing_test/{wildcards.group} &> {log}"
 
 rule check_hwe:
     input:
@@ -84,7 +85,7 @@ rule summarize_hwe:
         pd.concat([g01, g001]).to_csv(output.o, index=False, sep='\t')
 
 rule all_qc:
-    input: expand(DATA + 'interim/missing_test/{group}.{miss}', group=('3groups', 'gsa'), miss=('imiss', 'lmiss') ),
+    input: expand(DATA + 'interim/missing_test/{group}.{miss}', group=('3groups', 'gsa'), miss=('imiss', 'lmiss', 'missing') ),
            # expand(DATA + 'interim/sex_check/{group}.sexcheck', group=('3groups', 'gsa')),
            expand(DATA + 'interim/qc_hwe/{group}.counts', group=('3groups', 'gsa')),
            # expand(DATA + 'interim/qc_freq/{group}.counts', group=('3groups', 'gsa')),
