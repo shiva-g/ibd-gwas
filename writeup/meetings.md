@@ -7,6 +7,7 @@
         * 2 VEO identical to contols
         * 2 related VEO
         * 1 VEO related to control
+        * Related controls
     * [GSA+ genome table](https://docs.google.com/spreadsheets/d/1CFsaf5nz1TcppBgqOd4VkWKGRO2t1xmxFcfQC6oYsjw/edit#gid=1911340057)
     * .124 PI_HAT cutoff?
 * IBD GSA+ subject ID mixup
