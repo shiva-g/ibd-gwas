@@ -57,7 +57,7 @@
 * --het check: 0.365, largest F inbreeding coefficient estimate; smallest -0.15
 * case vs control missing per target (--test-missing) run after filtering targets with high missing rates and removing chrX. 6981 markers have p<0.05. 3200 p<0.01. 1197 p<0.001
 * [plink --genome table](https://docs.google.com/spreadsheets/d/1QK4bAMm4bZqctnldZjs5Jwbs1MiOqzWwflRetY1-RW0/edit#gid=301566719)
-* ~[maf table](tables/maf.md)~
+* [maf table](tables/gsa.maf.md)
     
 ### Imputation
 * Michigan Imputation Server v1.0.4
