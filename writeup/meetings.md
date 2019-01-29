@@ -1,3 +1,12 @@
+### 20190129
+
+#### Updates
+* [VEO GSA processing](https://github.com/samesense/ibd-gwas/blob/master/writeup/methods.md#gsa-snp-filters-1)
+* [VEO GSA QC](https://github.com/samesense/ibd-gwas/blob/master/writeup/methods.md#gsa-qc-1)
+* IBD GSA+ subject ID mixup
+    * Subject 261 labels two different people
+    * Subject 215 labels two different people
+
 ### 20190115
 
 #### Updates
