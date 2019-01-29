@@ -18,6 +18,7 @@
     * Tues 3:30 Y
     * Dynamic VEO microbiome 10:15?
     * IBD Tues 11?
+    * IBD Fri 11am Y
     * Large dynamic group?
 * Judith IBD pathways    
 
