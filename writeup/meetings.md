@@ -23,7 +23,7 @@
 * Judith IBD pathways; split samples by pathway?
 * [gsa vs gsa+ samples](https://docs.google.com/spreadsheets/d/1T5TmfiabuY-EuKc16Dmynmtao7TAAqAqU-z_hBAHQnI/edit#gid=186652860)
     * 41 VEO duplicates
-    * 96 control duplicates by ID
+    * 0 control duplicates by ID
 
 #### Working
 * Resolving sample issues
