@@ -20,7 +20,8 @@
     * IBD Tues 11?
     * IBD Fri 11am Y
     * Large dynamic group?
-* Judith IBD pathways    
+* Judith IBD pathways; split samples by pathway?
+* [gsa vs gsa+ samples](https://docs.google.com/spreadsheets/d/1T5TmfiabuY-EuKc16Dmynmtao7TAAqAqU-z_hBAHQnI/edit#gid=186652860)
 
 ### 20190115
 
