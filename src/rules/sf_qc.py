@@ -86,5 +86,7 @@ rule summarize_hwe:
 rule all_qc:
     input: expand(DATA + 'interim/missing_test/{group}.{miss}', group=('3groups', 'gsa'), miss=('imiss', 'lmiss') ),
            # expand(DATA + 'interim/sex_check/{group}.sexcheck', group=('3groups', 'gsa')),
-           # expand(DATA + 'interim/qc_hwe/{group}.counts', group=('3groups', 'gsa')),
+           expand(DATA + 'interim/qc_hwe/{group}.counts', group=('3groups', 'gsa')),
            # expand(DATA + 'interim/qc_freq/{group}.counts', group=('3groups', 'gsa')),
+           expand(DATA + 'interim/plink_genome/{group}.genome.tab', group=('3groups', 'gsa')),
+           expand(DATA + 'interim/qc_het/{group}.het', group=('3groups', 'gsa')),

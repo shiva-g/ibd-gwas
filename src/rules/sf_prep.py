@@ -117,5 +117,7 @@ rule combine_gsaplus_cag_bfiles:
     log:
         LOG + 'prep/combine_44_185'
     shell:
-        "plink --bfile {DATA}interim/bfiles_rm_samples/185 --bmerge {DATA}interim/bfiles_rm_samples/44 "
-        "--chr 1-22, x --make-bed --out {DATA}interim/bfiles/3groups &> {log}"
+        "plink --bfile {DATA}interim/bfiles_rm_samples/185 "
+        "--bmerge {DATA}interim/bfiles_rm_samples/44 "
+        "--chr 1-22, x --make-bed "
+        "--out {DATA}interim/bfiles/3groups &> {log}"

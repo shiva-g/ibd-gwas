@@ -96,6 +96,15 @@ rule ibd_hapmap_ibd:
         "plink --bfile {DATA}interim/bfiles_filter_samples/{wildcards.group} --genome "
         "--out {DATA}interim/plink_genome/{wildcards.group} &> {log}"
 
+rule pretty_genome:
+    input:
+        DATA + 'interim/plink_genome/{group}.genome'
+    output:
+        DATA + 'interim/plink_genome/{group}.genome.tab'
+    run:
+        shell("head -1 {input} | sed 's/^ *//' | sed -e 's/\s\+/\\t/g' > {output}")
+        shell("cat {input} | sed 's/^ *//' | sed -e 's/\s\+/\\t/g' | sort -k10gr | head -100 >> {output} || touch {output}")
+
 rule ibd_hapmap_mds:
     input:
         f = DATA + 'interim/bfiles_filter_samples/{group}.fam',

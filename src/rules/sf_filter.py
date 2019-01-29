@@ -2,9 +2,23 @@
    Locate independent targets.
 """
 
+rule fix_het_haploid:
+    input:
+        DATA + 'interim/bfiles/{group}.fam'
+    output:
+        expand(DATA + 'interim/bfiles_splitx/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim'))
+    singularity:
+        PLINK
+    log:
+        LOG + 'splitx/{group}'
+    shell:
+        "plink --bfile {DATA}interim/bfiles/{wildcards.group} "
+        "--set-hh-missing --make-bed "
+        "--out {DATA}interim/bfiles_splitx/{wildcards.group} &> {log}"
+
 rule list_monogenic_snps:
     input:
-        DATA + 'interim/bfiles/{group}.bim'
+        DATA + 'interim/bfiles_splitx/{group}.bim'
     output:
         DATA + 'interim/monogenic/{group}'
     shell:
@@ -15,7 +29,7 @@ rule filter_snps:
        rm non-polymorphic: --min-ac and w/ no minor allele
     """
     input:
-        b = expand(DATA + 'interim/bfiles/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') ),
+        b = expand(DATA + 'interim/bfiles_splitx/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') ),
         m = DATA + 'interim/monogenic/{group}'
     output:
         expand(DATA + 'interim/bfiles_filter_snps_1/{{group}}.{suffix}', suffix=('fam', 'bed', 'bim') )
@@ -24,7 +38,7 @@ rule filter_snps:
     log:
         LOG + 'prep/{group}.filter_snps'
     shell:
-        "plink --bfile {DATA}interim/bfiles/{wildcards.group} --min-ac 1 --geno 0.05 "
+        "plink --bfile {DATA}interim/bfiles_splitx/{wildcards.group} --min-ac 1 --geno 0.05 "
         "--exclude {input.m} --allow-no-sex "
         "--make-bed --out {DATA}interim/bfiles_filter_snps_1/{wildcards.group} &> {log}"
 
