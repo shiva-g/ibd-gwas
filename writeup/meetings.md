@@ -1,3 +1,27 @@
+### 20190129
+
+#### Updates
+* [VEO GSA processing](https://github.com/samesense/ibd-gwas/blob/master/writeup/methods.md#gsa-snp-filters-1)
+* [VEO GSA QC](https://github.com/samesense/ibd-gwas/blob/master/writeup/methods.md#gsa-qc-1)
+    * [GSA genome table](https://docs.google.com/spreadsheets/d/1QK4bAMm4bZqctnldZjs5Jwbs1MiOqzWwflRetY1-RW0/edit#gid=301566719)
+        * 2 VEO identical to contols
+        * 2 related VEO
+        * 1 VEO related to control
+        * Related controls
+    * [GSA+ genome table](https://docs.google.com/spreadsheets/d/1CFsaf5nz1TcppBgqOd4VkWKGRO2t1xmxFcfQC6oYsjw/edit#gid=1911340057)
+    * .124 PI_HAT cutoff?
+* [GSA MDS](https://github.com/samesense/ibd-gwas/blob/master/writeup/plots/hapmap_mds.gsa.png)  
+* IBD GSA+ subject ID mixup
+    * Subject 261 labels two different people
+    * Subject 215 labels two different people
+* Meetings?
+    * Tues 3:30 Y
+    * Dynamic VEO microbiome 10:15?
+    * IBD Tues 11?
+    * IBD Fri 11am Y
+    * Large dynamic group?
+* Judith IBD pathways    
+
 ### 20190115
 
 #### Updates

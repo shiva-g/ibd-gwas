@@ -1,3 +1,13 @@
+### 20190128
+* qc
+    * sample missing table
+    * hwe
+    * gender check
+    * --het check
+    * case vs control missing per target (--test-missing)
+    * plink --genome table
+    * maf table
+
 ### 20190123
 * Missing race for one gsa sample
 * Fixed race sample name issues

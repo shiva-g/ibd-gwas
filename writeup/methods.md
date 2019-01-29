@@ -1,4 +1,4 @@
-### SNP filters
+### GSA+ SNP filters
 * Start with 683369 markers across 118 cases and 99 controls. 
 * Use plink to remove 97585 monomorphic snps and markers not called for more than 5% of samples (geno 0.05). 
 * Remove 1363 duplicated variants and 4560 positions that appeared more than once with plink.
@@ -7,6 +7,12 @@
     *   HC 201939090179_R04C01          N    62569   557037   0.1123
     *   IBD 201939090179_R05C01          N    66395   557037   0.1192
 * For MDS, use independent markers (plink --indep-pairwise 50 5 0.2).
+
+### GSA SNP filters
+* Start with 633220 markers across 266 cases and 719 controls.
+* 545633 markers after variant filtering
+* Remove 4 samples with more than 5% of markers not called (plink mind 0.05).
+    * 1 VEO (15% of targets missing), 3 control
 
 ### HapMap samples
 * Download Phase 2 HapMap as a PLINK fileset (CEU, YRI, and JPT_CHB filtered founders) from http://zzz.bwh.harvard.edu/plink/res.shtml.
@@ -22,16 +28,36 @@
 * [IBD, HC, and hapmap plot](plots/hapmap_mds.png)
 * [EUR IBC and HC plot](plots/eur_mds.png)
 
-### QC
-* sample missing table: /mnt/isilon/microbiome/perry/ibd-gwas/data/interim/missing_test/3groups.imiss
+### GSA+ QC
+* test fraction of filtered snps missed by sample
+    * `sed -e 's/\s\+/\t/g' 3groups.imiss | cut -f 7 | sort -gr | head`
+    * /mnt/isilon/microbiome/perry/ibd-gwas/data/interim/missing_test/3groups.imiss
+    * 3 samples removed b/c more than 5% of filtered targets were missing
+    * 12%, 11%, 9% of filtered targets were missing
 * hwe (--hardy) run after filtering samples with too many missing targets and removing chrX, but before indep. 
-    * AFF: 1895 targets p<0.001. 7511 targets p<0.01 (might have real signal)
-    * UNAFF controls: 2058 targets p<0.001. 7932 targets p<0.01
+    * 555083 variants
+    * AFF: 1898 targets p<0.001. 7516 targets p<0.01 (might have real signal)
+    * UNAFF controls: 1864 targets p<0.001. 7561 targets p<0.01
 * gender check (--check-sex) run after indep filter shows two conflicts F of .08 and .06
 * --het check: 0.08715, largest F inbreeding coefficient estimate; smallest -0.09699
-* case vs control missing per target (--test-missing) run after filtering targets with high missing rates and removing chrX. 344 markers have p<0.05. 76 p<0.01. 7 p<0.001
-* plink --genome table
+* case vs control missing per target (--test-missing) run after filtering targets with high missing rates and removing chrX. 859 markers have p<0.05. 133 p<0.01. 7 p<0.001
+* [plink --genome table](https://docs.google.com/spreadsheets/d/1CFsaf5nz1TcppBgqOd4VkWKGRO2t1xmxFcfQC6oYsjw/edit#gid=1911340057)
 * [maf table](tables/maf.md)
+
+### GSA QC
+* test fraction of filtered snps missed by sample
+    * /mnt/isilon/microbiome/perry/ibd-gwas/data/interim/missing_test/gsa.imiss
+    * 4 samples removed b/c more than 5% of filtered targets were missing
+    * 39%, 22%, 15%, 6% of filtered targets were missing
+* hwe (--hardy) run after filtering samples with too many missing targets and removing chrX, but before indep.
+    * 532312 variants
+    * AFF: 4588 targets p<0.001. 13982 targets p<0.01 (might have real signal)
+    * UNAFF controls: nan
+* ~gender check (--check-sex) run after indep filter shows two conflicts F of .08 and .06~
+* --het check: 0.365, largest F inbreeding coefficient estimate; smallest -0.15
+* case vs control missing per target (--test-missing) run after filtering targets with high missing rates and removing chrX. 6981 markers have p<0.05. 3200 p<0.01. 1197 p<0.001
+* [plink --genome table](https://docs.google.com/spreadsheets/d/1QK4bAMm4bZqctnldZjs5Jwbs1MiOqzWwflRetY1-RW0/edit#gid=301566719)
+* ~[maf table](tables/maf.md)~
     
 ### Imputation
 * Michigan Imputation Server v1.0.4
