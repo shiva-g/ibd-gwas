@@ -12,6 +12,11 @@
 * IBD GSA+ subject ID mixup
     * Subject 261 labels two different people
     * Subject 215 labels two different people
+* Meetings?
+    * Tues 3:30 Y
+    * Dynamic VEO microbiome 10:15?
+    * IBD Tues 11?
+    * Large dynamic group?
 
 ### 20190115
 
