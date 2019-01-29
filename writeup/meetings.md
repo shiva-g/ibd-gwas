@@ -23,6 +23,11 @@
 * Judith IBD pathways; split samples by pathway?
 * [gsa vs gsa+ samples](https://docs.google.com/spreadsheets/d/1T5TmfiabuY-EuKc16Dmynmtao7TAAqAqU-z_hBAHQnI/edit#gid=186652860)
 
+#### Working
+* Resolving sample issues
+* Apply filters discussed during meeting
+* Clean microbiome table for Yue
+
 ### 20190115
 
 #### Updates
