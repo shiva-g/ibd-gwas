@@ -28,7 +28,7 @@
 * [IBD, HC, and hapmap plot](plots/hapmap_mds.png)
 * [EUR IBC and HC plot](plots/eur_mds.png)
 
-### GSA+ QC
+### IBD GSA+ QC
 * test fraction of filtered snps missed by sample
     * `sed -e 's/\s\+/\t/g' 3groups.imiss | cut -f 7 | sort -gr | head`
     * /mnt/isilon/microbiome/perry/ibd-gwas/data/interim/missing_test/3groups.imiss
@@ -44,7 +44,7 @@
 * [plink --genome table](https://docs.google.com/spreadsheets/d/1CFsaf5nz1TcppBgqOd4VkWKGRO2t1xmxFcfQC6oYsjw/edit#gid=1911340057)
 * [maf table](tables/maf.md)
 
-### GSA QC
+### VEO GSA QC
 * test fraction of filtered snps missed by sample
     * /mnt/isilon/microbiome/perry/ibd-gwas/data/interim/missing_test/gsa.imiss
     * 4 samples removed b/c more than 5% of filtered targets were missing
@@ -53,7 +53,9 @@
     * 532312 variants
     * AFF: 4588 targets p<0.001. 13982 targets p<0.01 (might have real signal)
     * UNAFF controls: nan
-* ~gender check (--check-sex) run after indep filter shows two conflicts F of .08 and .06~
+* gender check (--check-sex) run after indep filter
+    * 24A female vs 0 (F=0.5) female in both gender tables
+    * 1070A female vs male (F=1) female in both gender tables; male by genotype
 * --het check: 0.365, largest F inbreeding coefficient estimate; smallest -0.15
 * case vs control missing per target (--test-missing) run after filtering targets with high missing rates and removing chrX. 6981 markers have p<0.05. 3200 p<0.01. 1197 p<0.001
 * [plink --genome table](https://docs.google.com/spreadsheets/d/1QK4bAMm4bZqctnldZjs5Jwbs1MiOqzWwflRetY1-RW0/edit#gid=301566719)
