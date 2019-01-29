@@ -8,6 +8,16 @@
     *   IBD 201939090179_R05C01          N    66395   557037   0.1192
 * For MDS, use independent markers (plink --indep-pairwise 50 5 0.2).
 
+### GSA SNP filters
+* Start with 683369 markers across 118 cases and 99 controls. 
+* Use plink to remove 97585 monomorphic snps and markers not called for more than 5% of samples (geno 0.05). 
+* Remove 1363 duplicated variants and 4560 positions that appeared more than once with plink.
+* Remove 3 samples with more than 5% of markers not called (plink mind 0.05).
+    *   IBD case 201939090179_R06C01          N    52791   557037  0.09477
+    *   HC 201939090179_R04C01          N    62569   557037   0.1123
+    *   IBD 201939090179_R05C01          N    66395   557037   0.1192
+* For MDS, use independent markers (plink --indep-pairwise 50 5 0.2).
+
 ### HapMap samples
 * Download Phase 2 HapMap as a PLINK fileset (CEU, YRI, and JPT_CHB filtered founders) from http://zzz.bwh.harvard.edu/plink/res.shtml.
 * Use liftover to convert hg18 positions to hg19, discarding unmatched positions. Use plink to update genomic coordinates based on liftover results.
