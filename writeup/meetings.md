@@ -10,6 +10,7 @@
         * Related controls
     * [GSA+ genome table](https://docs.google.com/spreadsheets/d/1CFsaf5nz1TcppBgqOd4VkWKGRO2t1xmxFcfQC6oYsjw/edit#gid=1911340057)
     * .124 PI_HAT cutoff?
+* [GSA MDS](https://github.com/samesense/ibd-gwas/blob/master/writeup/plots/hapmap_mds.gsa.png)  
 * IBD GSA+ subject ID mixup
     * Subject 261 labels two different people
     * Subject 215 labels two different people
