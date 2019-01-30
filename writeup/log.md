@@ -11,7 +11,8 @@
 * remove related gsa+ case
     * 201939090050_R07C01
     * this shows up when using total populations. I think I missed it b/c of my focus on EUR
-    
+* fix hwe hardy test to allow missing gender info
+
 ### 20190128
 * qc
     * sample missing table
