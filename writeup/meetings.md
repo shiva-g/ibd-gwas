@@ -30,6 +30,11 @@
 * Apply filters discussed during meeting
 * Clean microbiome table for Yue
 
+#### Notes
+* Contact Ying about control samples found as cases
+* Ask about 24A cannot tell gender next mtg
+* Ask about 1070A female w/ male genotype (found in last analysis)
+
 ### 20190115
 
 #### Updates
