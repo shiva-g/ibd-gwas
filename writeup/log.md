@@ -1,3 +1,6 @@
+### 20190130
+* some gsa controls have ibd phenotypes, and are even the same veo gsa samples. these are removed
+
 ### 20190128
 * qc
     * sample missing table
