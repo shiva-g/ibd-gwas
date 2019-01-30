@@ -1,5 +1,13 @@
 ### 20190130
 * some gsa controls have ibd phenotypes, and are even the same veo gsa samples. these are removed
+* removing related controls; keeping conrol with least missing targets
+    * 201009140192_R05C01 dropped
+    * 201138250119_R10C02 dropped
+    * 201293500049_R01C02 dropped
+    * 201293510039_R10C01 dropped
+    * 201142030132_R04C02 dropped
+    * 201017900017_R10C02 dropped
+    * 201493020142_R07C01 dropped
 
 ### 20190128
 * qc
