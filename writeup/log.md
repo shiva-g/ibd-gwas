@@ -8,7 +8,10 @@
     * 201142030132_R04C02 dropped
     * 201017900017_R10C02 dropped
     * 201493020142_R07C01 dropped
-
+* remove related gsa+ case
+    * 201939090050_R07C01
+    * this shows up when using total populations. I think I missed it b/c of my focus on EUR
+    
 ### 20190128
 * qc
     * sample missing table
