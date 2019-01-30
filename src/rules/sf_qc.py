@@ -50,7 +50,7 @@ rule check_hwe:
         LOG + 'qc/{group}.hwe'
     shell:
         "plink --bfile $(dirname {input.f})/{wildcards.group} "
-        "--hardy --out $(dirname {output})/{wildcards.group} &> {log}"
+        "--allow-no-sex --hardy --out $(dirname {output})/{wildcards.group} &> {log}"
 
 rule check_het:
     input:
@@ -64,7 +64,7 @@ rule check_het:
         LOG + 'qc/{group}.het'
     shell:
         "plink --bfile $(dirname {input.f})/{wildcards.group} "
-        "--het --out $(dirname {output})/{wildcards.group} &> {log}"
+        "--allow-no-sex --het --out $(dirname {output})/{wildcards.group} &> {log}"
 
 rule summarize_hwe:
     input:
@@ -87,7 +87,7 @@ rule summarize_hwe:
 rule all_qc:
     input: expand(DATA + 'interim/missing_test/{group}.{miss}', group=('gsa', '3groups'), miss=('imiss', 'lmiss', 'missing') ),
            #expand(DATA + 'interim/sex_check/{group}.sexcheck', group=('3groups', 'gsa')),
-           #expand(DATA + 'interim/qc_hwe/{group}.counts', group=('3groups', 'gsa')),
+           expand(DATA + 'interim/qc_hwe/{group}.counts', group=('3groups', 'gsa')),
            # expand(DATA + 'interim/qc_freq/{group}.counts', group=('3groups', 'gsa')),
            expand(DATA + 'interim/plink_genome/{group}.genome.tab', group=('gsa', '3groups')),
-           #expand(DATA + 'interim/qc_het/{group}.het', group=('3groups', 'gsa')),
+           expand(DATA + 'interim/qc_het/{group}.het', group=('3groups', 'gsa')),
