@@ -1,8 +1,8 @@
 ### 20190129
 
 #### Updates
-* [VEO GSA processing](https://github.com/samesense/ibd-gwas/blob/master/writeup/methods.md#gsa-snp-filters-1)
-* [VEO GSA QC](https://github.com/samesense/ibd-gwas/blob/master/writeup/methods.md#gsa-qc-1)
+* [VEO GSA processing](https://github.com/samesense/ibd-gwas/blob/master/writeup/methods.md#veo-gsa-snp-filters)
+* [VEO GSA QC](https://github.com/samesense/ibd-gwas/blob/master/writeup/methods.md#veo-gsa-qc)
     * [GSA genome table](https://docs.google.com/spreadsheets/d/1QK4bAMm4bZqctnldZjs5Jwbs1MiOqzWwflRetY1-RW0/edit#gid=301566719)
         * 2 VEO identical to contols
         * 2 related VEO
@@ -20,7 +20,15 @@
     * IBD Tues 11?
     * IBD Fri 11am Y
     * Large dynamic group?
-* Judith IBD pathways    
+* Judith IBD pathways; split samples by pathway?
+* [gsa vs gsa+ samples](https://docs.google.com/spreadsheets/d/1T5TmfiabuY-EuKc16Dmynmtao7TAAqAqU-z_hBAHQnI/edit#gid=186652860)
+    * 41 VEO duplicates
+    * 0 control duplicates by ID
+
+#### Working
+* Resolving sample issues
+* Apply filters discussed during meeting
+* Clean microbiome table for Yue
 
 ### 20190115
 
