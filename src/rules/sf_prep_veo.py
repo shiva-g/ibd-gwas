@@ -112,8 +112,8 @@ rule combine_gsa_cag_bfiles:
         ex_hc = DATA + 'interim/gsa_discord/hc.discord',
         ex_veo = DATA + 'interim/gsa_discord/veo.discord',
     output:
-        f=DATA + 'interim/bfiles/gsa.fam',
-        a=expand(DATA + 'interim/bfiles/gsa.{s}', s=('bim', 'bed',))
+        f=DATA + 'interim/bfiles_fixed3/gsa.fam',
+        a=expand(DATA + 'interim/bfiles_fixed3/gsa.{s}', s=('bim', 'bed',))
     singularity:
         PLINK
     log:
@@ -127,3 +127,20 @@ rule combine_gsa_cag_bfiles:
         "plink --bfile {DATA}interim/bfiles/veo-gsa "
         "--bmerge {DATA}interim/bfiles/hc-gsa --merge-mode 1 --merge-equal-pos "
         "--allow-no-sex --chr 1-22, x --make-bed --out $(dirname {output.f})/gsa &> {log}"
+
+rule rm_gsa_dups:
+    input:
+        f = DATA + 'interim/bfiles_fixed3/gsa.fam',
+    output:
+        DATA + 'interim/bfiles/gsa.fam'
+    singularity:
+        PLINK
+    log:
+        LOG + 'prep/discard_gsa'
+    shell:
+        "grep '201009140192_R05C01\|201138250119_R10C02\|201293500049_R01C02\|201293510039_R10C01\|201142030132_R04C02\|201017900017_R10C02\|201493020142_R07C01' {input.f} > tmp_samples.gsa.dups && "
+        "plink --bfile  {DATA}interim/bfiles_fixed3/gsa "
+        "--remove tmp_samples.gsa.dups --make-bed "
+        "--out $(dirname {output})/gsa &> {log} && "
+        "rm tmp_samples.gsa.dups"
+

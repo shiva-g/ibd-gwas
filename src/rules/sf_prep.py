@@ -88,7 +88,7 @@ rule fix_gsaplus_cag_bfiles:
 
                 print(' '.join(sp[:-2] + [sex[iid], p]), file=fout)
 
-rule rm_dups_and_onc:
+rule rm_gsaplus_dups_and_onc:
     input:
         o1 = DATA + 'processed/onc_samples.44',
         o2 = DATA + 'processed/onc_samples.185',
