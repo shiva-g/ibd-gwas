@@ -51,8 +51,8 @@
     * 39%, 22%, 15%, 6% of filtered targets were missing
 * hwe (--hardy) run after filtering samples with too many missing targets and removing chrX, but before indep.
     * 532312 variants
-    * AFF: 4588 targets p<0.001. 13982 targets p<0.01 (might have real signal)
-    * UNAFF controls: nan
+    * AFF: 4582 targets p<0.001. 13968 targets p<0.01 (might have real signal)
+    * UNAFF 2320 targets p<0.001. 6972 targets p<0.01
 * gender check (--check-sex) run after indep filter
     * 24A female vs 0 (F=0.5) female in both gender tables
     * 1070A female vs male (F=1) female in both gender tables; male by genotype
