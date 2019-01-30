@@ -85,9 +85,9 @@ rule summarize_hwe:
         pd.concat([g01, g001]).to_csv(output.o, index=False, sep='\t')
 
 rule all_qc:
-    input: expand(DATA + 'interim/missing_test/{group}.{miss}', group=('gsa',), miss=('imiss', 'lmiss', 'missing') ),
+    input: expand(DATA + 'interim/missing_test/{group}.{miss}', group=('gsa', '3groups'), miss=('imiss', 'lmiss', 'missing') ),
            #expand(DATA + 'interim/sex_check/{group}.sexcheck', group=('3groups', 'gsa')),
            #expand(DATA + 'interim/qc_hwe/{group}.counts', group=('3groups', 'gsa')),
            # expand(DATA + 'interim/qc_freq/{group}.counts', group=('3groups', 'gsa')),
-           expand(DATA + 'interim/plink_genome/{group}.genome.tab', group=('gsa',)),
+           expand(DATA + 'interim/plink_genome/{group}.genome.tab', group=('gsa', '3groups')),
            #expand(DATA + 'interim/qc_het/{group}.het', group=('3groups', 'gsa')),
