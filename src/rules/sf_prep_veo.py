@@ -58,10 +58,39 @@ rule fix_hc_gsa_bfiles:
                 sp = line.strip().split()
                 print(' '.join(sp[:-2] + [sex, pheno]), file=fout)
 
+rule discard_hc_gsa_samples:
+    """These control samples should not be in study
+       b/c they have IBD related phenotypes."""
+    input:
+        f = DATA + 'interim/gsa_bfiles_fixed/hc-gsa.fam',
+        d = DATA + 'processed/DISCARD_SAMPLES.gsa'
+    output:
+        DATA + 'interim/gsa_bfiles_fixed2/hc-gsa.fam'
+    singularity:
+        PLINK
+    log:
+        LOG + 'prep/discard.gsa.hc'
+    shell:
+        """plink --bfile $(dirname {input.f})/hc-gsa \
+        --remove {input.d} --make-bed \
+        --out $(dirname {output})/hc-gsa &> {log}"""
+
+rule fake_discard_veo_gsa_samples:
+    input:
+        f = DATA + 'interim/gsa_bfiles_fixed/veo-gsa.fam',
+    output:
+        o = DATA + 'interim/gsa_bfiles_fixed2/veo-gsa.fam'
+    run:
+        i, o = input.f.replace('.fam', '.bim'), output.o.replace('.fam', '.bim')
+        shell('cp {i} {o}')
+        i, o = input.f.replace('.fam', '.bed'), output.o.replace('.fam', '.bed')
+        shell('cp {i} {o}')
+        shell("cp {input} {output}")
+
 rule list_discordant_pos_gsa:
     input:
-        ibd = DATA + 'interim/gsa_bfiles_fixed/veo-gsa.bim',
-        hc = DATA + 'interim/gsa_bfiles_fixed/hc-gsa.bim'
+        ibd = DATA + 'interim/gsa_bfiles_fixed2/veo-gsa.bim',
+        hc = DATA + 'interim/gsa_bfiles_fixed2/hc-gsa.bim'
     output:
         bout = DATA + 'interim/gsa_discord/veo.discord',
         hout = DATA + 'interim/gsa_discord/hc.discord',
@@ -79,21 +108,21 @@ rule list_discordant_pos_gsa:
 
 rule combine_gsa_cag_bfiles:
     input:
-        expand(DATA + 'interim/gsa_bfiles_fixed/{group}.fam', group=('hc-gsa', 'veo-gsa')),
+        expand(DATA + 'interim/gsa_bfiles_fixed2/{group}.fam', group=('hc-gsa', 'veo-gsa')),
         ex_hc = DATA + 'interim/gsa_discord/hc.discord',
         ex_veo = DATA + 'interim/gsa_discord/veo.discord',
     output:
         f=DATA + 'interim/bfiles/gsa.fam',
-        a=expand(DATA + 'interim/bfiles/gsa.{s}', s=('bim', 'bed', 'fam'))
+        a=expand(DATA + 'interim/bfiles/gsa.{s}', s=('bim', 'bed',))
     singularity:
         PLINK
     log:
         LOG + 'prep/combine_gsa'
     shell:
-        "plink --bfile {DATA}interim/gsa_bfiles_fixed/veo-gsa "
+        "plink --bfile {DATA}interim/gsa_bfiles_fixed2/veo-gsa "
         "--exclude {input.ex_veo} "
         "--make-bed --out {DATA}interim/bfiles/veo-gsa &> {log}.v && "
-        "plink --bfile {DATA}interim/gsa_bfiles_fixed/hc-gsa -exclude {input.ex_hc} "
+        "plink --bfile {DATA}interim/gsa_bfiles_fixed2/hc-gsa -exclude {input.ex_hc} "
         "--make-bed --out {DATA}interim/bfiles/hc-gsa &> {log}.h && "
         "plink --bfile {DATA}interim/bfiles/veo-gsa "
         "--bmerge {DATA}interim/bfiles/hc-gsa --merge-mode 1 --merge-equal-pos "

@@ -1,5 +1,5 @@
 """Prep CAG GSA+ PLINK data.
-   """
+"""
 
 rule cp_cag_bfiles:
     """Mv bfiles to folder to fix bim name."""
@@ -16,7 +16,7 @@ rule cp_cag_bfiles:
         shell('cp {input.fam} {output.fam}')
         shell('cp {input.bed} {output.bed}')
 
-rule discard_cag_samples:
+rule discard_gsaplus_cag_samples:
     """These samples should not be in study."""
     input:
         f = DATA + 'interim/cag_raw_bfiles/{group}.fam',
@@ -29,7 +29,8 @@ rule discard_cag_samples:
         LOG + 'prep/discard.{group}'
     shell:
         """plink --bfile $(dirname {input.f})/{wildcards.group} \
-        --remove {input.d} --make-bed --out $(dirname {output})/{wildcards.group} &> {log}"""
+        --remove {input.d} --make-bed \
+        --out $(dirname {output})/{wildcards.group} &> {log}"""
 
 rule fix_gsaplus_cag_bfiles:
     """Fill in pheno and gender.

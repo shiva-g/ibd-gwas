@@ -7,7 +7,28 @@ rule format_manifest_gsa:
         veo_dat = DATA + 'raw/veo-ibd/SNPList_01162019.xlsx'
     output:
         o = DATA + 'interim/manifest/gsa.csv',
+        discard = DATA + 'processed/DISCARD_SAMPLES.gsa'
     run:
+        # these 'healthy' controls have IBD like phenotypes and should not be included
+        discard_hc_samples = ('201493000097_R09C02',
+                              '201293500046_R10C01',
+                              '201138250091_R05C02',
+                              '201138250219_R04C02',
+                              '201134900139_R02C01',
+                              '201293510039_R06C02',
+                              '201142030144_R06C02',)
+
+        def write_discard():
+            with open(input.gsa_hc) as f, open(output.discard, 'w') as fout:
+                for line in f:
+                    if '\t' in line:
+                        sp = line.strip().split('\t')
+                    else:
+                        sp = line.strip().split()
+                    sample = sp[1]
+                    if sample in discard_hc_samples:
+                        print(line.strip(), file=fout)
+
         def fix_race(row):
             if row['race'] in ('White', 'white'):
                 return 'White'
@@ -55,6 +76,7 @@ rule format_manifest_gsa:
             else:
                 return row['IID'].lstrip('0')
 
+        write_discard()
         veo_df = pd.read_excel(input.veo_dat, sheet_name='SNP Array').rename(columns={'Subject ID':'IID', 'Race':'race', 'Ethnicity':'ethnicity', 'Sex':'gender'})[['IID', 'race', 'ethnicity', 'gender']]
         veo_df.loc[:, 'IID'] = veo_df.apply(update_snp_xls_id, axis=1)
         veo_df['Study Group'] = 'VEO'
@@ -74,7 +96,8 @@ rule format_manifest_gsa:
         df['chip'] = 'GSA'
         df.loc[:, 'is_gsa_duplicate'] = df.apply(lambda row: row['IID'] in gsa_dups, axis=1)
         df.loc[:, 'race'] = df.apply(fix_race, axis=1)
-        df.to_csv(output.o, index=False, sep='\t')
+        crit = df.apply(lambda row: not row['IID'] in discard_hc_samples, axis=1)
+        df[crit].to_csv(output.o, index=False, sep='\t')
 
 rule format_manifest_gsaplus:
     input: ibd = DATA + 'raw/conrad/CAG_Data_updated12.04.2018.xlsx',
@@ -82,7 +105,7 @@ rule format_manifest_gsaplus:
            cag2 = DATA + 'raw/cag/IRB_Microbiome11-2-18.csv',
     output:
         o = DATA + 'interim/manifest/gsaplus.csv',
-        d = DATA + 'processed/DISCARD_SAMPLES'
+        d = DATA + 'processed/DISCARD_SAMPLES.gsaplus'
     run:
         new_cag = {'2015_CHOP_MIC_BAL_FA071_SUB':'2015_CHOP_MIC_BAL_FAM071_SUB',
                    '2015_CHOP_MIC_BAL_FAM092_sub':'2015_CHOP_MIC_BAL_FAM092_SUB',
