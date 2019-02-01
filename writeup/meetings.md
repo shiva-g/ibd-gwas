@@ -3,7 +3,22 @@
 #### Overview
 * GSA+: 115 are cases and 94 are controls
 * GSA: 265 are cases (41 on GSA+) and 702 are controls (unknown control overlap)
-
+* 231 adult IBD SNPs used for polygenic risk score to rank GSA+. [AUC 0.73982 all populations](https://github.com/samesense/ibd-gwas/blob/master/writeup/plots/all.tpop.prs.roc.png). [All population PRS density](https://github.com/samesense/ibd-gwas/blob/master/writeup/plots/all.tpop.prs.density.png)
+* GSA+ SNP associations
+    * [231 adult ranked by snptest pval for all populations](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/adult.all.tpop.assoc.csv)
+    * [All SNPs below p 1e-5; all populations](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/ped.all.tpop.assoc.csv)
+    * [All SNPs plot EUR](https://github.com/samesense/ibd-gwas/blob/master/writeup/plots/manhattan.all.png)
+* Split GSA+ samples by PRS quantile, FUT2, CARD3, NOD2 risk allele
+| Count | Pheno   |   CARD9_risk  |    NOD2_risk   |    FUT2_risk |
+|:------|-----|------|------:|:-------------|
+| 11 | IBD | het-risk    |    no-risk | hom-risk | 
+| 12 | IBD | no-risk |no-risk|  het-risk | 
+| 13 | HC  | het-risk |       no-risk| no-risk | 
+| 14 | HC  | no-risk no-risk het-risk | 
+| 15 | HC  | het-risk     |   no-risk | hom-risk | 
+| 18 | IBD  het-risk    |    no-risk | no-risk | 
+| 25 | HC |   het-risk |        no-risk| het-risk | 
+| 29|  IBD |  het-risk |        no-risk het-risk | 
 
 ### 20190129
 
