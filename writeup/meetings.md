@@ -10,7 +10,7 @@
     * [231 adult ranked by snptest pval for all populations](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/adult.all.tpop.assoc.csv)
     * [All SNPs below p 1e-5; all populations](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/ped.all.tpop.assoc.csv)
     * [All SNPs plot EUR](https://github.com/samesense/ibd-gwas/blob/master/writeup/plots/manhattan.all.png)
-* Split GSA+ samples by PRS quantile, FUT2, CARD3, NOD2 risk allele
+* Split GSA+ samples by PRS quantile, FUT2, CARD9, NOD2 risk allele
 
 ### 20190129
 
