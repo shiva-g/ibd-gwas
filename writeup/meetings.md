@@ -3,6 +3,8 @@
 #### Overview
 * GSA+: 115 are cases and 94 are controls
 * GSA: 265 are cases (41 on GSA+) and 702 are controls (unknown control overlap)
+    * 24A female vs 0 (F=0.5) female in both gender tables
+    * 1070A female vs male (F=1) female in both gender tables; male by genotype
 * 231 adult IBD SNPs used for polygenic risk score to rank GSA+. [AUC 0.73982 all populations](https://github.com/samesense/ibd-gwas/blob/master/writeup/plots/all.tpop.prs.roc.png). [All population PRS density](https://github.com/samesense/ibd-gwas/blob/master/writeup/plots/all.tpop.prs.density.png)
 * GSA+ SNP associations
     * [231 adult ranked by snptest pval for all populations](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/adult.all.tpop.assoc.csv)
