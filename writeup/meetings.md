@@ -1,3 +1,10 @@
+### 20190201
+
+#### Overview
+* GSA+: 115 are cases and 94 are controls
+* GSA: 265 are cases (41 on GSA+) and 702 are controls (unknown control overlap)
+
+
 ### 20190129
 
 #### Updates
