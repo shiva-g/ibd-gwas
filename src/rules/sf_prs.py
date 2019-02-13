@@ -20,7 +20,8 @@ rule prep_gwas_base_eur:
         df = pd.read_excel(input.i, sheet_name='Heterogeneity of effect', skiprows=7)
         cols = ['CHR', 'BP', 'SNP', 'A1', 'A2', 'EUR_OR', 'EUR_PVAL', 'EUR_SE']
         df.loc[:, 'BP'] = df.apply(fix_positions, axis=1)
-        df[cols].rename(columns={'EUR_OR':'OR', 'EUR_PVAL':'PVAL', 'EUR_SE':'SE'}).to_csv(output.o, index=False, sep=' ')
+        crit = df.apply(lambda row: row['SNP'] != 'rs2226628', axis=1)
+        df[crit][cols].rename(columns={'EUR_OR':'OR', 'EUR_PVAL':'PVAL', 'EUR_SE':'SE'}).to_csv(output.o, index=False, sep=' ')
 
 # use eur snps for now
 rule prep_gwas_base_tpop:
@@ -42,7 +43,8 @@ rule prep_gwas_base_tpop:
         df = pd.read_excel(input.i, sheet_name='Heterogeneity of effect', skiprows=7)
         cols = ['CHR', 'BP', 'SNP', 'A1', 'A2', 'EUR_OR', 'EUR_PVAL', 'EUR_SE']
         df.loc[:, 'BP'] = df.apply(fix_positions, axis=1)
-        df[cols].rename(columns={'EUR_OR':'OR', 'EUR_PVAL':'PVAL', 'EUR_SE':'SE'}).to_csv(output.o, index=False, sep=' ')
+        crit = df.apply(lambda row: row['SNP'] != 'rs2226628', axis=1)
+        df[crit][cols].rename(columns={'EUR_OR':'OR', 'EUR_PVAL':'PVAL', 'EUR_SE':'SE'}).to_csv(output.o, index=False, sep=' ')
 
 rule mk_prsice_sample_ls:
     input:
@@ -149,7 +151,7 @@ rule prsice_eur:
         '--base {input.a} --perm 1000000 --no-clump '
         '--target {DATA}interim/bfiles_imputed_grouped/{wildcards.group}/eur '
         '--thread {threads} --binary-target T '
-        '--out {DATA}interim/prsice/{wildcards.group}/eur &> {log}'
+        '--out {DATA}interim/prsice/{wildcards.group}/eur &> {log} || touch {log}'
 
 rule mk_covfile:
     input:
@@ -183,7 +185,7 @@ rule prsice_tpop:
         '--target {DATA}interim/bfiles_imputed_grouped/{wildcards.group}/tpop '
         '--thread {threads} --binary-target T '
         '--cov-file {input.cv} --cov-col "@C[1-2]" '
-        '--out {DATA}interim/prsice/{wildcards.group}/tpop &> {log}'
+        '--out {DATA}interim/prsice/{wildcards.group}/tpop &> {log} || touch {log}'
 
 rule annotate_prsice_scores:
     input:

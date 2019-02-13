@@ -79,10 +79,12 @@ rule ann_plink_ped_assoc:
         a = DATA + 'interim/plink_assoc_fmt/{group}/{pop}.assoc',
         st = DATA + 'interim/{pop}_snptest_final/snptest.out',
         g = DATA + 'interim/ibd_gwas.{pop}.assoc',
-        s = DATA + "interim/variants/snpeff_parsed/{pop}"
+        s = DATA + "interim/variants/snpeff_parsed/{pop}",
+        adult_table = PWD + 'writeup/tables/adult.all.{pop}.assoc.csv'
     output:
         o = DATA + 'interim/ped_assoc_ann/{group}/{pop}.assoc'
     run:
+        adult_genes = {x:True for x in pd.read_csv(input.adult_table)['gene'].values if x}
         dat = pd.read_csv(input.s, sep='\t')
         st_cols = {'frequentist_add_pvalue':'P_snptest', 'alleleA':'A1_snptest', 'alleleB':'A2_snptest', 'all_OR':'OR_snptest'}
         snptest = pd.read_csv(input.st, sep='\t')[['frequentist_add_pvalue', 'chromosome', 'position', 'alleleA', 'alleleB', 'cases_maf', 'controls_maf', 'all_OR']].rename(columns=st_cols).fillna(1)
@@ -93,8 +95,11 @@ rule ann_plink_ped_assoc:
         adult_gwas = pd.read_csv(input.g, delim_whitespace=True).rename(columns={'SNP':'rs', 'A1':'A1_adult', 'A2':'A2_adult', 'OR':'OR_adult', 'PVAL':'PVAL_adult', 'SE':'SE_adult'})
         adult_gwas.loc[:, 'SNP'] = adult_gwas.apply(lambda row: str(row['CHR']) + ':' + str(row['BP']), axis=1)
         m1 = pd.merge(full_assoc, adult_gwas, on='SNP', how='left').fillna('')
-        crit = m1.apply(lambda row: row['P_snptest']<1e-5 or row['P_plink']<1e-5, axis=1)
-        pd.merge(m1[crit], dat, how='left', on='SNP').to_csv(output.o, index=False, sep='\t')
+        gg = pd.merge(m1, dat, how='left', on='SNP')
+        gg.loc[:, 'gene_tmp'] = gg.apply(lambda row: str(row['eff']).split('ANN=')[1].split('|')[3] if 'ANN=' in str(row['eff']) else 'none', axis=1)
+        gg.loc[:, 'in_adult_gene'] = gg.apply(lambda row: row['gene_tmp'] in adult_genes, axis=1)
+        crit = gg.apply(lambda row: row['P_snptest']<1e-5 or row['P_plink']<1e-5 or row['in_adult_gene'], axis=1)
+        gg[crit].to_csv(output.o, index=False, sep='\t')
 
 rule gene_assoc:
     input:
@@ -108,5 +113,7 @@ rule gene_assoc:
                 'A1_snptest', 'A2_snptest', 'P_snptest', 'OR_snptest',
                 'cases_maf', 'controls_maf',
                 'A1_adult', 'A2_adult', 'PVAL_adult', 'OR_adult',
-                'A1_vcf', 'A2_vcf', 'eff']
+                'A1_vcf', 'A2_vcf', 'eff',]# 'in_adult_gene']
+        if 'ped'==wildcards.age:
+            cols.append('in_adult_gene')
         df[cols].sort_values(by='P_snptest', ascending=True).to_csv(output.o, index=False, sep=',')

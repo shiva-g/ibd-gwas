@@ -1,3 +1,9 @@
+### 20190213
+* [rm rs2226628 from prs](https://mail.google.com/mail/u/0/#inbox/FMfcgxwBVglfNVdxppnmmpBRhWJmwPMT)
+
+### 20190207
+* [snptest and plink have inverse odds ratio interpretations](https://mail.google.com/mail/u/0/#inbox/KtbxLwgpsbxHgxqgCrVhJZzDtfzFMxQqbq)
+
 ### 20190130
 * some gsa controls have ibd phenotypes, and are even the same veo gsa samples. these are removed
 * removing related controls; keeping conrol with least missing targets
