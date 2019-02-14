@@ -46,6 +46,24 @@ rule prep_gwas_base_tpop:
         crit = df.apply(lambda row: row['SNP'] != 'rs2226628', axis=1)
         df[crit][cols].rename(columns={'EUR_OR':'OR', 'EUR_PVAL':'PVAL', 'EUR_SE':'SE'}).to_csv(output.o, index=False, sep=' ')
 
+rule mk_prs_list:
+    input:
+        i = DATA + 'interim/ibd_gwas.{pop}.assoc',
+        ann = DATA + 'interim/tables_tmp/adult.all.{pop}.assoc.paths.csv'
+    output:
+        o = DATA + 'interim/prs_adult_ls/{go}.{pop}.assoc'
+    run:
+        if wildcards.go=='GO_ALL':
+            shell('cp {input.i} {output}')
+        else:
+            df = pd.read_csv(input.i, delim_whitespace=True)
+            ann_df = pd.read_csv(input.ann, sep='\t')
+            crit = ann_df.apply(lambda row: wildcards.go in row['pathways'], axis=1)
+            ann_df = ann_df[crit]
+            keep_keys = {row['SNP'] + ':' + row['A1_plink'] + ':' + row['A2_plink'] for _, row in ann_df.iterrows()}
+            crit = df.apply(lambda row: ':'.join([str(row[x]) for x in ('CHR', 'BP', 'A1', 'A2')]) in keep_keys, axis=1)
+            df[crit].to_csv(output.o, index=False, sep='\t')
+
 rule mk_prsice_sample_ls:
     input:
         m = DATA + 'processed/MANIFEST.csv',
@@ -120,11 +138,11 @@ rule recode_fam_prsice_sample_subsets:
 rule base_impute_overlap:
     input:
         b = DATA + 'interim/bfiles_imputed_grouped/{group}/{pop}.bim',
-        a = DATA + 'interim/ibd_gwas.{pop}.assoc',
+        a = DATA + 'interim/prs_adult_ls/{go}.{pop}.assoc',
         init = DATA + 'interim/bfiles_{pop}/3groups.bim',
     output:
-        o = DATA + 'interim/prsice/snp_overlap/{group}.{pop}.imputed_all',
-        oi = DATA + 'interim/prsice/snp_overlap/{group}.{pop}.init'
+        o = DATA + 'interim/prsice/snp_overlap/{go}/{group}.{pop}.imputed_all',
+        oi = DATA + 'interim/prsice/snp_overlap/{go}/{group}.{pop}.init'
     run:
         shell('cut -f 1,4 {input.b} | sort -u > {output.o}.b')
         shell('cut -f 1,4 {input.init} | sort -u > {output.o}.init')
@@ -135,23 +153,23 @@ rule base_impute_overlap:
 rule prsice_eur:
     input:
         b = DATA + 'interim/bfiles_imputed_grouped/{group}/eur.fam',
-        a = DATA + 'interim/ibd_gwas.eur.assoc'
+        a = DATA + 'interim/prs_adult_ls/{go}.eur.assoc'
     output:
-        DATA + 'interim/prsice/{group}/eur.summary',
-        DATA + 'interim/prsice/{group}/eur.best'
+        DATA + 'interim/prsice/{group}/{go}/eur.summary',
+        DATA + 'interim/prsice/{group}/{go}/eur.best'
     singularity:
         PRSICE
     threads: 16
     log:
-        LOG + 'eur.prs.{group}'
+        LOG + 'eur.prs.{go}.{group}'
     shell:
-        'Rscript /usr/local/bin/PRSice.R --dir {DATA}/interim/prsice/{wildcards.group}/ '
+        'Rscript /usr/local/bin/PRSice.R --dir {DATA}/interim/prsice/{wildcards.group}/{wildcards.go}/ '
         '--snp SNP --chr CHR --bp BP --A1 A1 --A2 A2 --stat OR --se SE --pvalue PVAL '
         '--prsice /usr/local/bin/PRSice_linux --keep-ambig '
         '--base {input.a} --perm 1000000 --no-clump '
         '--target {DATA}interim/bfiles_imputed_grouped/{wildcards.group}/eur '
         '--thread {threads} --binary-target T '
-        '--out {DATA}interim/prsice/{wildcards.group}/eur &> {log} || touch {log}'
+        '--out {DATA}interim/prsice/{wildcards.group}/{wildcards.go}/eur &> {log} || touch {log}'
 
 rule mk_covfile:
     input:
@@ -167,34 +185,34 @@ rule mk_covfile:
 rule prsice_tpop:
     input:
         b = DATA + 'interim/bfiles_imputed_grouped/{group}/tpop.fam',
-        a = DATA + 'interim/ibd_gwas.tpop.assoc',
+        a = DATA + 'interim/prs_adult_ls/{go}.tpop.assoc',
         cv = DATA + 'interim/prs/tpop.covfile'
     output:
-        DATA + 'interim/prsice/{group}/tpop.summary',
-        DATA + 'interim/prsice/{group}/tpop.best'
+        DATA + 'interim/prsice/{group}/{go}/tpop.summary',
+        DATA + 'interim/prsice/{group}/{go}/tpop.best'
     singularity:
         PRSICE
     threads: 16
     log:
-        LOG + 'tpop.prs.{group}'
+        LOG + 'tpop.prs.{go}.{group}'
     shell:
-        'Rscript /usr/local/bin/PRSice.R --dir {DATA}/interim/prsice/{wildcards.group}/ '
+        'Rscript /usr/local/bin/PRSice.R --dir {DATA}/interim/prsice/{wildcards.group}/{wildcards.go}/ '
         '--snp SNP --chr CHR --bp BP --A1 A1 --A2 A2 --stat OR --se SE --pvalue PVAL '
         '--prsice /usr/local/bin/PRSice_linux --keep-ambig '
         '--base {input.a} --perm 1000000 --no-clump '
         '--target {DATA}interim/bfiles_imputed_grouped/{wildcards.group}/tpop '
         '--thread {threads} --binary-target T '
         '--cov-file {input.cv} --cov-col "@C[1-2]" '
-        '--out {DATA}interim/prsice/{wildcards.group}/tpop &> {log} || touch {log}'
+        '--out {DATA}interim/prsice/{wildcards.group}/{wildcards.go}/tpop &> {log} || touch {log}'
 
 rule annotate_prsice_scores:
     input:
-        p = DATA + 'interim/prsice/{group}/{pop}.best',
+        p = DATA + 'interim/prsice/{group}/{go}/{pop}.best',
         f = DATA + 'interim/bfiles_imputed_grouped/{group}/{pop}.fam',
         m = DATA + 'processed/MANIFEST.csv',
         r = DATA + 'interim/snp_groups/{pop}'
     output:
-        o = DATA + 'interim/prsice_parsed/{group}/{pop}.dat'
+        o = DATA + 'interim/prsice_parsed/{group}/{go}/{pop}.dat'
     run:
         pheno_dict = { 'all': {1:'HC', 2:'IBD'},
                        'early': {1:'HC', 2:'VEO'},
@@ -223,13 +241,14 @@ rule annotate_prsice_scores:
         quantile_labels = pd.qcut(df['PRS'], 4, labels=["very-low", "low-medium", "high-medium", "high"])
         df.loc[:, 'quantile'] = quantile_labels
         df.loc[:, 'pheno'] = df.apply(recode_pheno, axis=1)
+        df.loc[:, 'GO'] = wildcards.go
         pd.merge(df, m, on='IID', how='left').to_csv(output.o, index=False, sep='\t')
 
 rule plot_prs_quantiles:
     input:
-        DATA + 'interim/prsice_parsed/{group}/{pop}.dat'
+        DATA + 'interim/prsice_parsed/{group}/{go}/{pop}.dat'
     output:
-        PLOTS + '{group}.{pop}.prs.quantiles.png'
+        PLOTS + '{group}.{pop}.{go}.prs.quantiles.png'
     run:
         R("""
         require(ggplot2)
@@ -241,9 +260,9 @@ rule plot_prs_quantiles:
 
 rule plot_prs_dist:
     input:
-        DATA + 'interim/prsice_parsed/{group}/{pop}.dat'
+        DATA + 'interim/prsice_parsed/{group}/{go}/{pop}.dat'
     output:
-        PLOTS + '{group}.{pop}.prs.density.png'
+        PLOTS + '{group}.{pop}.{go}.prs.density.png'
     run:
         R("""
         require(ggplot2)
@@ -256,12 +275,13 @@ rule plot_prs_dist:
 rule tmp_yue:
     input:
         expand(DATA + 'interim/prsice_parsed/{group}/{pop}.dat', group='all', pop=('eur', 'tpop'))
+
 rule calc_prs_roc:
     input:
-        i = DATA + 'interim/prsice_parsed/{group}/{pop}.dat'
+        i = DATA + 'interim/prsice_parsed/{group}/{go}/{pop}.dat'
     output:
-        o = DATA + 'interim/prsice_roc/{group}.{pop}.roc',
-        auc = DATA + 'interim/prsice_roc/{group}.{pop}.auc'
+        o = DATA + 'interim/prsice_roc/{group}.{pop}.{go}.roc',
+        auc = DATA + 'interim/prsice_roc/{group}.{pop}.{go}.auc'
     run:
         df = pd.read_csv(input.i, sep='\t')
         if wildcards.group != 'ibd_all':
@@ -281,9 +301,9 @@ rule calc_prs_roc:
 
 rule calc_prs_roc_pval:
     input:
-        i = DATA + 'interim/prsice_parsed/{group}/{pop}.dat'
+        i = DATA + 'interim/prsice_parsed/{group}/{go}/{pop}.dat'
     output:
-        o = DATA + 'interim/prsice_roc/{group}.{pop}.roc_pval',
+        o = DATA + 'interim/prsice_roc/{group}.{pop}.{go}.roc_pval',
     conda:
         ENVS + 'verification-env.yml'
     shell:
@@ -291,9 +311,9 @@ rule calc_prs_roc_pval:
 
 rule plot_prs_roc:
     input:
-        DATA + 'interim/prsice_roc/{group}.{pop}.roc'
+        DATA + 'interim/prsice_roc/{group}.{pop}.{go}.roc'
     output:
-        PLOTS + '{group}.{pop}.prs.roc.png'
+        PLOTS + '{group}.{pop}.{go}.prs.roc.png'
     run:
         R("""require(ggplot2)
              d = read.delim("{input}", sep='\t', header=TRUE)
@@ -306,14 +326,15 @@ rule plot_prs_roc:
 
 rule join_rs_dat:
     input:
-        prs = DATA + 'interim/prsice/{group}/{pop}.summary',
-        roc = DATA + 'interim/prsice_roc/{group}.{pop}.auc'
+        prs = DATA + 'interim/prsice/{group}/{go}/{pop}.summary',
+        roc = DATA + 'interim/prsice_roc/{group}.{pop}.{go}.auc'
     output:
-        o = temp(DATA + 'interim/prsice/{group}/{pop}.dat')
+        o = DATA + 'interim/prsice/{group}/{go}/{pop}.dat'
     run:
         def read_df(afile):
             df = pd.read_csv(afile, sep='\t')
-            df['test'] = afile.split('/')[-2]
+            df['test'] = wildcards.group
+            df['pathway'] = wildcards.go
             return df
 
         df = read_df(input.prs)
@@ -322,7 +343,7 @@ rule join_rs_dat:
 
 rule combine_prs:
     input:
-        expand(DATA + 'interim/prsice/{group}/{{pop}}.dat', group=G)
+        expand(DATA + 'interim/prsice/{group}/{go}/{{pop}}.dat', group=G, go=GOS)
     output:
         o = PWD + 'writeup/tables/prs.{pop}.md'
     run:

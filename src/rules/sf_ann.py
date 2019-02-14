@@ -35,10 +35,22 @@ rule snpeff:
     wrapper:
         "file:///mnt/isilon/cbmi/variome/perry/projects/ext/snakemake-wrappers/bio/snpeff/wrapper.py"
 
-#java -jar SnpSift.jar geneSets -v db/msigDb/msigdb.v3.1.symbols.gmt test.ann.vcf > test.eff.geneSets.vcf
+rule annotate_go:
+    input: vcf=DATA + "interim/variants/snpeff/{group}.vcf",
+           go_msig=DATA + 'raw/msigDb/c5.all.v6.2.symbols.gmt'
+    output: DATA + 'interim/variants/snpsift/{group}.vcf'
+    singularity:
+        "docker://samesense/snpeff-docker"
+    shell:
+        'java -jar /opt/snpEff/SnpSift.jar geneSets -v {input.go_msig} {input.vcf} > {output}'
+
+rule tmp_sift:
+    input:
+        DATA + 'interim/variants/snpsift/eur.vcf'
+
 rule parse_vcf_ann:
     input:
-        i = DATA + "interim/variants/snpeff/{pop}.vcf"
+        i = DATA + "interim/variants/snpsift/{pop}.vcf"
     output:
         o = DATA + "interim/variants/snpeff_parsed/{pop}"
     run:
@@ -72,7 +84,9 @@ rule ann_plink_adult_assoc:
         adult_gwas = pd.read_csv(input.g, delim_whitespace=True).rename(columns={'SNP':'rs', 'A1':'A1_adult', 'A2':'A2_adult', 'OR':'OR_adult', 'PVAL':'PVAL_adult', 'SE':'SE_adult'})
         adult_gwas.loc[:, 'SNP'] = adult_gwas.apply(lambda row: str(row['CHR']) + ':' + str(row['BP']), axis=1)
         m1 = pd.merge(adult_gwas, full_assoc, on='SNP', how='left').fillna('')
-        pd.merge(m1, dat, how='left', on='SNP').to_csv(output.o, index=False, sep='\t')
+        a = pd.merge(m1, dat, how='left', on='SNP')
+        a.loc[:, 'GO'] = a.apply(lambda row: str(row['eff']).split('MSigDb=')[1].split(';')[0] if 'ANN=' in str(row['eff'])  and 'MSigDb' in str(row['eff']) else 'none', axis=1)
+        a.to_csv(output.o, index=False, sep='\t')
 
 rule ann_plink_ped_assoc:
     input:
@@ -97,6 +111,7 @@ rule ann_plink_ped_assoc:
         m1 = pd.merge(full_assoc, adult_gwas, on='SNP', how='left').fillna('')
         gg = pd.merge(m1, dat, how='left', on='SNP')
         gg.loc[:, 'gene_tmp'] = gg.apply(lambda row: str(row['eff']).split('ANN=')[1].split('|')[3] if 'ANN=' in str(row['eff']) else 'none', axis=1)
+        gg.loc[:, 'GO'] = gg.apply(lambda row: str(row['eff']).split('MSigDb=')[1].split(';')[0] if 'ANN=' in str(row['eff'])  and 'MSigDb' in str(row['eff']) else 'none', axis=1)
         gg.loc[:, 'in_adult_gene'] = gg.apply(lambda row: row['gene_tmp'] in adult_genes, axis=1)
         crit = gg.apply(lambda row: row['P_snptest']<1e-5 or row['P_plink']<1e-5 or row['in_adult_gene'], axis=1)
         gg[crit].to_csv(output.o, index=False, sep='\t')
@@ -105,7 +120,7 @@ rule gene_assoc:
     input:
         a = DATA + 'interim/{age}_assoc_ann/{group}/{pop}.assoc'
     output:
-        o = PWD + 'writeup/tables/{age}.{group}.{pop}.assoc.csv'
+        o = DATA + 'interim/tables_tmp/{age}.{group}.{pop}.assoc.csv'
     run:
         df = pd.read_csv(input.a, sep='\t')
         df.loc[:, 'gene'] = df.apply(lambda row: str(row['eff']).split('ANN=')[1].split('|')[3] if 'ANN=' in str(row['eff']) else 'none', axis=1)
@@ -113,7 +128,28 @@ rule gene_assoc:
                 'A1_snptest', 'A2_snptest', 'P_snptest', 'OR_snptest',
                 'cases_maf', 'controls_maf',
                 'A1_adult', 'A2_adult', 'PVAL_adult', 'OR_adult',
-                'A1_vcf', 'A2_vcf', 'eff',]# 'in_adult_gene']
+                'A1_vcf', 'A2_vcf', 'GO', 'eff',]# 'in_adult_gene']
         if 'ped'==wildcards.age:
             cols.append('in_adult_gene')
-        df[cols].sort_values(by='P_snptest', ascending=True).to_csv(output.o, index=False, sep=',')
+        df[cols].sort_values(by='P_snptest', ascending=True).to_csv(output.o, index=False, sep='\t')
+
+rule assign_pathways:
+    input:
+        DATA + 'interim/tables_tmp/{age}.{group}.{pop}.assoc.csv'
+    output:
+        DATA + 'interim/tables_tmp/{age}.{group}.{pop}.assoc.paths.csv'
+    shell:
+        'python {SCRIPTS}assign_pathways.py {input} {output}'
+
+rule fix_alleles:
+    """Make ped alleles agree with adult and check direction of effect"""
+    input:
+        i = DATA + 'interim/tables_tmp/{age}.{group}.{pop}.assoc.paths.csv'
+    output:
+        PWD + 'writeup/tables/{age}.{group}.{pop}.assoc.csv'
+    shell:
+        'python {SCRIPTS}check_ped_adult_effect_agreement.py {input} {output}'
+
+rule tmp_paths:
+    input:
+        PWD + 'writeup/tables/adult.all.tpop.assoc.csv'
