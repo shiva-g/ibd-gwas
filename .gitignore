@@ -78,4 +78,4 @@ nohup*
 /log/
 /work/
 *~
-*/tables/
+/writeup/tables/*.assoc.csv
