@@ -1,3 +1,6 @@
+### 20190213
+* [rm rs2226628 from prs](https://mail.google.com/mail/u/0/#inbox/FMfcgxwBVglfNVdxppnmmpBRhWJmwPMT)
+
 ### 20190207
 * [snptest and plink have inverse odds ratio interpretations](https://mail.google.com/mail/u/0/#inbox/KtbxLwgpsbxHgxqgCrVhJZzDtfzFMxQqbq)
 
