@@ -20,7 +20,7 @@
 * nealelab data on dropbox
 
 #### Notes
-* bug in pathway snps - I joing on plink A1/A2 instead of adult A1/A2
+* ~bug in pathway snps - I joing on plink A1/A2 instead of adult A1/A2~
 * 5 ped specific SNPs (not seen in adult) from Hakon paper
 * merge pathways to make larger groups - get gene sets from Noor
 * Check [gene ls](https://mail.google.com/mail/u/0/#inbox/FMfcgxwBVgqHjxqmbzzPCBJFZSZtPpdC) against nealelab results
