@@ -1,3 +1,16 @@
+### 20190215
+
+### Updates
+* Removed rs2226628 from PRS
+* Compare ped/adult risk alleles
+    * EUR: 141 agree, 86 disagree, 1 different ped/adult alleles
+    * All pops: 147 match, 76 disagree, 3 ped/adult different alleles
+* Pathway PRS (on going)
+    * Building pathways from [Khor 2011](https://www.ncbi.nlm.nih.gov/pubmed/21677747) gene lists and associated GO terms
+    * 64/231 SNPs matched to a pathway
+    * [EUR](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.eur.md)
+    * [All pops](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.tpop.md)
+    
 ### 20190201
 
 #### Overview
