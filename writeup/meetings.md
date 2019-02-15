@@ -1,10 +1,13 @@
 ### 20190215
 
-### Updates
+#### Updates
 * Removed rs2226628 from PRS
 * Compare ped/adult risk alleles (if alleles match, does odds ratio match?)
+    * problem indel at adult snp 16:50763781 A1=D, A2=I (present before imputation, but not after)
     * EUR: 141 agree, 86 disagree, 4 unresolved
     * All pops: 147 match, 76 disagree, 4 unresolved
+    * plink vs snptest:
+        * https://docs.google.com/spreadsheets/d/1LFdhrfXSHDtJ3Ed3tt7ynj9LL4LY3LMvuiCwaEBFpYE/edit#gid=551803840
 * Pathway PRS (on going)
     * Building pathways from [Khor 2011](https://www.ncbi.nlm.nih.gov/pubmed/21677747) gene lists and associated GO terms
     * 64/231 SNPs matched to a pathway
@@ -12,8 +15,17 @@
     * 64/135 possible pathway assignments made
     * [EUR](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.eur.md) sorted by p-value
     * [All pops](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.tpop.md) sorted by p-value
-    * [SNP pathway assignments]()
-    
+    * [SNP pathway assignments](http://mybic.chop.edu/slink/devoto_lab/ibd-gwas/writeup/tables/adult.all.tpop.assoc.csv)
+* Association tests for adult genes (ongoing)
+* nealelab data on dropbox
+
+#### Notes
+* bug in pathway snps - I joing on plink A1/A2 instead of adult A1/A2
+* 5 ped specific SNPs (not seen in adult) from Hakon paper
+* merge pathways to make larger groups - get gene sets from Noor
+* Check [gene ls](https://mail.google.com/mail/u/0/#inbox/FMfcgxwBVgqHjxqmbzzPCBJFZSZtPpdC) against nealelab results
+* don't restrict SNP OR adult/ped agreement for PRS for you want to test the utility of the adult SNPs as a set
+
 ### 20190201
 
 #### Overview
