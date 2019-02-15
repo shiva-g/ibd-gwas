@@ -1,6 +1,6 @@
 ### 20190215
 
-### Updates
+#### Updates
 * Removed rs2226628 from PRS
 * Compare ped/adult risk alleles (if alleles match, does odds ratio match?)
     * problem indel at adult snp 16:50763781 A1=D, A2=I (present before imputation, but not after)
@@ -18,6 +18,12 @@
     * [SNP pathway assignments](http://mybic.chop.edu/slink/devoto_lab/ibd-gwas/writeup/tables/adult.all.tpop.assoc.csv)
 * Association tests for adult genes (ongoing)
 * nealelab data on dropbox
+
+#### Notes
+* bug in pathway snps - I joing on plink A1/A2 instead of adult A1/A2
+* 5 ped specific SNPs (not seen in adult) from Hakon paper
+* merge pathways to make larger groups - get gene sets from Noor
+* Check [gene ls](https://mail.google.com/mail/u/0/#inbox/FMfcgxwBVgqHjxqmbzzPCBJFZSZtPpdC) against nealelab results
 
 ### 20190201
 
