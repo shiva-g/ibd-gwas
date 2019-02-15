@@ -3,7 +3,7 @@
 ### Updates
 * Removed rs2226628 from PRS
 * Compare ped/adult risk alleles (if alleles match, does odds ratio match?)
-    * problem indel at adult snp 16:50763781 A1=D, A2=I
+    * problem indel at adult snp 16:50763781 A1=D, A2=I (present before imputation, but not after)
     * EUR: 141 agree, 86 disagree, 4 unresolved
     * All pops: 147 match, 76 disagree, 4 unresolved
     * plink vs snptest:
