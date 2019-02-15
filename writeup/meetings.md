@@ -12,7 +12,8 @@
     * 64/135 possible pathway assignments made
     * [EUR](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.eur.md) sorted by p-value
     * [All pops](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.tpop.md) sorted by p-value
-    * [SNP pathway assignments]()
+    * [SNP pathway assignments](http://mybic.chop.edu/slink/devoto_lab/ibd-gwas/writeup/tables/adult.all.tpop.assoc.csv)
+* Association tests for adult genes (ongoing)
     
 ### 20190201
 
