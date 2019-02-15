@@ -60,7 +60,7 @@ rule mk_prs_list:
             ann_df = pd.read_csv(input.ann, sep='\t')
             crit = ann_df.apply(lambda row: wildcards.go in row['pathways'], axis=1)
             ann_df = ann_df[crit]
-            keep_keys = {row['SNP'] + ':' + row['A1_plink'] + ':' + row['A2_plink'] for _, row in ann_df.iterrows()}
+            keep_keys = {row['SNP'] + ':' + row['A1_adult'] + ':' + row['A2_adult'] for _, row in ann_df.iterrows()}
             crit = df.apply(lambda row: ':'.join([str(row[x]) for x in ('CHR', 'BP', 'A1', 'A2')]) in keep_keys, axis=1)
             df[crit].to_csv(output.o, index=False, sep='\t')
 
