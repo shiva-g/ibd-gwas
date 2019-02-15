@@ -16,5 +16,5 @@
 * [Tot pop IBD vs HC]({{SLINK}}/writeup/tables/adult.all.tpop.assoc.csv)
 * [Tot pop early IBD vs HC]({{SLINK}}/writeup/tables/adult.early.eur.assoc.csv)
 * [Tot pop late IBD vs HC]({{SLINK}}/writeup/tables/adult.late.eur.assoc.csv)
-*
+
 {% endmarkdown %} {% endblock %}
