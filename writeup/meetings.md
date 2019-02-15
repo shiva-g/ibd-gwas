@@ -3,8 +3,11 @@
 ### Updates
 * Removed rs2226628 from PRS
 * Compare ped/adult risk alleles (if alleles match, does odds ratio match?)
+    * problem indel at adult snp 16:50763781 A1=D, A2=I
     * EUR: 141 agree, 86 disagree, 4 unresolved
     * All pops: 147 match, 76 disagree, 4 unresolved
+    * plink vs snptest:
+        * https://docs.google.com/spreadsheets/d/1LFdhrfXSHDtJ3Ed3tt7ynj9LL4LY3LMvuiCwaEBFpYE/edit#gid=551803840
 * Pathway PRS (on going)
     * Building pathways from [Khor 2011](https://www.ncbi.nlm.nih.gov/pubmed/21677747) gene lists and associated GO terms
     * 64/231 SNPs matched to a pathway
