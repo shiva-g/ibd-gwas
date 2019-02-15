@@ -347,9 +347,10 @@ rule combine_prs:
     output:
         o = PWD + 'writeup/tables/prs.{pop}.md'
     run:
+        cols = ['test', 'pathway', 'Coefficient', 'Standard.Error', 'P', 'Empirical-P', 'Num_SNP', 'auc']
         def read_df(afile):
-            df = pd.read_csv(afile, sep='\t')
+            df = pd.read_csv(afile, sep='\t')[cols]
             return df
-        df = pd.concat([read_df(af) for af in input])
+        df = pd.concat([read_df(af) for af in input]).sort_values(by='Empirical-P', ascending=True)
         with open(output.o, 'w') as fout:
             print(tabulate.tabulate(df.values, df.columns, tablefmt="pipe"), file=fout)

@@ -6,6 +6,23 @@ import argparse
 def is_redox(row):
     if 'NF_KAPPAB_SIGNALING' in row['GO'] or 'OXIDATIVE_STRESS' in row['GO']:
         return True
+    for gene in ('PRDX5', 'BACH2', 'ADO', 'GPX4', 'GPX1', 'SLC22A4', 'LRRK2', 'NOD2', 'CARD9', 'HSPA6', 'DLD', 'PARK7', 'UTS2', 'PEX13', ):
+        if gene in row['gene_ls']:
+            return True
+    return False
+
+def is_carbo_metabolism(row):
+    if 'CARBOHYDRATE_METABOLIC_PROCESS' in row['GO']:
+        return True
+    for gene in ('GCKR', 'SLC2A4RG', ):
+        if gene in row['gene_ls']:
+            return True
+    return False
+
+def is_intracellular_logistics(row):
+    for gene in ('VAMP3', 'KIF21B', 'TTLL8', 'FGRF1OP', 'CEP72', 'TPPP', ):
+        if gene in row['gene_ls']:
+            return True
     return False
 
 def is_er_stress(row):
@@ -62,7 +79,9 @@ def is_bcell_regulation(row):
     return False
 
 def mk_pathways(row):
-    pathways = {'er_stress':is_er_stress,
+    pathways = {'intracellular_logistics':is_intracellular_logistics,
+                'carbohydrate_metabolism':is_carbo_metabolism,
+                'er_stress':is_er_stress,
                 'bcell_regulation':is_bcell_regulation,
                 'tcell_regulation':is_tcell_regulation,
                 'apoptosis':is_apoptosis,

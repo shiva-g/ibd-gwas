@@ -34,7 +34,7 @@ PRSICE = "docker://quay.research.chop.edu/evansj/prsice-docker:2.1.4"
 SNPTEST = "docker://csoriano/snptest:2.5.2"
 
 G = ('early', 'all', 'late', 'ibd_all')
-GOS = ['GO_ALL',
+GOS = ['GO_ALL', 'carbohydrate_metabolism',
        'er_stress', 'bcell_regulation', 'tcell_regulation', 'apoptosis',
        'cell_migration',
        'redox',

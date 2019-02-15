@@ -40,5 +40,5 @@ rule after_imputation:
         expand(PWD + 'writeup/tables/prs.{pop}.md', pop=('eur', 'tpop')),
         # # PWD + 'writeup/tables/maf.md',
         # # expand(DATA + 'interim/prsice/snp_overlap/all.{pop}.init', pop=('eur', 'tpop')),
-        # expand(PWD + "writeup/tables/{age}.{group}.{pop}.assoc.csv", age=('ped', 'adult'), pop=('tpop', 'eur'), group=G),
+        #expand(PWD + "writeup/tables/{age}.{group}.{pop}.assoc.csv", age=('ped', 'adult'), pop=('tpop', 'eur'), group=G),
         # DATA + 'interim/snp_groups/tpop'
