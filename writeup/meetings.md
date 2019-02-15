@@ -24,6 +24,7 @@
 * 5 ped specific SNPs (not seen in adult) from Hakon paper
 * merge pathways to make larger groups - get gene sets from Noor
 * Check [gene ls](https://mail.google.com/mail/u/0/#inbox/FMfcgxwBVgqHjxqmbzzPCBJFZSZtPpdC) against nealelab results
+* don't restrict SNP OR adult/ped agreement for PRS for you want to test the utility of the adult SNPs as a set
 
 ### 20190201
 
