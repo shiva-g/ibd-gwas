@@ -1,3 +1,8 @@
+### 20190218
+* eur imputation again so I can check logs
+* ask for devoto lab mounting on mybic.chop.edu
+* setup adult gene queries
+
 ### 20190213
 * [rm rs2226628 from prs](https://mail.google.com/mail/u/0/#inbox/FMfcgxwBVglfNVdxppnmmpBRhWJmwPMT)
 

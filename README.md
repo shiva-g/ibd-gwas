@@ -1,12 +1,16 @@
 ibd-gwas
 ==============================
 
-IBD (late and early onset) vs healthy
+Pediatric IBD (late and early onset) vs healthy
 * Manifest: /mnt/isilon/microbiome/perry/ibd-gwas/data/processed/MANIFEST.csv
 * [Results](writeup/results.md)
 * [Methods](writeup/methods.md)
 * [Log](writeup/log.md)
 * [Meetings](writeup/meetings.md)
+
+#### Questions
+* Can adult IBD associatons be used for a pediatric polygenic risk score?
+* Does grouping adult IBD associatons by pathway improve pediatric polygenic risk score?
 
 ### Run: 
 `conda create env create -f envs/project.yml`
