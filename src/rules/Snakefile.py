@@ -22,13 +22,13 @@ include: "sf_snp_splits.py"
 rule before_imputation:
     input:
         expand(DATA + 'interim/{pop}_vcf/3groups.{chr}.vcf.gz', pop=('tpop', 'eur'), chr=range(1,23)),
-        PLOTS + 'eur_mds.png',
-        PLOTS + 'hapmap_mds.png',
-        PLOTS + 'hapmap_mds_nogroup.png',
-        expand(DATA + 'interim/missing_test/3groups.{miss}', miss=('imiss', 'lmiss') ),
-        DATA + 'interim/sex_check/3groups.sexcheck',
-        DATA + 'interim/qc_hwe/3groups.counts',
-        DATA + 'interim/qc_het/3groups.het'
+        # PLOTS + 'eur_mds.png',
+        # PLOTS + 'hapmap_mds.png',
+        # PLOTS + 'hapmap_mds_nogroup.png',
+        # expand(DATA + 'interim/missing_test/3groups.{miss}', miss=('imiss', 'lmiss') ),
+        # DATA + 'interim/sex_check/3groups.sexcheck',
+        # DATA + 'interim/qc_hwe/3groups.counts',
+        # DATA + 'interim/qc_het/3groups.het'
 
 rule after_imputation:
     input:

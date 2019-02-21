@@ -39,7 +39,7 @@ rule vcf_tpop:
     input:
         DATA + 'interim/bfiles_filter_samples/{group}.fam',
     output:
-        DATA + 'interim/bfiles_tpop_vcf_chr{chr}/{group}.vcf'
+        temp(DATA + 'interim/bfiles_tpop_vcf_chr{chr}/{group}.vcf')
     singularity:
         PLINK
     log:
@@ -53,7 +53,7 @@ rule cp_vcf:
     input:
         DATA + 'interim/bfiles_{pop}_vcf_chr{chr}/{group}.vcf'
     output:
-        DATA + 'interim/{pop}_vcf/{group}.{chr}.vcf'
+        temp(DATA + 'interim/{pop}_vcf/{group}.{chr}.vcf')
     shell:
         'cp {input} {output}'
 
