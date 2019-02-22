@@ -10,6 +10,14 @@ if you want I can send you the pathway list I have, but i remember when I did th
     * [EUR](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.eur.md) sorted by p-value
     * [All pops](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.tpop.md) sorted by p-value
 
+#### Notes
+* [Fix PRS base snp table](https://mail.google.com/mail/u/0/#sent/FFNDWNPFQxdrgHwcJLNcqbbcCfdBRchR)
+* Add genes to adult lookup and relax cutoff to 10^-4.
+* odd that IL21 is not in the PRS adult list
+* use impute2 for local imputation
+* NOD2, CARD9, FUT2 not for monogenic IBD
+* [monogenic disorders and immunodeficiencies in particular, since these require a different treatment strategy than conventional IBD](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5376484/)
+
 ### 20190215
 
 #### Updates
