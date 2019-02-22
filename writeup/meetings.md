@@ -1,3 +1,15 @@
+### 20190222
+#### Updates
+* [VEO adult results](https://github.com/samesense/adult-veo-check)
+* noor ingenuity: no i haven't done that with ingenuity
+I have a list of immunodeficiency pathways and genes that are associated with each pathway, and I do my own calculations
+but I think there are several adult IBD genes that don't fall into these pathways, Judith has previously said that they do, but she needs to actually make the assignment
+if you want I can send you the pathway list I have, but i remember when I did the overlap between that and genes from the IBD risk loci, the overlap was small
+* missing NOD2 indel solved: imputation server discards indels
+* update pathway PRS tests
+    * [EUR](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.eur.md) sorted by p-value
+    * [All pops](https://github.com/samesense/ibd-gwas/blob/master/writeup/tables/prs.tpop.md) sorted by p-value
+
 ### 20190215
 
 #### Updates
