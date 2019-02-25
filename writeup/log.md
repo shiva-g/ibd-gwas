@@ -1,3 +1,11 @@
+### 20190225
+* change prs Lui table to ibd gwas pvals for eur in first supp table
+* update eur results for new michigan imputation
+* fix int/float for chr in assoc tables, and redo adult cross ref
+* dl 1kg data as data recipe. done, but need to finish recipe
+* start imputation code
+* prs redo is missing snps 
+
 ### 20190218
 * eur imputation again so I can check logs
 * ask for devoto lab mounting on mybic.chop.edu
