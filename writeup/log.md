@@ -1,3 +1,24 @@
+### 20190227
+* The problem w/ missing SNPs is that changing tables altered p-values, so using all SNPs for PRS is no longer the best result. My scripts were setup to report the best result. 
+
+### 20190226
+* prs snp ids are correct, so I think alleles are wrong
+* imputation results look the same for eur!
+* missing
+rs11010067      35295431
+rs11681525      145492382
+rs1505992       40498577
+rs17061048      40833012
+rs1748195       63049593
+rs2066845       50756540
+rs2361755       86009686
+rs3851228       111848191
+rs5743293       50763781
+rs6863411       141513204
+rs7746082       106435269
+* cannot tell why snps are tossed out. some snps have exact same data
+* cp old to new ibd table and rerun to recover all snps - this failed! I think b/c I left out keep ambig snps in prs
+
 ### 20190225
 * change prs Lui table to ibd gwas pvals for eur in first supp table
 * update eur results for new michigan imputation

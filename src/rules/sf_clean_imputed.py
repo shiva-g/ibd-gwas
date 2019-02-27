@@ -15,7 +15,7 @@ rule unzip_eur_imputed:
     output:
         DATA + 'interim/imputed_vcf_eur/chr{c}.dose.vcf.gz'
     shell:
-        'unzip -o -P "Ok4iEYdK9Ue\Pu" -d {DATA}/interim/imputed_vcf_eur/ {input}'
+        'unzip -o -P "kUwrE2PYDYr1gf" -d {DATA}/interim/imputed_vcf_eur/ {input}'
 
 rule limit_imputed_r2:
     input:

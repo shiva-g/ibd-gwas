@@ -32,13 +32,13 @@ rule before_imputation:
 
 rule after_imputation:
     input:
-        expand(PLOTS + '{group}.{pop}.{go}.prs.roc.png', group=G, pop=('eur', 'tpop'), go=GOS),
-        expand(PLOTS + '{group}.{pop}.{go}.prs.density.png', group=G, pop=('eur', 'tpop'), go=GOS),
+        #expand(PLOTS + '{group}.{pop}.{go}.prs.roc.png', group=G, pop=('eur', 'tpop'), go=GOS),
+        #expand(PLOTS + '{group}.{pop}.{go}.prs.density.png', group=G, pop=('eur', 'tpop'), go=GOS),
         #expand(PLOTS + '{group}.{pop}.{go}.prs.quantiles.png', group=G, pop=('eur', 'tpop'), go=GOS),
-        # # expand(DATA + 'interim/plink_assoc_fmt/{group}/eur.assoc', group=G),
-        # # expand(PLOTS + 'manhattan.{group}.png', group=G),
+        #expand(DATA + 'interim/plink_assoc_fmt/{group}/eur.assoc', group=G),
+        expand(PLOTS + 'manhattan.{group}.png', group=G),
         expand(PWD + 'writeup/tables/prs.{pop}.md', pop=('eur', 'tpop')),
         # # PWD + 'writeup/tables/maf.md',
-        # # expand(DATA + 'interim/prsice/snp_overlap/all.{pop}.init', pop=('eur', 'tpop')),
+        #expand(DATA + 'interim/prsice/snp_overlap/GO_ALL/all.{pop}.init', pop=('eur', )),
         expand(PWD + "writeup/tables/{age}.{group}.{pop}.assoc.csv", age=('ped', 'adult'), pop=('tpop', 'eur'), group=G),
         # DATA + 'interim/snp_groups/tpop'

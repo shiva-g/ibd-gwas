@@ -3,9 +3,9 @@
 # https://www.nature.com/articles/ng.3359#supplementary-information
 rule prep_gwas_base_eur:
     input:
-        i = DATA + 'raw/ibd_gwas/ng.3359-S4.xlsx'
+        i = HTTP.remote('https://media.nature.com/original/nature-assets/ng/journal/v47/n9/extref/ng.3359-S2.xlsx')
     output:
-        o = DATA + 'interim/ibd_gwas.eur.assoc'
+        o = DATA + 'interim/ibd_gwas.{pop}.assoc'
     run:
         def fix_positions(row):
             if row['SNP']=='rs3172494' and row['BP']==48681053:
@@ -17,34 +17,40 @@ rule prep_gwas_base_eur:
             if row['SNP']=='rs11564258' and row['BP']==40756472:
                 return 40792300
             return row['BP']
-        df = pd.read_excel(input.i, sheet_name='Heterogeneity of effect', skiprows=7)
-        cols = ['CHR', 'BP', 'SNP', 'A1', 'A2', 'EUR_OR', 'EUR_PVAL', 'EUR_SE']
+
+        usecols = [0,1,2,3,4,5, 16,17,19]
+        new_names = {'Chr.':'CHR', 'BP (hg19/GRCh37)':'BP', 'Ichip P':'PVAL'}
+        shell('cp {input} {output}.tmp')
+        df = pd.read_excel(output.o + '.tmp', sheetname='All loci - Eur.', skiprows=5, usecols=usecols).rename(columns=new_names)
         df.loc[:, 'BP'] = df.apply(fix_positions, axis=1)
         crit = df.apply(lambda row: row['SNP'] != 'rs2226628', axis=1)
-        df[crit][cols].rename(columns={'EUR_OR':'OR', 'EUR_PVAL':'PVAL', 'EUR_SE':'SE'}).to_csv(output.o, index=False, sep=' ')
+        cols = ['CHR', 'BP', 'SNP', 'A1', 'A2', 'OR', 'PVAL', 'SE']
+        print(df.head())
+        df[crit][cols].to_csv(output.o, index=False, sep=' ')
+        shell('rm {output}.tmp')
 
 # use eur snps for now
-rule prep_gwas_base_tpop:
-    input:
-        i = DATA + 'raw/ibd_gwas/ng.3359-S4.xlsx'
-    output:
-        o = DATA + 'interim/ibd_gwas.tpop.assoc'
-    run:
-        def fix_positions(row):
-            if row['SNP']=='rs3172494' and row['BP']==48681053:
-                return 48731487
-            if row['SNP']=='rs9868809' and row['BP']==48731487:
-                return 48681053
-            if row['SNP']=='rs4768236' and row['BP']==40528432:
-                return 40756472
-            if row['SNP']=='rs11564258' and row['BP']==40756472:
-                return 40792300
-            return row['BP']
-        df = pd.read_excel(input.i, sheet_name='Heterogeneity of effect', skiprows=7)
-        cols = ['CHR', 'BP', 'SNP', 'A1', 'A2', 'EUR_OR', 'EUR_PVAL', 'EUR_SE']
-        df.loc[:, 'BP'] = df.apply(fix_positions, axis=1)
-        crit = df.apply(lambda row: row['SNP'] != 'rs2226628', axis=1)
-        df[crit][cols].rename(columns={'EUR_OR':'OR', 'EUR_PVAL':'PVAL', 'EUR_SE':'SE'}).to_csv(output.o, index=False, sep=' ')
+# rule prep_gwas_base_tpop:
+#     input:
+#         i = DATA + 'raw/ibd_gwas/ng.3359-S4.xlsx'
+#     output:
+#         o = DATA + 'interim/ibd_gwas.old'
+#     run:
+#         def fix_positions(row):
+#             if row['SNP']=='rs3172494' and row['BP']==48681053:
+#                 return 48731487
+#             if row['SNP']=='rs9868809' and row['BP']==48731487:
+#                 return 48681053
+#             if row['SNP']=='rs4768236' and row['BP']==40528432:
+#                 return 40756472
+#             if row['SNP']=='rs11564258' and row['BP']==40756472:
+#                 return 40792300
+#             return row['BP']
+#         df = pd.read_excel(input.i, sheet_name='Heterogeneity of effect', skiprows=7)
+#         cols = ['CHR', 'BP', 'SNP', 'A1', 'A2', 'EUR_OR', 'EUR_PVAL', 'EUR_SE']
+#         df.loc[:, 'BP'] = df.apply(fix_positions, axis=1)
+#         crit = df.apply(lambda row: row['SNP'] != 'rs2226628', axis=1)
+#         df[crit][cols].rename(columns={'EUR_OR':'OR', 'EUR_PVAL':'PVAL', 'EUR_SE':'SE'}).to_csv(output.o, index=False, sep=' ')
 
 rule mk_prs_list:
     input:
@@ -62,7 +68,7 @@ rule mk_prs_list:
             ann_df = ann_df[crit]
             keep_keys = {row['SNP'] + ':' + row['A1_adult'] + ':' + row['A2_adult'] for _, row in ann_df.iterrows()}
             crit = df.apply(lambda row: ':'.join([str(row[x]) for x in ('CHR', 'BP', 'A1', 'A2')]) in keep_keys, axis=1)
-            df[crit].to_csv(output.o, index=False, sep='\t')
+            df[crit].to_csv(output.o, index=False, sep=' ')
 
 rule mk_prsice_sample_ls:
     input:
@@ -135,21 +141,23 @@ rule recode_fam_prsice_sample_subsets:
                     pheno = str(phenos[sample])
                     print(' '.join(sp[:-1] + [pheno]), file=fout)
 
-rule base_impute_overlap:
-    input:
-        b = DATA + 'interim/bfiles_imputed_grouped/{group}/{pop}.bim',
-        a = DATA + 'interim/prs_adult_ls/{go}.{pop}.assoc',
-        init = DATA + 'interim/bfiles_{pop}/3groups.bim',
-    output:
-        o = DATA + 'interim/prsice/snp_overlap/{go}/{group}.{pop}.imputed_all',
-        oi = DATA + 'interim/prsice/snp_overlap/{go}/{group}.{pop}.init'
-    run:
-        shell('cut -f 1,4 {input.b} | sort -u > {output.o}.b')
-        shell('cut -f 1,4 {input.init} | sort -u > {output.o}.init')
-        shell('cut -f 1,2 -d " " {input.a} | sed "s/ /\t/g" | sort -u > {output.o}.a')
-        shell('comm -12 {output.o}.a {output.o}.b > {output.o}')
-        shell('comm -12 {output.o} {output.o}.init > {output.oi}')
-
+# rule base_impute_overlap:
+#     input:
+#         b = DATA + 'interim/bfiles_imputed_grouped/{group}/{pop}.bim',
+#         a = DATA + 'interim/prs_adult_ls/{go}.{pop}.assoc',
+#         init = DATA + 'interim/bfiles_{pop}/3groups.bim',
+#     output:
+#         o = DATA + 'interim/prsice/snp_overlap/{go}/{group}.{pop}.imputed_all',
+#         o4 = DATA + 'interim/prsice/snp_overlap/{go}/{group}.{pop}.imputed_all.4',
+#         oi = DATA + 'interim/prsice/snp_overlap/{go}/{group}.{pop}.init'
+#     run:
+#         shell('cut -f 1,4 {input.b} | sort -u > {output.o}.b')
+#         shell('cut -f 1,4,2 {input.b} | sort -u > {output.o}.b4')
+#         shell('cut -f 1,4 {input.init} | sort -u > {output.o}.init')
+#         shell('cut -f 1,2 -d " " {input.a} | sed "s/ /\t/g" | sort -u > {output.o}.a')
+#         shell('comm -12 {output.o}.a {output.o}.b > {output.o}')
+#         shell('comm -12 {output.o} {output.o}.init > {output.oi}')
+# --keep-ambig
 rule prsice_eur:
     input:
         b = DATA + 'interim/bfiles_imputed_grouped/{group}/eur.fam',
@@ -165,12 +173,15 @@ rule prsice_eur:
     shell:
         'Rscript /usr/local/bin/PRSice.R --dir {DATA}/interim/prsice/{wildcards.group}/{wildcards.go}/ '
         '--snp SNP --chr CHR --bp BP --A1 A1 --A2 A2 --stat OR --se SE --pvalue PVAL '
-        '--prsice /usr/local/bin/PRSice_linux --keep-ambig '
-        '--base {input.a} --perm 1000000 --no-clump '
+        '--prsice /usr/local/bin/PRSice_linux '
+        '--base {input.a} --perm 1000000 --no-clump --print-snp --keep-ambig '
         '--target {DATA}interim/bfiles_imputed_grouped/{wildcards.group}/eur '
         '--thread {threads} --binary-target T '
         '--out {DATA}interim/prsice/{wildcards.group}/{wildcards.go}/eur &> {log} || touch {log}'
 
+rule tmp_prs:
+    input:
+        DATA + 'interim/prsice/all/GO_ALL/eur.best'
 rule mk_covfile:
     input:
         pcs = DATA + 'interim/mds_dat/ibd_hapmap.dat'
@@ -198,7 +209,7 @@ rule prsice_tpop:
     shell:
         'Rscript /usr/local/bin/PRSice.R --dir {DATA}/interim/prsice/{wildcards.group}/{wildcards.go}/ '
         '--snp SNP --chr CHR --bp BP --A1 A1 --A2 A2 --stat OR --se SE --pvalue PVAL '
-        '--prsice /usr/local/bin/PRSice_linux --keep-ambig '
+        '--prsice /usr/local/bin/PRSice_linux --keep-ambig --print-snp '
         '--base {input.a} --perm 1000000 --no-clump '
         '--target {DATA}interim/bfiles_imputed_grouped/{wildcards.group}/tpop '
         '--thread {threads} --binary-target T '

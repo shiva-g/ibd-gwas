@@ -32,6 +32,7 @@ PLINK = "docker://quay.research.chop.edu/evansj/plink-docker:181012"
 PLINK2 = "docker://quay.research.chop.edu/evansj/plink2-docker:11Feb"
 PRSICE = "docker://quay.research.chop.edu/evansj/prsice-docker:2.1.4"
 SNPTEST = "docker://csoriano/snptest:2.5.2"
+SHAPEIT = "docker://sinonkt/shapeit"
 
 G = ('early', 'all', 'late', 'ibd_all')
 GOS = ['GO_ALL', 'carbohydrate_metabolism',
